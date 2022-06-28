@@ -29,7 +29,7 @@ public class TileGrid
 					HexCoordinates.FromOffsetCoordinates(x, y);
 
 				Tiles[i] = new Tile(coordinates);
-				i++;
+                i++;
 			}
         }
 	}
@@ -46,5 +46,57 @@ public class TileGrid
 		return Tiles[selectedIndex];
     }
 
+    public Tile GetTileAtHexCoords(HexCoordinates hexCoord)
+    {
+        int offsetCoordY = hexCoord.Z;
+
+        int offsetCoordX = hexCoord.X + (offsetCoordY / 2);
+
+        return GetTileAtPos(offsetCoordX, offsetCoordY);
+    }
+
+    public Tile GetTileInDirection(Tile startTile, Direction direction)
+    {
+        HexCoordinates startCoords = startTile.coordinates;
+        HexCoordinates endCoords;
+
+        switch (direction)
+        {
+            case Direction.NE:
+                endCoords = new HexCoordinates(
+                    startCoords.X, startCoords.Z + 1);
+                break;
+                
+            case Direction.E:
+                endCoords = new HexCoordinates(
+                    startCoords.X + 1, startCoords.Z);
+                break;
+
+            case Direction.SE:
+                endCoords = new HexCoordinates(
+                    startCoords.X + 1, startCoords.Z - 1);
+                break;
+
+            case Direction.SW:
+                endCoords = new HexCoordinates(
+                    startCoords.X, startCoords.Z - 1);
+                break;
+
+            case Direction.W:
+                endCoords = new HexCoordinates(
+                    startCoords.X - 1, startCoords.Z);
+                break;
+
+            case Direction.NW:
+                endCoords = new HexCoordinates(
+                    startCoords.X - 1, startCoords.Z + 1);
+                break;
+
+            default:
+                return null;
+        }
+
+        return GetTileAtHexCoords(endCoords);
+    }
 
 }

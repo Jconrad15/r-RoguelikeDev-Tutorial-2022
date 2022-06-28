@@ -9,17 +9,20 @@ public class Tile
     public HexCoordinates coordinates;
     public Color color;
 
+    public Entity entity;
+
     public Tile(HexCoordinates coordinates)
     {
         this.coordinates = coordinates;
+        entity = null;
 
-        if (coordinates.Z % 2 == 0)
+        if (coordinates.X % 2 == 0)
         {
             color = defaultColor;
         }
         else
         {
-            color = Color.black;
+            color = Color.blue;
         }
     }
 }

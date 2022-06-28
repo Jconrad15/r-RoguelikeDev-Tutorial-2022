@@ -7,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public class GameManager : MonoBehaviour
 {
+    public EntityManager EntityManager { get; private set; }
+
     public static GameManager Instance { get; private set; }
     private void Awake()
     {
@@ -23,11 +25,18 @@ public class GameManager : MonoBehaviour
 
     public void GameStart()
     {
+        EntityManager = FindObjectOfType<EntityManager>();
+
         // Create the grid of tiles
         Grid = new TileGrid(6, 6);
 
+        // Create the player at ltile 0
+        EntityManager.CreatePlayer(Grid.Tiles[0]);
+
         // TODO: fix this call. use event
-        FindObjectOfType<TileGridDisplay>().CreateInitialGrid(Grid);
+        FindObjectOfType<Display>().CreateInitialGrid(Grid);
+
+
     }
 
 

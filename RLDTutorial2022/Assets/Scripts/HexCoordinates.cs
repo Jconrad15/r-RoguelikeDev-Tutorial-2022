@@ -14,6 +14,14 @@ public struct HexCoordinates
 		}
 	}
 
+	public int Y
+	{
+		get
+		{
+			return -X - Z;
+		}
+	}
+
 	public int Z
     {
 		get
@@ -25,12 +33,25 @@ public struct HexCoordinates
 	public HexCoordinates(int x, int z)
 	{
 		this.x = x;
-		this.z = z;
+        this.z = z;
 	}
 
-	public static HexCoordinates FromOffsetCoordinates(int x, int z)
+	public static HexCoordinates FromOffsetCoordinates(int x, int y)
 	{
-        return new HexCoordinates(x - (z / 2), z);
+        return new HexCoordinates(x - (y / 2), y);
+    }
+
+	public Vector3 GetWorldPosition()
+    {
+		float offsetY = Z;
+		float offsetX = X + (offsetY / 2);
+
+        Vector3 position;
+        position.x = offsetX * (HexMetrics.innerRadius * 2f);
+		position.y = offsetY * (HexMetrics.outerRadius * 1.5f);
+		position.z = 0;
+
+		return position;
     }
 
 	public static HexCoordinates FromPosition(Vector3 position)
@@ -63,14 +84,6 @@ public struct HexCoordinates
 		}
 
 		return new HexCoordinates(iX, iZ);
-	}
-
-	public int Y
-	{
-		get
-		{
-			return -X - Z;
-		}
 	}
 
 	public override string ToString()

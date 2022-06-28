@@ -104,10 +104,8 @@ public class Display : MonoBehaviour
     private void UpdatePosition(GameObject entityGO, Entity entity)
     {
         HexCoordinates hexCoords = entity.CurrentTile.coordinates;
-        Debug.Log(hexCoords.ToString());
         Vector3 position = hexCoords.GetWorldPosition();
 
         entityGO.transform.position = position;
-
     }
 }

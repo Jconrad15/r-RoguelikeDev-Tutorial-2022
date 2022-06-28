@@ -17,12 +17,6 @@ public class EntityManager : MonoBehaviour
         cbOnPlayerCreated?.Invoke(newPlayer);
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     public void RegisterOnPlayerCreated(Action<Entity> callbackfunc)
     {
         cbOnPlayerCreated += callbackfunc;

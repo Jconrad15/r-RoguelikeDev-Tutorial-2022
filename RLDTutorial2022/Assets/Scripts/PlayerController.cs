@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     private Entity player;
 
-    void Start()
+    private void Start()
     {
         FindObjectOfType<EntityManager>()
             .RegisterOnPlayerCreated(OnPlayerCreated);
@@ -14,11 +14,13 @@ public class PlayerController : MonoBehaviour
 
     private void OnPlayerCreated(Entity player)
     {
+        Debug.Log("Player set");
         this.player = player;
     }
 
-    void Update()
+    private void Update()
     {
+        if (player == null) { return; }
         CheckPlayerMovement();
     }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameInit : MonoBehaviour
 {
 
-    private void Start()
+    public void StartButton()
     {
         GameManager.Instance.GameStart();
     }

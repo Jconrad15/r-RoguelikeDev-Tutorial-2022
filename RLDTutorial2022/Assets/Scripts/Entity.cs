@@ -46,8 +46,6 @@ public class Entity
         CurrentTile.entity = this;
 
         cbOnEntityMoved?.Invoke(this);
-
-        Debug.Log("Move to: " + destination.coordinates.ToString());
     }
 
     public void RegisterOnEntityMoved(Action<Entity> callbackfunc)

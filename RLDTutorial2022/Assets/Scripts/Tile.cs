@@ -16,13 +16,6 @@ public class Tile
         this.coordinates = coordinates;
         entity = null;
 
-        if (coordinates.X % 2 == 0)
-        {
-            color = defaultColor;
-        }
-        else
-        {
-            color = Color.blue;
-        }
+        color = defaultColor;
     }
 }

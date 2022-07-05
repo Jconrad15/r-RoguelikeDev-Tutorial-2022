@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
         EntityManager = FindObjectOfType<EntityManager>();
 
         // Create the grid of tiles
-        Grid = new TileGrid(6, 6);
+        Grid = new TileGrid(50, 50);
 
         // Create the player at ltile 0
         EntityManager.CreatePlayer(Grid.Tiles[0], playerColor);

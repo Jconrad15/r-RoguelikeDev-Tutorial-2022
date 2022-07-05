@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class TileGrid
 {
-    public int width = 6;
-    public int height = 6;
+    public int width;
+    public int height;
 
 	public Tile[] Tiles { get; private set; }
+    private List<RectangularRoom> rooms = new List<RectangularRoom>();
 
-	public TileGrid(int width, int height)
+    public TileGrid(int width, int height)
     {
         this.width = width;
         this.height = height;
@@ -18,30 +19,51 @@ public class TileGrid
     }
 
     private void CreateGrid()
-	{
-		Tiles = new Tile[height * width];
+    {
+        Tiles = new Tile[height * width];
 
-		for (int y = 0, i = 0; y < height; y++)
-		{
-			for (int x = 0; x < width; x++)
-			{
+        CreateRooms();
+
+        for (int y = 0, i = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
                 HexCoordinates coordinates =
-					HexCoordinates.FromOffsetCoordinates(x, y);
+                    HexCoordinates.FromOffsetCoordinates(x, y);
 
-                // TODO: World generation
-                if (x == width - 1)
-                {
-                    Tiles[i] = new Tile(TileType.Wall, coordinates);
-                }
-                else
+                if (IsPointInRoom(y, x))
                 {
                     Tiles[i] = new Tile(TileType.Floor, coordinates);
                 }
+                else
+                {
+                    Tiles[i] = new Tile(TileType.Wall, coordinates);
+                }
 
                 i++;
-			}
+            }
         }
-	}
+    }
+
+    private void CreateRooms()
+    {
+        // Create two rooms
+        rooms.Add(new RectangularRoom(10, 15, 10, 15));
+        rooms.Add(new RectangularRoom(25, 15, 10, 15));
+    }
+
+    private bool IsPointInRoom(int y, int x)
+    {
+        foreach (RectangularRoom room in rooms)
+        {
+            if (room.Contains(x, y))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public Tile GetTileAtPos(int x, int y)
     {

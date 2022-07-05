@@ -46,9 +46,28 @@ public class TileGrid
                     Tiles[i] = new Tile(TileType.Wall, coordinates);
                 }
 
+                // debug
+                if (IsCenterPoint(x, y))
+                {
+                    Tiles[i].backgroundColor = Color.magenta;
+                }
+
+
                 i++;
             }
         }
+    }
+
+    private bool IsCenterPoint(int x, int y)
+    {
+        foreach (RectangularRoom room in rooms)
+        {
+            if (room.Center.Item1 == x && room.Center.Item2 == y)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void CreateHallways()
@@ -76,7 +95,7 @@ public class TileGrid
         }
     }
 
-    private bool IsPointInHallway(int y, int x)
+    private bool IsPointInHallway(int x, int y)
     {
         foreach (Hallway h in hallways)
         {
@@ -89,7 +108,7 @@ public class TileGrid
         return false;
     }
 
-    private bool IsPointInRoom(int y, int x)
+    private bool IsPointInRoom(int x, int y)
     {
         foreach (RectangularRoom room in rooms)
         {
@@ -179,10 +198,12 @@ public class TileGrid
         RectangularRoom selectedRoom = rooms[Random.Range(0, rooms.Count)];
 
         (int, int) center = selectedRoom.Center;
+
         HexCoordinates coordinates = HexCoordinates.FromOffsetCoordinates(
             center.Item1, center.Item2);
 
-        return GetTileAtHexCoords(coordinates);
+        Debug.Log("player at " + coordinates.ToString());
+        return GetTileAtPos(center.Item1, center.Item2);
     }
 
 }

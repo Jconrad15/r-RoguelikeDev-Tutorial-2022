@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class Hallway
 {
-    private readonly float resolution = 1000f;
+    private readonly float resolution = 10000f;
 
     public (int, int) startPoint { get; private set; }
     public (int, int) endPoint { get; private set; }

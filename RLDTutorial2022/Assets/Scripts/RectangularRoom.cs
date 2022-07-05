@@ -38,7 +38,6 @@ public class RectangularRoom
     {
         int centerX = (X1 + X2) / 2;
         int centerY = (Y1 + Y2) / 2;
-        Debug.Log("CenterXY" + centerX + ", " + centerY);
         Center = (centerX, centerY);
     }
 

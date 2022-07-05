@@ -41,6 +41,15 @@ public struct HexCoordinates
         return new HexCoordinates(x - (y / 2), y);
     }
 
+	public static (int, int) ToOffsetCoordinates(
+		HexCoordinates hexCoordinates)
+    {
+		// hexX = x - (y/2)
+		// hexZ = y
+		return ((hexCoordinates.Z / 2) + hexCoordinates.X,
+				 hexCoordinates.Z);
+    }
+
 	public Vector3 GetWorldPosition()
     {
 		float offsetY = Z;
@@ -53,6 +62,14 @@ public struct HexCoordinates
 
 		return position;
     }
+
+	public static int HexDistance(HexCoordinates a, HexCoordinates b)
+	{
+		return (Mathf.Abs(a.X - b.X) + 
+				Mathf.Abs(a.Y - b.Y) + 
+				Mathf.Abs(a.Z - b.Z)) 
+				/ 2;
+	}
 
 	public static HexCoordinates FromPosition(Vector3 position)
 	{

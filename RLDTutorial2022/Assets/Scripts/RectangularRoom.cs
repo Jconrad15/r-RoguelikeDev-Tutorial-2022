@@ -68,4 +68,12 @@ public class RectangularRoom
 
         return false;
     }
+
+    public bool Intersects(RectangularRoom otherRoom)
+    {
+        return X1 <= otherRoom.X2 &&
+               X2 >= otherRoom.X1 &&
+               Y1 <= otherRoom.Y2 &&
+               Y2 >= otherRoom.Y1;
+    }
 }

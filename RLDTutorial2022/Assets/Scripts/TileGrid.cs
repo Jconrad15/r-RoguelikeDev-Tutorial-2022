@@ -72,27 +72,76 @@ public class TileGrid
 
     private void CreateHallways()
     {
+        if (rooms == null) { return; }
+        if (rooms.Count < 2) { return; }
+
         for (int i = 1; i < rooms.Count; i++)
         {
-            hallways.Add(new Hallway(rooms[i - 1].Center, rooms[i].Center));
+            hallways.Add(new Hallway(
+                rooms[i - 1].Center, rooms[i].Center));
         }
+
+        // also add hallway from first to last room
+        hallways.Add(new Hallway(
+            rooms[0].Center, rooms[rooms.Count - 1].Center));
     }
 
     private void CreateRooms()
     {
-        // Create two rooms
-        int roomCount = Random.Range(6, 10);
+        Debug.Log("CreateRooms");
+
+        int roomCount = 4;//Random.Range(4, 5);
+
+        int maxIterations = 100;
 
         for (int i = 0; i < roomCount; i++)
         {
-            int roomWidth = Random.Range(8, 12);
-            int roomHeight = Random.Range(8, 12);
-            int minX = Random.Range(1, width - roomWidth);
-            int minY = Random.Range(1, height - roomHeight);
+            int counter = 0;
+            bool isRoomCreated = false;
+            while (isRoomCreated == false)
+            {
+                int roomWidth = Random.Range(8, 12);
+                int roomHeight = Random.Range(8, 12);
+                int minX = Random.Range(1, width - roomWidth);
+                int minY = Random.Range(1, height - roomHeight);
 
-            rooms.Add(new RectangularRoom(
-                minX, minY, roomWidth, roomHeight));
+                RectangularRoom newRoom = new RectangularRoom(
+                    minX, minY, roomWidth, roomHeight);
+
+                // Add room if no intersections
+                if (IntersectionCheck(newRoom) == false)
+                {
+                    rooms.Add(newRoom);
+                    isRoomCreated = true;
+                    Debug.Log("Room added");
+                }
+
+                // Too many loop - exit
+                if (counter >= maxIterations)
+                {
+                    break;
+                }
+                counter++;
+            }
         }
+    }
+
+    /// <summary>
+    /// Return true if new room intersects an existing room.
+    /// </summary>
+    /// <param name="newRoom"></param>
+    /// <returns></returns>
+    private bool IntersectionCheck(RectangularRoom newRoom)
+    {
+        foreach (RectangularRoom room in rooms)
+        {
+            if (room.Intersects(newRoom))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private bool IsPointInHallway(int x, int y)

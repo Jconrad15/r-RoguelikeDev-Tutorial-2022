@@ -9,7 +9,9 @@ public class EntityText : MonoBehaviour
     {
         TextMeshProUGUI text =
             GetComponentInChildren<TextMeshProUGUI>();
+
         text.SetText(entity.character);
+        text.color = entity.Color;
     }
 
 

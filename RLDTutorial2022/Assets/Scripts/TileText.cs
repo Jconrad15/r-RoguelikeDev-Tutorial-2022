@@ -11,6 +11,7 @@ public class TileText : MonoBehaviour
     public void SetText(Tile t)
     {
         characterText.SetText(t.Character.ToString());
+        characterText.color = t.foregroundColor;
     }
 
 

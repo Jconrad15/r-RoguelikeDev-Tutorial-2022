@@ -63,7 +63,9 @@ public class Display : MonoBehaviour
         tileGO.transform.localPosition = position;
         
         SpriteRenderer sr = tileGO.GetComponent<SpriteRenderer>();
-        sr.color = tile.color;
+        sr.color = tile.backgroundColor;
+
+        tileGO.GetComponent<TileText>().SetText(tile);
 
         createdTileGOs.Add(tileGO);
     }
@@ -103,7 +105,7 @@ public class Display : MonoBehaviour
 
     private void UpdatePosition(GameObject entityGO, Entity entity)
     {
-        HexCoordinates hexCoords = entity.CurrentTile.coordinates;
+        HexCoordinates hexCoords = entity.CurrentTile.Coordinates;
         Vector3 position = hexCoords.GetWorldPosition();
 
         entityGO.transform.position = position;

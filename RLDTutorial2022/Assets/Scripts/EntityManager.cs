@@ -9,9 +9,10 @@ public class EntityManager : MonoBehaviour
 
     private Action<Entity> cbOnPlayerCreated; 
 
-    public void CreatePlayer(Tile startTile)
+    public void CreatePlayer(Tile startTile, Color playerColor)
     {
-        Entity newPlayer = new Entity(startTile, "@", true);
+        Entity newPlayer =
+            new Entity(startTile, "@", playerColor, true);
 
         entities.Add(newPlayer);
         cbOnPlayerCreated?.Invoke(newPlayer);

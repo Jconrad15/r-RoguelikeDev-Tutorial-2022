@@ -11,13 +11,16 @@ public class Entity
 
     public Tile CurrentTile { get; private set; }
 
+    public Color Color { get; private set; }
+
     public Entity(
         Tile currentTile, string character,
-        bool isPlayer = false)
+        Color color, bool isPlayer = false)
     {
         CurrentTile = currentTile;
         this.isPlayer = isPlayer;
         this.character = character;
+        Color = color;
 
         // Set self to tile
         currentTile.entity = this;
@@ -28,8 +31,8 @@ public class Entity
         Tile neighborTile = GameManager.Instance.Grid
             .GetTileInDirection(CurrentTile, direction);
 
-        if (neighborTile == null){ return false; }
-
+        if (neighborTile == null) { return false; }
+        if (neighborTile.IsWalkable == false) { return false; }
         if (neighborTile.entity != null) { return false; }
 
         MoveTo(neighborTile);

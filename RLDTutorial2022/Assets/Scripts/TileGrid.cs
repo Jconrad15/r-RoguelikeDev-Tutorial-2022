@@ -28,7 +28,16 @@ public class TileGrid
                 HexCoordinates coordinates =
 					HexCoordinates.FromOffsetCoordinates(x, y);
 
-				Tiles[i] = new Tile(coordinates);
+                // TODO: World generation
+                if (x == width - 1)
+                {
+                    Tiles[i] = new Tile(TileType.Wall, coordinates);
+                }
+                else
+                {
+                    Tiles[i] = new Tile(TileType.Floor, coordinates);
+                }
+
                 i++;
 			}
         }
@@ -57,7 +66,7 @@ public class TileGrid
 
     public Tile GetTileInDirection(Tile startTile, Direction direction)
     {
-        HexCoordinates startCoords = startTile.coordinates;
+        HexCoordinates startCoords = startTile.Coordinates;
         HexCoordinates endCoords;
 
         switch (direction)

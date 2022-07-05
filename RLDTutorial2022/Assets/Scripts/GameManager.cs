@@ -22,8 +22,7 @@ public class GameManager : MonoBehaviour
 
     public TileGrid Grid { get; private set; }
 
-
-    public void GameStart()
+    public void GameStart(Color playerColor)
     {
         EntityManager = FindObjectOfType<EntityManager>();
 
@@ -31,7 +30,7 @@ public class GameManager : MonoBehaviour
         Grid = new TileGrid(6, 6);
 
         // Create the player at ltile 0
-        EntityManager.CreatePlayer(Grid.Tiles[0]);
+        EntityManager.CreatePlayer(Grid.Tiles[0], playerColor);
 
         // TODO: fix this call. use event
         FindObjectOfType<Display>().CreateInitialGrid(Grid);

@@ -29,8 +29,9 @@ public class GameManager : MonoBehaviour
         // Create the grid of tiles
         Grid = new TileGrid(50, 50);
 
-        // Create the player at ltile 0
-        EntityManager.CreatePlayer(Grid.Tiles[0], playerColor);
+        // Create the player
+        EntityManager.CreatePlayer(
+            Grid.GetRandomRoomCenterTile(), playerColor);
 
         // TODO: fix this call. use event
         FindObjectOfType<Display>().CreateInitialGrid(Grid);

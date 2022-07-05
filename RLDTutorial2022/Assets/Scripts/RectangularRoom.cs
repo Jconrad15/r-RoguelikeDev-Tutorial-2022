@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Room that is in xy offset coordinates.
+/// </summary>
 public class RectangularRoom
 {
     public int X1 { get; private set; }
@@ -9,7 +12,7 @@ public class RectangularRoom
     public int X2 { get; private set; }
     public int Y2 { get; private set; }
 
-    public (int, int) Center => ((X1 + X2) / 2, (Y1 + Y2) / 2);
+    public (int, int) Center { get; private set; }
 
     public (List<int>, List<int>) InnerArea { get; private set; }
 
@@ -28,6 +31,15 @@ public class RectangularRoom
         Y2 = minY + height;
 
         CreateInnerArea();
+        SetCenter();
+    }
+
+    private void SetCenter()
+    {
+        int centerX = (X1 + X2) / 2;
+        int centerY = (Y1 + Y2) / 2;
+        Debug.Log("CenterXY" + centerX + ", " + centerY);
+        Center = (centerX, centerY);
     }
 
     private void CreateInnerArea()

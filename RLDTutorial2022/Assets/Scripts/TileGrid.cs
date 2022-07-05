@@ -9,6 +9,7 @@ public class TileGrid
 
 	public Tile[] Tiles { get; private set; }
     private List<RectangularRoom> rooms = new List<RectangularRoom>();
+    private List<Hallway> hallways = new List<Hallway>();
 
     public TileGrid(int width, int height)
     {
@@ -23,6 +24,7 @@ public class TileGrid
         Tiles = new Tile[height * width];
 
         CreateRooms();
+        CreateHallways();
 
         for (int y = 0, i = 0; y < height; y++)
         {
@@ -31,7 +33,11 @@ public class TileGrid
                 HexCoordinates coordinates =
                     HexCoordinates.FromOffsetCoordinates(x, y);
 
-                if (IsPointInRoom(y, x))
+                if (IsPointInRoom(x, y))
+                {
+                    Tiles[i] = new Tile(TileType.Floor, coordinates);
+                }
+                else if (IsPointInHallway(x, y))
                 {
                     Tiles[i] = new Tile(TileType.Floor, coordinates);
                 }
@@ -45,11 +51,42 @@ public class TileGrid
         }
     }
 
+    private void CreateHallways()
+    {
+        for (int i = 1; i < rooms.Count; i++)
+        {
+            hallways.Add(new Hallway(rooms[i - 1].Center, rooms[i].Center));
+        }
+    }
+
     private void CreateRooms()
     {
         // Create two rooms
-        rooms.Add(new RectangularRoom(10, 15, 10, 15));
-        rooms.Add(new RectangularRoom(25, 15, 10, 15));
+        int roomCount = Random.Range(6, 10);
+
+        for (int i = 0; i < roomCount; i++)
+        {
+            int roomWidth = Random.Range(8, 12);
+            int roomHeight = Random.Range(8, 12);
+            int minX = Random.Range(1, width - roomWidth);
+            int minY = Random.Range(1, height - roomHeight);
+
+            rooms.Add(new RectangularRoom(
+                minX, minY, roomWidth, roomHeight));
+        }
+    }
+
+    private bool IsPointInHallway(int y, int x)
+    {
+        foreach (Hallway h in hallways)
+        {
+            if (h.Contains(x, y))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private bool IsPointInRoom(int y, int x)
@@ -128,6 +165,24 @@ public class TileGrid
         }
 
         return GetTileAtHexCoords(endCoords);
+    }
+
+    /// <summary>
+    /// Returns tile for the center of a room.
+    /// </summary>
+    /// <returns></returns>
+    public Tile GetRandomRoomCenterTile()
+    {
+        if (rooms == null) { return null; }
+        if (rooms.Count == 0) { return null; }
+
+        RectangularRoom selectedRoom = rooms[Random.Range(0, rooms.Count)];
+
+        (int, int) center = selectedRoom.Center;
+        HexCoordinates coordinates = HexCoordinates.FromOffsetCoordinates(
+            center.Item1, center.Item2);
+
+        return GetTileAtHexCoords(coordinates);
     }
 
 }

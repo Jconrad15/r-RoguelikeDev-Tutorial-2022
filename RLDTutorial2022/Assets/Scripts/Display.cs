@@ -1,7 +1,6 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
 public class Display : MonoBehaviour
 {
@@ -18,6 +17,8 @@ public class Display : MonoBehaviour
     private List<GameObject> createdTileGOs;
     private List<GameObject> createdEntityGOs;
     private List<Entity> entities;
+
+    private Action<GameObject> cbOnPlayerGOCreated;
 
     public void CreateInitialGrid(TileGrid tileGrid)
     {
@@ -88,6 +89,11 @@ public class Display : MonoBehaviour
 
         tile.entity.RegisterOnEntityMoved(OnEntityMoved);
         entities.Add(tile.entity);
+
+        if (tile.entity.isPlayer)
+        {
+            cbOnPlayerGOCreated?.Invoke(entityGO);
+        }
     }
 
     private void OnEntityMoved(Entity movedEntity)
@@ -109,5 +115,15 @@ public class Display : MonoBehaviour
         Vector3 position = hexCoords.GetWorldPosition();
 
         entityGO.transform.position = position;
+    }
+
+    public void RegisterOnPlayerGOCreated(Action<GameObject> callbackfunc)
+    {
+        cbOnPlayerGOCreated += callbackfunc;
+    }
+
+    public void UnregisterOnPlayerGOCreated(Action<GameObject> callbackfunc)
+    {
+        cbOnPlayerGOCreated -= callbackfunc;
     }
 }

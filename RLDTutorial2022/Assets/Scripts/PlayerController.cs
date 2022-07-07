@@ -14,7 +14,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnPlayerCreated(Entity player)
     {
-        Debug.Log("Player set");
         this.player = player;
     }
 

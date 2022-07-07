@@ -120,8 +120,8 @@ public class TileGrid
         {
             int radius = Random.Range(3, 7);
 
-            int x = Random.Range(radius + 1, width - radius);
-            int y = Random.Range(radius + 1, height - radius);
+            int x = Random.Range(radius + 1, width - radius - 1);
+            int y = Random.Range(radius + 1, height - radius - 1);
             (int, int) center = (x, y);
 
             HexRoom newRoom = new HexRoom(radius, center);

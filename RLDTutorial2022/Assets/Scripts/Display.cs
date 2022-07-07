@@ -106,7 +106,7 @@ public class Display : MonoBehaviour
             if (entityGOData[i].ContainsEntity(movedEntity))
             {
                 LerpMovement lm = entityGOData[i].entityMovement;
-                StartCoroutine(lm.UpdatePosition(movedEntity));
+                lm.UpdatePosition(movedEntity);
                 return;
             }
         }

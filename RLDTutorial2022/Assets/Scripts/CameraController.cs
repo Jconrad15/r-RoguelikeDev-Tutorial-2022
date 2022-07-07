@@ -6,6 +6,11 @@ public class CameraController : MonoBehaviour
 {
     private GameObject playerGO;
     private readonly float defaultZ = -10f;
+    private readonly float speed = 2f;
+    private readonly float distanceThreshold = 0.01f;
+    
+    private readonly float maxDistance = 100f;
+    private bool coroutineRunning = false;
 
     private void Start()
     {
@@ -16,6 +21,7 @@ public class CameraController : MonoBehaviour
     private void OnPlayerCreated(GameObject playerGO)
     {
         this.playerGO = playerGO;
+        transform.position = GetPlayerPos();
     }
 
     private void Update()
@@ -27,9 +33,46 @@ public class CameraController : MonoBehaviour
 
     private void FollowPlayer()
     {
-        Vector3 newPos = playerGO.transform.position;
-        newPos.z = defaultZ;
+        Vector3 playerPos = GetPlayerPos();
+        float distance = Vector3.Distance(
+            transform.position, playerPos);
 
-        transform.position = newPos;
+        if (distance > maxDistance &&
+            coroutineRunning == false)
+        {
+            StopAllCoroutines();
+            StartCoroutine(LerpToPlayerPos());
+        }
+    }
+
+    private IEnumerator LerpToPlayerPos()
+    {
+        coroutineRunning = true;
+
+        float distance = Vector3.Distance(
+            transform.position, GetPlayerPos());
+
+        while (distance >= distanceThreshold)
+        {
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                GetPlayerPos(),
+                speed * distance * Time.deltaTime);
+
+            distance = Vector3.Distance(
+                transform.position, GetPlayerPos());
+            yield return null;
+        }
+
+        // set to end player pos
+        transform.position = GetPlayerPos();
+        coroutineRunning = false;
+    }
+
+    private Vector3 GetPlayerPos()
+    {
+        Vector3 playerPos = playerGO.transform.position;
+        playerPos.z = defaultZ;
+        return playerPos;
     }
 }

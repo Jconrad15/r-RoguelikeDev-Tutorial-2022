@@ -15,10 +15,10 @@ public class Display : MonoBehaviour
     private GameObject entityContainer;
 
     private List<GameObject> createdTileGOs;
-    private List<GameObject> createdEntityGOs;
-    private List<Entity> entities;
+    private List<EntityGOData> entityGOData;
 
     private Action<GameObject> cbOnPlayerGOCreated;
+
 
     public void CreateInitialGrid(TileGrid tileGrid)
     {
@@ -26,8 +26,7 @@ public class Display : MonoBehaviour
         int height = tileGrid.height;
 
         createdTileGOs = new List<GameObject>();
-        createdEntityGOs = new List<GameObject>();
-        entities = new List<Entity>();
+        entityGOData = new List<EntityGOData>();
 
         for (int y = 0; y < height; y++)
         {
@@ -85,44 +84,45 @@ public class Display : MonoBehaviour
 
         entityGO.GetComponent<EntityText>().SetText(tile.entity);
 
-        createdEntityGOs.Add(entityGO);
-
         tile.entity.RegisterOnEntityMoved(OnEntityMoved);
-        entities.Add(tile.entity);
 
         if (tile.entity.isPlayer)
         {
             cbOnPlayerGOCreated?.Invoke(entityGO);
         }
+
+        EntityGOData data = new EntityGOData(
+            entityGO, 
+            tile.entity,
+            entityGO.GetComponent<LerpMovement>());
+
+        entityGOData.Add(data);
     }
 
     private void OnEntityMoved(Entity movedEntity)
     {
-        int index = entities.FindIndex(a => a == movedEntity);
-
-        if (index == -1)
+        for (int i = 0; i < entityGOData.Count; i++)
         {
-            Debug.LogError("Moved Entity is not stored in display list");
-            return;
+            if (entityGOData[i].ContainsEntity(movedEntity))
+            {
+                LerpMovement lm = entityGOData[i].entityMovement;
+                StartCoroutine(lm.UpdatePosition(movedEntity));
+                return;
+            }
         }
 
-        UpdatePosition(createdEntityGOs[index], movedEntity);
+        Debug.LogError(
+            "Moved Entity is not stored in display list");
     }
 
-    private void UpdatePosition(GameObject entityGO, Entity entity)
-    {
-        HexCoordinates hexCoords = entity.CurrentTile.Coordinates;
-        Vector3 position = hexCoords.GetWorldPosition();
-
-        entityGO.transform.position = position;
-    }
-
-    public void RegisterOnPlayerGOCreated(Action<GameObject> callbackfunc)
+    public void RegisterOnPlayerGOCreated(
+        Action<GameObject> callbackfunc)
     {
         cbOnPlayerGOCreated += callbackfunc;
     }
 
-    public void UnregisterOnPlayerGOCreated(Action<GameObject> callbackfunc)
+    public void UnregisterOnPlayerGOCreated(
+        Action<GameObject> callbackfunc)
     {
         cbOnPlayerGOCreated -= callbackfunc;
     }

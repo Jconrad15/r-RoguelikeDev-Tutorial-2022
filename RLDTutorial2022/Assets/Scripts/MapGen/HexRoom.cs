@@ -36,7 +36,8 @@ public class HexRoom : Room
                     {
                         // Add this hex spot to the inner area
                         HexCoordinates hex = new HexCoordinates(
-                            q + centerHexCoords.X, r +centerHexCoords.Z);
+                            q + centerHexCoords.X,
+                            r + centerHexCoords.Z);
 
                         int distance =
                             HexCoordinates.HexDistance(
@@ -46,8 +47,8 @@ public class HexRoom : Room
                             continue;
                         }
 
-                        (int x, int y) = 
-                            HexCoordinates.ToOffsetCoordinates(hex);
+                        (int x, int y) = HexCoordinates
+                            .ToOffsetCoordinates(hex);
 
                         InnerArea.Add((x, y));
                     }

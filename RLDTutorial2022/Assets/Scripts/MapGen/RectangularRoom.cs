@@ -21,7 +21,8 @@ public class RectangularRoom : Room
     /// <param name="minY"></param>
     /// <param name="width"></param>
     /// <param name="height"></param>
-    public RectangularRoom(int minX, int minY, int width, int height)
+    public RectangularRoom(
+        int minX, int minY, int width, int height)
     {
         X1 = minX;
         Y1 = minY;

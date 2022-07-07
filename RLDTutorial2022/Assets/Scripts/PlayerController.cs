@@ -4,6 +4,19 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField]
+    private KeyCode eastKey = KeyCode.S;
+    [SerializeField]
+    private KeyCode westKey = KeyCode.A;
+    [SerializeField]
+    private KeyCode northeastKey = KeyCode.W;
+    [SerializeField]
+    private KeyCode northwestKey = KeyCode.Q;
+    [SerializeField]
+    private KeyCode southeastKey = KeyCode.X;
+    [SerializeField]
+    private KeyCode southwestKey = KeyCode.Z;
+
     private Entity player;
 
     private void Start()
@@ -25,8 +38,8 @@ public class PlayerController : MonoBehaviour
 
     private void CheckPlayerMovement()
     {
-        bool west = Input.GetKeyDown(KeyCode.A);
-        bool east = Input.GetKeyDown(KeyCode.S);
+        bool west = Input.GetKeyDown(westKey);
+        bool east = Input.GetKeyDown(eastKey);
         if (west || east)
         {
             // move west or east
@@ -42,8 +55,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        bool northwest = Input.GetKeyDown(KeyCode.Q);
-        bool southeast = Input.GetKeyDown(KeyCode.X);
+        bool northwest = Input.GetKeyDown(northwestKey);
+        bool southeast = Input.GetKeyDown(southeastKey);
         if (northwest || southeast)
         {
             // move northwest or southeast
@@ -58,8 +71,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        bool southwest = Input.GetKeyDown(KeyCode.Z);
-        bool northeast = Input.GetKeyDown(KeyCode.W);
+        bool southwest = Input.GetKeyDown(southwestKey);
+        bool northeast = Input.GetKeyDown(northeastKey);
         if (southwest || northeast)
         {
             // move southwest or northeast

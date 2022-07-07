@@ -899,6 +899,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98c9d03905fdabe46bb0201713d0acc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eastKey: 115
+  westKey: 97
+  northeastKey: 119
+  northwestKey: 113
+  southeastKey: 120
+  southwestKey: 122
 --- !u!4 &1074856121
 Transform:
   m_ObjectHideFlags: 0

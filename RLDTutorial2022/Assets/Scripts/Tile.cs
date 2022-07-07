@@ -7,11 +7,15 @@ public class Tile
 {
     public Color backgroundColor;
     public static readonly Color defaultBackgroundColor =
-        new Color32(50, 50, 150, 255);
+        new Color32(15, 76, 92, 255);
 
     public Color foregroundColor;
     public static readonly Color defaultForegroundColor =
-        Color.white;
+        new Color32(251, 139, 36, 255);
+
+    public static readonly Color defaultWallBackgroundColor =
+        new Color32(95, 15, 64, 255);
+
 
     public HexCoordinates Coordinates { get; private set; }
 
@@ -66,7 +70,7 @@ public class Tile
 
     private void CreateWallTile()
     {
-        backgroundColor = new Color32(0, 0, 100, 255);
+        backgroundColor = defaultWallBackgroundColor;
         foregroundColor = defaultForegroundColor;
         IsWalkable = false;
         IsTransparent = false;

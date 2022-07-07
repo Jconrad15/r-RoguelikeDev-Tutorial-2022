@@ -50,9 +50,9 @@ public class TileGrid
                 // debug
                 if (IsCenterPoint(x, y))
                 {
-                    Tiles[i].backgroundColor = Color.magenta;
+                    Tiles[i].backgroundColor = 
+                        new Color32(11, 37, 69, 255);
                 }
-
 
                 i++;
             }

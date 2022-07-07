@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Room that is in xy offset coordinates.
 /// </summary>
-public class RectangularRoom
+public class RectangularRoom : Room
 {
     public int X1 { get; private set; }
     public int Y1 { get; private set; }
@@ -13,8 +13,6 @@ public class RectangularRoom
     public int Y2 { get; private set; }
 
     public (int, int) Center { get; private set; }
-
-    public (List<int>, List<int>) InnerArea { get; private set; }
 
     /// <summary>
     /// Creates a room based on minX, minY positions
@@ -41,35 +39,20 @@ public class RectangularRoom
         Center = (centerX, centerY);
     }
 
-    private void CreateInnerArea()
+    protected override void CreateInnerArea()
     {
-        List<int> x = new List<int>();
-        for (int i = X1 + 1; i < X2; i++)
-        {
-            x.Add(i);
-        }
+        InnerArea = new List<(int, int)>();
 
-        List<int> y = new List<int>();
-        for (int i = Y1 + 1; i < Y2; i++)
+        for (int x = X1 + 1; x < X2; x++)
         {
-            y.Add(i);
+            for (int y = Y1 + 1; y < Y2; y++)
+            {
+                InnerArea.Add((x, y));
+            }
         }
-
-        InnerArea = (x, y);
     }
 
-    public bool Contains(int x, int y)
-    {
-        if (InnerArea.Item1.Contains(x) &&
-            InnerArea.Item2.Contains(y))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    public bool Intersects(RectangularRoom otherRoom)
+    public bool IntersectsRectangularRoom(RectangularRoom otherRoom)
     {
         return X1 <= otherRoom.X2 &&
                X2 >= otherRoom.X1 &&

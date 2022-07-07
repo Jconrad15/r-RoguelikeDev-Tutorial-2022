@@ -8,7 +8,8 @@ public class TileGrid
     public int height;
 
 	public Tile[] Tiles { get; private set; }
-    private List<RectangularRoom> rooms = new List<RectangularRoom>();
+    private List<RectangularRoom> rectRooms = new List<RectangularRoom>();
+    private List<HexRoom> hexRooms = new List<HexRoom>();
     private List<Hallway> hallways = new List<Hallway>();
 
     public TileGrid(int width, int height)
@@ -60,41 +61,81 @@ public class TileGrid
 
     private bool IsCenterPoint(int x, int y)
     {
-        foreach (RectangularRoom room in rooms)
+        foreach (RectangularRoom room in rectRooms)
         {
             if (room.Center.Item1 == x && room.Center.Item2 == y)
             {
                 return true;
             }
         }
+        foreach(HexRoom room in hexRooms)
+        {
+            if (room.Center.Item1 == x && room.Center.Item2 == y)
+            {
+                return true;
+            }
+        }
+
         return false;
     }
 
     private void CreateHallways()
     {
-        if (rooms == null) { return; }
-        if (rooms.Count < 2) { return; }
-
-        for (int i = 1; i < rooms.Count; i++)
+        // Rectangular rooms
+        for (int i = 1; i < rectRooms.Count; i++)
         {
             hallways.Add(new Hallway(
-                rooms[i - 1].Center, rooms[i].Center));
+                rectRooms[i - 1].Center, rectRooms[i].Center));
         }
-
-        // also add hallway from first to last room
+        // also add hallway from first to last rectRoom
         hallways.Add(new Hallway(
-            rooms[0].Center, rooms[rooms.Count - 1].Center));
+            rectRooms[0].Center, rectRooms[rectRooms.Count - 1].Center));
+
+        // Hexagonal rooms
+        for (int i = 1; i < hexRooms.Count; i++)
+        {
+            hallways.Add(new Hallway(
+                hexRooms[i - 1].Center, hexRooms[i].Center));
+        }
+        
+        
+        // also add hallway from last rect room to first hex room
+        hallways.Add(new Hallway(
+            rectRooms[0].Center, hexRooms[hexRooms.Count - 1].Center));
+
     }
 
     private void CreateRooms()
     {
-        Debug.Log("CreateRooms");
+        int rectRoomCount = Random.Range(7, 9);
+        int hexRoomCount = Random.Range(5, 8);
 
-        int roomCount = 4;//Random.Range(4, 5);
+        CreateRectRooms(rectRoomCount);
+        CreateHexRooms(hexRoomCount);
+    }
 
+    private void CreateHexRooms(int hexRoomCount)
+    {
+        for (int i = 0; i < hexRoomCount; i++)
+        {
+            int radius = Random.Range(3, 7);
+
+            int x = Random.Range(radius + 1, width - radius);
+            int y = Random.Range(radius + 1, height - radius);
+            (int, int) center = (x, y);
+
+            HexRoom newRoom = new HexRoom(radius, center);
+
+            // Add room even if there are intersections
+            hexRooms.Add(newRoom);
+        }
+    }
+
+    private void CreateRectRooms(int rectRoomCount)
+    {
         int maxIterations = 100;
 
-        for (int i = 0; i < roomCount; i++)
+        for (int i = 0; i < rectRoomCount; i++)
         {
             int counter = 0;
             bool isRoomCreated = false;
@@ -111,9 +152,8 @@ public class TileGrid
                 // Add room if no intersections
                 if (IntersectionCheck(newRoom) == false)
                 {
-                    rooms.Add(newRoom);
+                    rectRooms.Add(newRoom);
                     isRoomCreated = true;
-                    Debug.Log("Room added");
                 }
 
                 // Too many loop - exit
@@ -133,9 +173,9 @@ public class TileGrid
     /// <returns></returns>
     private bool IntersectionCheck(RectangularRoom newRoom)
     {
-        foreach (RectangularRoom room in rooms)
+        foreach (RectangularRoom room in rectRooms)
         {
-            if (room.Intersects(newRoom))
+            if (room.IntersectsRectangularRoom(newRoom))
             {
                 return true;
             }
@@ -159,9 +199,17 @@ public class TileGrid
 
     private bool IsPointInRoom(int x, int y)
     {
-        foreach (RectangularRoom room in rooms)
+        foreach (RectangularRoom rectRoom in rectRooms)
         {
-            if (room.Contains(x, y))
+            if (rectRoom.Contains(x, y))
+            {
+                return true;
+            }
+        }
+
+        foreach(HexRoom hexRoom in hexRooms)
+        {
+            if (hexRoom.Contains(x, y))
             {
                 return true;
             }
@@ -241,10 +289,10 @@ public class TileGrid
     /// <returns></returns>
     public Tile GetRandomRoomCenterTile()
     {
-        if (rooms == null) { return null; }
-        if (rooms.Count == 0) { return null; }
+        if (rectRooms == null) { return null; }
+        if (rectRooms.Count == 0) { return null; }
 
-        RectangularRoom selectedRoom = rooms[Random.Range(0, rooms.Count)];
+        RectangularRoom selectedRoom = rectRooms[Random.Range(0, rectRooms.Count)];
 
         (int, int) center = selectedRoom.Center;
 

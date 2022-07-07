@@ -12,6 +12,8 @@ public class CameraController : MonoBehaviour
     private readonly float maxDistance = 100f;
     private bool coroutineRunning = false;
 
+    private bool isDebugZoomOut = false;
+
     private void Start()
     {
         FindObjectOfType<Display>()
@@ -27,6 +29,16 @@ public class CameraController : MonoBehaviour
     private void Update()
     {
         if (playerGO == null) { return; }
+
+        // DebugONLY
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            transform.position = new Vector3(368, 368, defaultZ);
+            Camera.main.orthographicSize = 380f;
+            isDebugZoomOut = true;
+        }
+
+        if (isDebugZoomOut) { return; }
 
         FollowPlayer();
     }

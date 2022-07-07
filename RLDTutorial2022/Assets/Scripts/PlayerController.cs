@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     private void CheckPlayerMovement()
     {
         bool west = Input.GetKeyDown(KeyCode.A);
-        bool east = Input.GetKeyDown(KeyCode.D);
+        bool east = Input.GetKeyDown(KeyCode.S);
         if (west || east)
         {
             // move west or east
@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        bool northwest = Input.GetKeyDown(KeyCode.W);
+        bool northwest = Input.GetKeyDown(KeyCode.Q);
         bool southeast = Input.GetKeyDown(KeyCode.X);
         if (northwest || southeast)
         {
@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
         }
 
         bool southwest = Input.GetKeyDown(KeyCode.Z);
-        bool northeast = Input.GetKeyDown(KeyCode.E);
+        bool northeast = Input.GetKeyDown(KeyCode.W);
         if (southwest || northeast)
         {
             // move southwest or northeast

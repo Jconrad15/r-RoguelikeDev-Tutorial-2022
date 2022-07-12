@@ -1,10 +1,12 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public enum TileType { Floor, Wall };
 public class Tile
 {
+    private Action<Tile> cbOnVisibilityChanged;
+
     public Color backgroundColor;
     public static readonly Color defaultBackgroundColor =
         new Color32(15, 76, 92, 255);
@@ -25,7 +27,14 @@ public class Tile
     public bool IsWalkable { get; private set; }
     public bool IsTransparent { get; private set; }
 
-    public Tile(
+    public VisibilityLevel VisibilityLevel { get; private set; }
+    public void ChangeVisibilityLevel(VisibilityLevel vl)
+    {
+        VisibilityLevel = vl;
+        cbOnVisibilityChanged?.Invoke(this);
+    }
+
+/*    public Tile(
         HexCoordinates coordinates,
         bool isWalkable = false,
         bool isTransparent = false,
@@ -39,12 +48,13 @@ public class Tile
         foregroundColor = defaultForegroundColor;
         IsWalkable = isWalkable;
         IsTransparent = isTransparent;
-    }
+    }*/
 
     public Tile(TileType type, HexCoordinates coordinates)
     {
         Coordinates = coordinates;
         entity = null;
+        VisibilityLevel = VisibilityLevel.NotVisible;
 
         switch (type)
         {
@@ -56,7 +66,6 @@ public class Tile
                 CreateWallTile();
                 break;
         }
-
     }
 
     private void CreateFloorTile()
@@ -77,4 +86,15 @@ public class Tile
         Character = '#';
     }
 
+    public void RegisterOnVisibilityChanged(
+        Action<Tile> callbackfunc)
+    {
+        cbOnVisibilityChanged += callbackfunc;
+    }
+
+    public void UnregisterOnVisibilityChanged(
+        Action<Tile> callbackfunc)
+    {
+        cbOnVisibilityChanged -= callbackfunc;
+    }
 }

@@ -6,6 +6,7 @@ public class Entity
 {
     public bool isPlayer = false;
     public string character;
+    public int visibilityDistance = 5;
 
     private Action<Entity> cbOnEntityMoved;
 

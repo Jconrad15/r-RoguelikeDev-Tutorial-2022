@@ -14,18 +14,18 @@ public class Display : MonoBehaviour
     [SerializeField]
     private GameObject entityContainer;
 
-    private List<GameObject> createdTileGOs;
+    private List<TileGOData> tileGOData;
     private List<EntityGOData> entityGOData;
 
     private Action<GameObject> cbOnPlayerGOCreated;
 
-
-    public void CreateInitialGrid(TileGrid tileGrid)
+    public void CreateInitialGrid()
     {
+        TileGrid tileGrid = GameManager.Instance.Grid;
         int width = tileGrid.width;
         int height = tileGrid.height;
 
-        createdTileGOs = new List<GameObject>();
+        tileGOData = new List<TileGOData>();
         entityGOData = new List<EntityGOData>();
 
         for (int y = 0; y < height; y++)
@@ -61,13 +61,46 @@ public class Display : MonoBehaviour
         GameObject tileGO = Instantiate(
             tilePrefab, tileContainer.transform);
         tileGO.transform.localPosition = position;
-        
+
+        SetTileColor(tile, tileGO);
+        tileGOData.Add(new TileGOData(tileGO, tile));
+
+        tile.RegisterOnVisibilityChanged(OnTileVisibilityChanged);
+    }
+
+    private static void SetTileColor(Tile tile, GameObject tileGO)
+    {
         SpriteRenderer sr = tileGO.GetComponent<SpriteRenderer>();
-        sr.color = tile.backgroundColor;
+
+        if (tile.VisibilityLevel ==
+            VisibilityLevel.NotVisible)
+        {
+            sr.color = new Color32(0, 0, 0, 255);
+        }
+        else if (tile.VisibilityLevel ==
+            VisibilityLevel.PreviouslySeen)
+        {
+            sr.color = Utility.DarkenColor(tile.backgroundColor);
+        }
+        else // Visible
+        {
+            sr.color = tile.backgroundColor;
+        }
 
         tileGO.GetComponent<TileText>().SetText(tile);
+    }
 
-        createdTileGOs.Add(tileGO);
+    private void OnTileVisibilityChanged(Tile t)
+    {
+        // Find gameobject for the tile
+        for (int i = 0; i < tileGOData.Count; i++)
+        {
+            if (tileGOData[i].ContainsEntity(t))
+            {
+                SetTileColor(t, tileGOData[i].tileGO);
+                break; // when found
+            }
+        }
     }
 
     private void CreateEntityGraphic(int x, int y, Tile tile)

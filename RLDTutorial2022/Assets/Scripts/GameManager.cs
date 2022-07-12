@@ -24,7 +24,10 @@ public class GameManager : MonoBehaviour
 
     public void GameStart(Color playerColor)
     {
+        // TODO: fix these calls. use event(s)
+
         EntityManager = FindObjectOfType<EntityManager>();
+        FindObjectOfType<FieldOfView>().InitializeFOV();
 
         // Create the grid of tiles
         Grid = new TileGrid(50, 50);
@@ -33,12 +36,7 @@ public class GameManager : MonoBehaviour
         EntityManager.CreatePlayer(
             Grid.GetRandomRoomCenterTile(), playerColor);
 
-        // TODO: fix this call. use event
-        FindObjectOfType<Display>().CreateInitialGrid(Grid);
-
-
+        FindObjectOfType<Display>().CreateInitialGrid();
     }
-
-
 
 }

@@ -239,7 +239,8 @@ public class TileGrid
         return GetTileAtPos(offsetCoordX, offsetCoordY);
     }
 
-    public Tile GetTileInDirection(Tile startTile, Direction direction)
+    public Tile GetTileInDirection(
+        Tile startTile, Direction direction)
     {
         HexCoordinates startCoords = startTile.Coordinates;
         HexCoordinates endCoords;

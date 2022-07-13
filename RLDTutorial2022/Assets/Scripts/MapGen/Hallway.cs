@@ -36,7 +36,7 @@ public class Hallway
         HexCoordinates b = HexCoordinates
             .FromOffsetCoordinates(endPoint.Item1, endPoint.Item2);
 
-        int distance = HexCoordinates.HexDistance(a, b);
+        //int distance = HexCoordinates.HexDistance(a, b);
 
         for (int i = 0; i <= resolution; i++)
         {

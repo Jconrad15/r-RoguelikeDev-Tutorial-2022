@@ -50,14 +50,95 @@ public class FieldOfView : MonoBehaviour
                 }
                 else
                 {
+                    // The tile is currently in visibility range
+                    // need to check if there is a blocking wall
                     // Set as visible
-                    grid.Tiles[i].ChangeVisibilityLevel(
-                        VisibilityLevel.Visible);
+                    if (IsLineOfSightBlocked(currentHex, targetHex)
+                        == false)
+                    {
+                        grid.Tiles[i].ChangeVisibilityLevel(
+                            VisibilityLevel.Visible);
+                    }
+                    else if (grid.Tiles[i].VisibilityLevel ==
+                        VisibilityLevel.Visible)
+                    {
+                        grid.Tiles[i].ChangeVisibilityLevel(
+                            VisibilityLevel.PreviouslySeen);
+                    }
+
+
+
                 }
 
                 i++;
             }
         }
+    }
+
+    /// <summary>
+    /// Returns true if the line of sight between two hexes is blocked.
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <returns></returns>
+    private bool IsLineOfSightBlocked(
+        HexCoordinates a, HexCoordinates b)
+    {
+        int distance = HexCoordinates.HexDistance(a, b);
+        // Neighboring and same hexes are always visible
+        if (distance <= 1) { return false; }
+
+        int resolution = distance * 10;
+        // Sample points along path
+        for (int i = 0; i <= resolution; i++)
+        {
+            float t = i / (float)resolution;
+
+            float x = Mathf.Lerp(a.X, b.X, t);
+            float y = Mathf.Lerp(a.Y, b.Y, t);
+            float z = Mathf.Lerp(a.Z, b.Z, t);
+
+            int ix = Mathf.RoundToInt(x);
+            int iy = Mathf.RoundToInt(y);
+            int iz = Mathf.RoundToInt(z);
+
+            // Check for rounding errors
+            if (ix + iy + iz != 0)
+            {
+                float dX = Mathf.Abs(x - ix);
+                float dY = Mathf.Abs(y - iy);
+                float dZ = Mathf.Abs(-x - y - iz);
+
+                if (dX > dY && dX > dZ)
+                {
+                    ix = -iy - iz;
+                }
+                else if (dZ > dY)
+                {
+                    iz = -ix - iy;
+                }
+            }
+
+            // Get tile at lerped position
+            Tile intermediateTile = GameManager.Instance.Grid
+                .GetTileAtHexCoords(new HexCoordinates(ix, iz));
+
+            // If reach target, hex is not blocked
+            if (intermediateTile.Coordinates.X == b.X &&
+                intermediateTile.Coordinates.Y == b.Y &&
+                intermediateTile.Coordinates.Z == b.Z)
+            {
+                return false;
+            }
+
+            if (intermediateTile.IsTransparent == false)
+            {
+                return true; // is blocked
+            }
+
+        }
+
+        return false;
     }
 
 

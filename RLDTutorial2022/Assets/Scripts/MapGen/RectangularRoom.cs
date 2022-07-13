@@ -12,8 +12,6 @@ public class RectangularRoom : Room
     public int X2 { get; private set; }
     public int Y2 { get; private set; }
 
-    public (int, int) Center { get; private set; }
-
     /// <summary>
     /// Creates a room based on minX, minY positions
     /// </summary>

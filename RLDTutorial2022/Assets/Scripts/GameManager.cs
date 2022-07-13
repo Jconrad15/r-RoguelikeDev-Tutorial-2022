@@ -32,9 +32,9 @@ public class GameManager : MonoBehaviour
         // Create the grid of tiles
         Grid = new TileGrid(50, 50);
 
-        // Create the player
-        EntityManager.CreatePlayer(
-            Grid.GetRandomRoomCenterTile(), playerColor);
+        EntityManager.CreateEntities(
+            Grid,
+            playerColor);
 
         FindObjectOfType<Display>().CreateInitialGrid();
     }

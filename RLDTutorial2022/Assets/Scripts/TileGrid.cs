@@ -290,18 +290,62 @@ public class TileGrid
     /// <returns></returns>
     public Tile GetRandomRoomCenterTile()
     {
-        if (rectRooms == null) { return null; }
-        if (rectRooms.Count == 0) { return null; }
+        Room[] allRooms = GetAllRoomsArray();
+        if (allRooms == null)
+        {
+            return null;
+        }
 
-        RectangularRoom selectedRoom = rectRooms[Random.Range(0, rectRooms.Count)];
+        Room selectedRoom =
+            allRooms[Random.Range(0, allRooms.Length)];
 
         (int, int) center = selectedRoom.Center;
 
-        HexCoordinates coordinates = HexCoordinates.FromOffsetCoordinates(
-            center.Item1, center.Item2);
-
-        Debug.Log("player at " + coordinates.ToString());
         return GetTileAtPos(center.Item1, center.Item2);
     }
+
+    public Room[] GetAllRoomsArray()
+    {
+        if (rectRooms == null || hexRooms == null)
+        { return null; }
+        if (rectRooms.Count == 0 && hexRooms.Count == 0)
+        { return null; }
+
+        Room[] allRooms = new Room[rectRooms.Count + hexRooms.Count];
+        for (int i = 0; i < allRooms.Length; i++)
+        {
+            if (i < rectRooms.Count)
+            {
+                allRooms[i] = rectRooms[i];
+            }
+            else
+            {
+                allRooms[i] = hexRooms[i + rectRooms.Count];
+            }
+        }
+
+        return allRooms;
+    }
+
+    public Tile[] GetAllRoomCenterTiles()
+    {
+        Room[] allRooms = GetAllRoomsArray();
+        if (allRooms == null)
+        {
+            return null;
+        }
+
+        Tile[] roomCenterTiles = new Tile[allRooms.Length];
+        for (int i = 0; i < allRooms.Length; i++)
+        {
+            (int, int) center = allRooms[i].Center;
+            Tile t = GetTileAtPos(center.Item1, center.Item2);
+
+            roomCenterTiles[i] = t;
+        }
+
+        return roomCenterTiles;
+    }
+
 
 }

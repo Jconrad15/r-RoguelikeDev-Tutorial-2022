@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public static class Utility
 {
@@ -44,9 +43,9 @@ public static class Utility
     public static Color32 RandomColor()
     {
         return new Color32(
-            (byte)Random.Range(0, 255),
-            (byte)Random.Range(0, 255),
-            (byte)Random.Range(0, 255),
+            (byte)UnityEngine.Random.Range(0, 255),
+            (byte)UnityEngine.Random.Range(0, 255),
+            (byte)UnityEngine.Random.Range(0, 255),
             255);
     }
 
@@ -58,7 +57,27 @@ public static class Utility
     public static T GetRandomEnum<T>()
     {
         Array enumArray = Enum.GetValues(typeof(T));
-        T selectedEnum = (T)enumArray.GetValue(Random.Range(0, enumArray.Length));
+        T selectedEnum = (T)enumArray.GetValue(
+            UnityEngine.Random.Range(0, enumArray.Length));
         return selectedEnum;
+    }
+
+    /// <summary>
+    /// Shuffle array values.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="rng"></param>
+    /// <param name="array"></param>
+    public static void ShuffleArray<T>(T[] array)
+    {
+        var rng = new System.Random();
+        int n = array.Length;
+        while (n > 1)
+        {
+            int k = rng.Next(n--);
+            T temp = array[n];
+            array[n] = array[k];
+            array[k] = temp;
+        }
     }
 }

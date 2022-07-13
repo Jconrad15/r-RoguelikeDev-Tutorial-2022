@@ -6,11 +6,6 @@ public class HexRoom : Room
 {
     public int Radius { get; private set; }
 
-    /// <summary>
-    /// Center in offset coordinates.
-    /// </summary>
-    public (int, int) Center { get; private set; }
-
     public HexRoom(int radius, (int, int) center)
     {
         Radius = radius;

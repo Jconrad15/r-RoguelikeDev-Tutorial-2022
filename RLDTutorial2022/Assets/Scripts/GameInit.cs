@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class GameInit : MonoBehaviour
 {
-    [SerializeField]
-    private Color playerColor;
-
     public void StartButton()
     {
-        GameManager.Instance.GameStart(playerColor);
+        EntityFactory.Instance.InitializeFactory();
+        GameManager.Instance.GameStart();
     }
 
 }

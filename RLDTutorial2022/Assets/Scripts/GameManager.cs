@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     public TileGrid Grid { get; private set; }
 
-    public void GameStart(Color playerColor)
+    public void GameStart()
     {
         // TODO: fix these calls. use event(s)
 
@@ -32,9 +32,7 @@ public class GameManager : MonoBehaviour
         // Create the grid of tiles
         Grid = new TileGrid(50, 50);
 
-        EntityManager.CreateEntities(
-            Grid,
-            playerColor);
+        EntityManager.CreateEntities(Grid);
 
         FindObjectOfType<Display>().CreateInitialGrid();
     }

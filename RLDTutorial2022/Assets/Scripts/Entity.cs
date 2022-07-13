@@ -14,7 +14,19 @@ public class Entity
 
     public Color Color { get; private set; }
 
-    public Entity(
+    public bool BlocksMovement { get; private set; }
+
+    public Entity(string character, Color color,
+        bool isPlayer = false, bool blocksMovement = true)
+    {
+        this.isPlayer = isPlayer;
+        this.character = character;
+
+        Color = color;
+        BlocksMovement = blocksMovement;
+    }
+
+/*    public Entity(
         Tile currentTile, string character,
         Color color, bool isPlayer = false)
     {
@@ -23,8 +35,27 @@ public class Entity
         this.character = character;
         Color = color;
 
+        BlocksMovement = true;
+
         // Set self to tile
         currentTile.entity = this;
+    }*/
+
+    private Entity(Entity entityToClone, Tile targetTile)
+    {
+        CurrentTile = targetTile;
+        targetTile.entity = this;
+
+        isPlayer = entityToClone.isPlayer;
+        character = entityToClone.character;
+        Color = entityToClone.Color;
+        BlocksMovement = entityToClone.BlocksMovement;
+    }
+
+    public static Entity SpawnCloneAtTile(
+        Entity entityPrefab, Tile tile)
+    {
+        return new Entity(entityPrefab, tile);
     }
 
     public bool TryMove(Direction direction)
@@ -34,7 +65,15 @@ public class Entity
 
         if (neighborTile == null) { return false; }
         if (neighborTile.IsWalkable == false) { return false; }
-        if (neighborTile.entity != null) { return false; }
+        
+        // if entity exists and blocks movement, dont move
+        if (neighborTile.entity != null) 
+        { 
+            if (neighborTile.entity.BlocksMovement)
+            {
+                return false;
+            }
+        }
 
         MoveTo(neighborTile);
 

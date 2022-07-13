@@ -9,13 +9,13 @@ public class EntityManager : MonoBehaviour
 
     private Action<Entity> cbOnPlayerCreated;
 
-    public void CreateEntities(TileGrid grid, Color playerColor)
+    public void CreateEntities(TileGrid grid)
     {
         Tile[] roomCenters = grid.GetAllRoomCenterTiles();
         Room[] rooms = grid.GetAllRoomsArray();
 
 
-        CreatePlayer(playerColor, roomCenters[0]);
+        CreatePlayer(roomCenters[0]);
 
         // Create NPCs -- Use index 1 to N
         for (int i = 1; i < roomCenters.Length; i++)
@@ -24,10 +24,10 @@ public class EntityManager : MonoBehaviour
         }
     }
 
-    private void CreatePlayer(Color playerColor, Tile tile)
+    private void CreatePlayer(Tile tile)
     {
-        Entity newPlayer = new Entity(
-            tile, "@", playerColor, true);
+        Entity newPlayer = Entity.SpawnCloneAtTile(
+            EntityFactory.Instance.PlayerPrefab, tile);
 
         Debug.Log("player at " +
             tile.Coordinates.ToString());
@@ -52,6 +52,9 @@ public class EntityManager : MonoBehaviour
             Tile tile = grid.GetTileAtPos(
                 location.Item1, location.Item2);
 
+            // Skip if this tile already has an entity
+            if (tile.entity != null) { continue; }
+
             PlaceEntityAtTile(tile);
         }
 
@@ -59,8 +62,17 @@ public class EntityManager : MonoBehaviour
 
     private void PlaceEntityAtTile(Tile tile)
     {
-        Entity newEntity = new Entity(
-            tile, "g", Color.magenta);
+        Entity newEntity;
+        if (UnityEngine.Random.value < 0.8f)
+        {
+            newEntity = Entity.SpawnCloneAtTile(
+                EntityFactory.Instance.OrcPrefab, tile);
+        }
+        else
+        {
+            newEntity = Entity.SpawnCloneAtTile(
+                EntityFactory.Instance.TrollPrefab, tile);
+        }
 
         entities.Add(newEntity);
     }

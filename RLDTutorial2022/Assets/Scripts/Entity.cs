@@ -58,26 +58,30 @@ public class Entity
         return new Entity(entityPrefab, tile);
     }
 
-    public bool TryMove(Direction direction)
+    public void TryMove(Direction direction)
     {
         Tile neighborTile = GameManager.Instance.Grid
             .GetTileInDirection(CurrentTile, direction);
 
-        if (neighborTile == null) { return false; }
-        if (neighborTile.IsWalkable == false) { return false; }
+        if (neighborTile == null) { return; }
+        if (neighborTile.IsWalkable == false) { return; }
         
-        // if entity exists and blocks movement, dont move
+        // if entity exists and blocks movement, Attack instead
         if (neighborTile.entity != null) 
         { 
             if (neighborTile.entity.BlocksMovement)
             {
-                return false;
+                Attack(neighborTile);
+                return;
             }
         }
 
         MoveTo(neighborTile);
+    }
 
-        return true;
+    private void Attack(Tile neighborTile)
+    {
+
     }
 
     private void MoveTo(Tile destination)

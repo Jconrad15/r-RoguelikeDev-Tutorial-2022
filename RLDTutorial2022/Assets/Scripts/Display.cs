@@ -80,7 +80,7 @@ public class Display : MonoBehaviour
         else if (tile.VisibilityLevel ==
             VisibilityLevel.PreviouslySeen)
         {
-            sr.color = Utility.DarkenColor(tile.backgroundColor);
+            sr.color = Utility.DarkenColor(tile.backgroundColor, 2);
         }
         else // Visible
         {

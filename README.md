@@ -10,3 +10,6 @@
 
 # Parts 2-3 - Generic Entity, Map, and Dungeon
 ![GeneratedDungeon](https://user-images.githubusercontent.com/83470418/177862918-291de181-af10-4ee4-8ef0-f60bbbe85746.gif)
+
+# Parts 4-5 - Field of view and initial combat framework
+![FOV](https://user-images.githubusercontent.com/83470418/178847808-1b7cd6ba-3c5c-4b11-be65-127134e564d7.gif)

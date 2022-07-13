@@ -118,7 +118,7 @@ public class TileGrid
     {
         for (int i = 0; i < hexRoomCount; i++)
         {
-            int radius = Random.Range(3, 7);
+            int radius = Random.Range(2, 5);
 
             int x = Random.Range(radius + 1, width - radius - 1);
             int y = Random.Range(radius + 1, height - radius - 1);
@@ -141,8 +141,8 @@ public class TileGrid
             bool isRoomCreated = false;
             while (isRoomCreated == false)
             {
-                int roomWidth = Random.Range(8, 12);
-                int roomHeight = Random.Range(8, 12);
+                int roomWidth = Random.Range(5, 9);
+                int roomHeight = Random.Range(5, 9);
                 int minX = Random.Range(1, width - roomWidth);
                 int minY = Random.Range(1, height - roomHeight);
 

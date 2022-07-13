@@ -23,7 +23,7 @@ public class EntityText : MonoBehaviour
             selectedTextColor = entity.Color;
         }
 
-        text.SetText(entity.character);
+        text.SetText(entity.Character);
         text.color = selectedTextColor;
     }
 

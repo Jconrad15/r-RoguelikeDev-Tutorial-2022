@@ -43,13 +43,13 @@ public class PlayerController : MonoBehaviour
         if (west || east)
         {
             // move west or east
-            if (west) 
+            if (west)
             { 
-                player.TryMove(Direction.W);
+                player.TryAction(Direction.W);
             }
             else
             {
-                player.TryMove(Direction.E);
+                player.TryAction(Direction.E);
             }
 
             return;
@@ -62,11 +62,11 @@ public class PlayerController : MonoBehaviour
             // move northwest or southeast
             if (northwest)
             {
-                player.TryMove(Direction.NW);
+                player.TryAction(Direction.NW);
             }
             else
             {
-                player.TryMove(Direction.SE);
+                player.TryAction(Direction.SE);
             }
             return;
         }
@@ -78,11 +78,11 @@ public class PlayerController : MonoBehaviour
             // move southwest or northeast
             if (southwest)
             {
-                player.TryMove(Direction.SW);
+                player.TryAction(Direction.SW);
             }
             else
             {
-                player.TryMove(Direction.NE);
+                player.TryAction(Direction.NE);
             }
             return;
         }

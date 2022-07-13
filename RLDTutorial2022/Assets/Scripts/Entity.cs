@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Entity
 {
-    public bool isPlayer = false;
-    public string character;
-    public int visibilityDistance = 5;
+    public bool IsPlayer { get; private set; }
+    public string Character { get; private set; }
+    public int VisibilityDistance { get; private set; } = 5;
+
+    public string EntityName { get; private set; }
 
     private Action<Entity> cbOnEntityMoved;
 
@@ -17,37 +19,25 @@ public class Entity
     public bool BlocksMovement { get; private set; }
 
     public Entity(string character, Color color,
+        string entityName, int visibilityDistance = 5,
         bool isPlayer = false, bool blocksMovement = true)
     {
-        this.isPlayer = isPlayer;
-        this.character = character;
-
+        IsPlayer = isPlayer;
+        Character = character;
+        EntityName = entityName;
+        VisibilityDistance = visibilityDistance;
         Color = color;
         BlocksMovement = blocksMovement;
     }
-
-/*    public Entity(
-        Tile currentTile, string character,
-        Color color, bool isPlayer = false)
-    {
-        CurrentTile = currentTile;
-        this.isPlayer = isPlayer;
-        this.character = character;
-        Color = color;
-
-        BlocksMovement = true;
-
-        // Set self to tile
-        currentTile.entity = this;
-    }*/
 
     private Entity(Entity entityToClone, Tile targetTile)
     {
         CurrentTile = targetTile;
         targetTile.entity = this;
 
-        isPlayer = entityToClone.isPlayer;
-        character = entityToClone.character;
+        EntityName = entityToClone.EntityName;
+        IsPlayer = entityToClone.IsPlayer;
+        Character = entityToClone.Character;
         Color = entityToClone.Color;
         BlocksMovement = entityToClone.BlocksMovement;
     }
@@ -58,7 +48,7 @@ public class Entity
         return new Entity(entityPrefab, tile);
     }
 
-    public void TryMove(Direction direction)
+    public void TryAction(Direction direction)
     {
         Tile neighborTile = GameManager.Instance.Grid
             .GetTileInDirection(CurrentTile, direction);
@@ -81,7 +71,7 @@ public class Entity
 
     private void Attack(Tile neighborTile)
     {
-
+        Debug.Log("You kick the " + neighborTile.entity.EntityName);
     }
 
     private void MoveTo(Tile destination)

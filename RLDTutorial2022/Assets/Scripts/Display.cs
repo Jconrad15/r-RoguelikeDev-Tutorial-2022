@@ -138,7 +138,7 @@ public class Display : MonoBehaviour
 
         tile.entity.RegisterOnEntityMoved(OnEntityMoved);
 
-        if (tile.entity.isPlayer)
+        if (tile.entity.IsPlayer)
         {
             cbOnPlayerGOCreated?.Invoke(entityGO);
         }

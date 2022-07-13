@@ -38,7 +38,7 @@ public class FieldOfView : MonoBehaviour
                 int dist = HexCoordinates.HexDistance(
                     targetHex, currentHex);
 
-                if (dist > player.visibilityDistance)
+                if (dist > player.VisibilityDistance)
                 {
                     // out of range
                     if (grid.Tiles[i].VisibilityLevel ==

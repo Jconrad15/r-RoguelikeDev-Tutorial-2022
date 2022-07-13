@@ -34,22 +34,6 @@ public class Tile
         cbOnVisibilityChanged?.Invoke(this);
     }
 
-/*    public Tile(
-        HexCoordinates coordinates,
-        bool isWalkable = false,
-        bool isTransparent = false,
-        char character = ' ')
-    {
-        Coordinates = coordinates;
-        entity = null;
-
-        Character = character;
-        backgroundColor = defaultBackgroundColor;
-        foregroundColor = defaultForegroundColor;
-        IsWalkable = isWalkable;
-        IsTransparent = isTransparent;
-    }*/
-
     public Tile(TileType type, HexCoordinates coordinates)
     {
         Coordinates = coordinates;

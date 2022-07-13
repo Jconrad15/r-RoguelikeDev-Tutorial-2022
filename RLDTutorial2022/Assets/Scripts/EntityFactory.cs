@@ -16,10 +16,12 @@ public class EntityFactory : MonoBehaviour
 
     public void InitializeFactory()
     {
-        PlayerPrefab = new Entity("@", playerColor, true, true);
-        OrcPrefab = new Entity("o", new Color32(63,127,63,255));
-        TrollPrefab = new Entity("t", new Color32(0, 127, 0, 255));
-
+        PlayerPrefab =
+            new Entity("@", playerColor, "Player", 5, true, true);
+        OrcPrefab =
+            new Entity("o", new Color32(63,127,63,255),"Orc");
+        TrollPrefab =
+            new Entity("t", new Color32(0, 127, 0, 255), "Troll");
     }
 
     public static EntityFactory Instance { get; private set; }

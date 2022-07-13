@@ -10,8 +10,21 @@ public class EntityText : MonoBehaviour
         TextMeshProUGUI text =
             GetComponentInChildren<TextMeshProUGUI>();
 
+        Tile t = entity.CurrentTile;
+
+        Color selectedTextColor;
+        if (t.VisibilityLevel == VisibilityLevel.NotVisible ||
+            t.VisibilityLevel == VisibilityLevel.PreviouslySeen)
+        {
+            selectedTextColor = new Color32(0, 0, 0, 0);
+        }
+        else // Visible
+        {
+            selectedTextColor = entity.Color;
+        }
+
         text.SetText(entity.character);
-        text.color = entity.Color;
+        text.color = selectedTextColor;
     }
 
 

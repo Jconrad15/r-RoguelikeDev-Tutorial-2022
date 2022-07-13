@@ -95,12 +95,31 @@ public class Display : MonoBehaviour
         // Find gameobject for the tile
         for (int i = 0; i < tileGOData.Count; i++)
         {
-            if (tileGOData[i].ContainsEntity(t))
+            if (tileGOData[i].ContainsTile(t))
             {
                 SetTileColor(t, tileGOData[i].tileGO);
+
+                // if tile has an entity update entity visibility
+                if (t.entity != null)
+                {
+                    for (int j = 0; j < entityGOData.Count; j++)
+                    {
+                        if (entityGOData[j].ContainsEntity(t.entity))
+                        {
+                            UpdateEntityVisibility(entityGOData[j]);
+                        }
+                    }
+                }
+
                 break; // when found
             }
         }
+    }
+
+    private void UpdateEntityVisibility(EntityGOData entityGOData)
+    {
+        entityGOData.entityGO.GetComponent<EntityText>()
+            .SetText(entityGOData.entity);
     }
 
     private void CreateEntityGraphic(int x, int y, Tile tile)

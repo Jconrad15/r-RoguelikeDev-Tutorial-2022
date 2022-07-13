@@ -11,7 +11,7 @@ public struct TileGOData
         this.tile = tile;
     }
 
-    public bool ContainsEntity(Tile compareTile)
+    public bool ContainsTile(Tile compareTile)
     {
         return compareTile == tile;
     }

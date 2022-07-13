@@ -320,7 +320,7 @@ public class TileGrid
             }
             else
             {
-                allRooms[i] = hexRooms[i + rectRooms.Count];
+                allRooms[i] = hexRooms[i - rectRooms.Count];
             }
         }
 

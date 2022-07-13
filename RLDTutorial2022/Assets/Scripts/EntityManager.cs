@@ -20,7 +20,7 @@ public class EntityManager : MonoBehaviour
         // Create NPCs -- Use index 1 to N
         for (int i = 1; i < roomCenters.Length; i++)
         {
-            CreateEntitiesInRoom(rooms[i]);
+            CreateEntitiesInRoom(grid, rooms[i]);
         }
     }
 
@@ -36,22 +36,33 @@ public class EntityManager : MonoBehaviour
         cbOnPlayerCreated?.Invoke(newPlayer);
     }
 
-    private void CreateEntitiesInRoom(Room room)
+    private void CreateEntitiesInRoom(TileGrid grid, Room room)
     {
         int entityCount = 2;
         List<(int, int)> locations = room.InnerArea;
 
         for (int i = 0; i < entityCount; i++)
         {
-            int index =
-                UnityEngine.Random.Range(0, locations.Count);
-            (int, int) point = locations[index];
+            // Determine index and remove from list
+            int index = UnityEngine.Random.Range(
+                0, locations.Count);
+            (int, int) location = locations[index];
+            locations.RemoveAt(index);
 
+            Tile tile = grid.GetTileAtPos(
+                location.Item1, location.Item2);
 
-
+            PlaceEntityAtTile(tile);
         }
 
+    }
 
+    private void PlaceEntityAtTile(Tile tile)
+    {
+        Entity newEntity = new Entity(
+            tile, "g", Color.magenta);
+
+        entities.Add(newEntity);
     }
 
     public void RegisterOnPlayerCreated(

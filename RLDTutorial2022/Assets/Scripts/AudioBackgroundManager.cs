@@ -23,6 +23,9 @@ public class AudioBackgroundManager : MonoBehaviour
 
     public void OnEnable()
     {
+        // Shuffle audioclips
+        Utility.ShuffleArray(audioClips);
+
         audioSources = GetComponents<AudioSource>();
         nextStartTime = AudioSettings.dspTime + 0.2;
 

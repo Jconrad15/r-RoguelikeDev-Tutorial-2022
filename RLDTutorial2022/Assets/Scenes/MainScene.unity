@@ -1345,7 +1345,9 @@ MonoBehaviour:
   audioClips:
   - {fileID: 8300000, guid: 950fdfb4154099243a31b20de2424f8a, type: 3}
   - {fileID: 8300000, guid: 9e91ed29993c91144ae5d32b15f543dd, type: 3}
+  - {fileID: 8300000, guid: a50672ea645afb840bc704d85a9f8dcb, type: 3}
   - {fileID: 8300000, guid: 6b6012d852445bf4d9dac570fc1a9541, type: 3}
+  - {fileID: 8300000, guid: 3a0e6681f88030d478f0ff9a41db6391, type: 3}
   audioMixer: {fileID: 24100000, guid: 56ffb76504441b94eaf18303096a5a5b, type: 2}
 --- !u!1 &955287492
 GameObject:

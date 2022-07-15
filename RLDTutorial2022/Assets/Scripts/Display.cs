@@ -17,7 +17,9 @@ public class Display : MonoBehaviour
     private List<TileGOData> tileGOData;
     private List<EntityGOData> entityGOData;
 
-    private Action<GameObject> cbOnPlayerGOCreated;
+    private Action cbOnPlayerGOCreated;
+
+    public GameObject PlayerGO { get; private set; }
 
     public void CreateInitialGrid()
     {
@@ -140,11 +142,12 @@ public class Display : MonoBehaviour
 
         if (tile.entity.IsPlayer)
         {
-            cbOnPlayerGOCreated?.Invoke(entityGO);
+            PlayerGO = entityGO;
+            cbOnPlayerGOCreated?.Invoke();
         }
 
         EntityGOData data = new EntityGOData(
-            entityGO, 
+            entityGO,
             tile.entity,
             entityGO.GetComponent<LerpMovement>());
 
@@ -168,13 +171,13 @@ public class Display : MonoBehaviour
     }
 
     public void RegisterOnPlayerGOCreated(
-        Action<GameObject> callbackfunc)
+        Action callbackfunc)
     {
         cbOnPlayerGOCreated += callbackfunc;
     }
 
     public void UnregisterOnPlayerGOCreated(
-        Action<GameObject> callbackfunc)
+        Action callbackfunc)
     {
         cbOnPlayerGOCreated -= callbackfunc;
     }

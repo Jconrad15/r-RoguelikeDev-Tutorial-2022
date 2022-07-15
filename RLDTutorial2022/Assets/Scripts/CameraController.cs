@@ -14,15 +14,17 @@ public class CameraController : MonoBehaviour
 
     private bool isDebugZoomOut = false;
 
+    private Display display;
+
     private void Start()
     {
-        FindObjectOfType<Display>()
-            .RegisterOnPlayerGOCreated(OnPlayerCreated);
+        display = FindObjectOfType<Display>();
+        display.RegisterOnPlayerGOCreated(OnPlayerCreated);
     }
 
-    private void OnPlayerCreated(GameObject playerGO)
+    private void OnPlayerCreated()
     {
-        this.playerGO = playerGO;
+        playerGO = display.PlayerGO;
         transform.position = GetPlayerPos();
     }
 

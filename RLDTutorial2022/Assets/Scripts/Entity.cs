@@ -11,6 +11,7 @@ public class Entity
     public string EntityName { get; private set; }
 
     private Action<Entity> cbOnEntityMoved;
+    private Action<Entity, Direction> cbOnEntityAttack;
 
     public Tile CurrentTile { get; private set; }
 
@@ -61,7 +62,7 @@ public class Entity
         { 
             if (neighborTile.entity.BlocksMovement)
             {
-                Attack(neighborTile);
+                Attack(neighborTile, direction);
                 return;
             }
         }
@@ -69,9 +70,12 @@ public class Entity
         MoveTo(neighborTile);
     }
 
-    private void Attack(Tile neighborTile)
+    private void Attack(Tile neighborTile, Direction direction)
     {
-        Debug.Log("You kick the " + neighborTile.entity.EntityName);
+        Debug.Log("You kick the " +
+            neighborTile.entity.EntityName);
+
+        cbOnEntityAttack?.Invoke(this, direction);
     }
 
     private void MoveTo(Tile destination)
@@ -85,13 +89,27 @@ public class Entity
         cbOnEntityMoved?.Invoke(this);
     }
 
-    public void RegisterOnEntityMoved(Action<Entity> callbackfunc)
+    public void RegisterOnEntityMoved(
+        Action<Entity> callbackfunc)
     {
         cbOnEntityMoved += callbackfunc;
     }
 
-    public void UnregisterOnEntityMoved(Action<Entity> callbackfunc)
+    public void UnregisterOnEntityMoved(
+        Action<Entity> callbackfunc)
     {
         cbOnEntityMoved -= callbackfunc;
+    }
+
+    public void RegisterOnEntityAttack(
+        Action<Entity, Direction> callbackfunc)
+    {
+        cbOnEntityAttack += callbackfunc;
+    }
+
+    public void UnregisterOnEntityAttack(
+        Action<Entity, Direction> callbackfunc)
+    {
+        cbOnEntityAttack -= callbackfunc;
     }
 }

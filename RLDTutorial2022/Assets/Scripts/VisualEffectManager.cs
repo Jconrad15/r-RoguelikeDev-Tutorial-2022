@@ -41,7 +41,10 @@ public class VisualEffectManager : MonoBehaviour
     {
         Vector3 spawnPos = playerGO.transform.position;
         spawnPos.y -= 6f;
-        PlayVisualEffect(moveVisualEffectPrefab, spawnPos);
+        PlayVisualEffect(
+            moveVisualEffectPrefab,
+            spawnPos,
+            Vector2.zero);
     }
 
     private void OnPlayerAttack(
@@ -49,27 +52,33 @@ public class VisualEffectManager : MonoBehaviour
     {
         Vector3 spawnPos = playerGO.transform.position;
         // Add direction vector
-        Vector3 directionVector =
-            direction.UnitDirection() *
-            HexMetrics.innerRadius * 2;
-        spawnPos += directionVector;
+        Vector3 directionVector = direction.UnitDirection();
 
-        PlayVisualEffect(attackVisualEffectPrefab, spawnPos);
+        spawnPos += HexMetrics.innerRadius * directionVector;
+
+        PlayVisualEffect(
+            attackVisualEffectPrefab,
+            spawnPos,
+            directionVector);
     }
 
     private void PlayVisualEffect(
-        VisualEffect visualEffect, Vector3 spawnPos)
+        VisualEffect visualEffect, Vector3 spawnPos,
+        Vector2 direction)
     {
         // Clone prefab effect
-        VisualEffect newMoveEffect = Instantiate(
+        VisualEffect spawnedEffect = Instantiate(
             visualEffect,
             spawnPos,
             Quaternion.identity);
 
+        spawnedEffect.SetVector2("_direction", direction);
+
+
         // Create, play, destroy
-        newMoveEffect.gameObject.SetActive(true);
-        newMoveEffect.Play();
-        Destroy(newMoveEffect.gameObject, 0.7f);
+        spawnedEffect.gameObject.SetActive(true);
+        spawnedEffect.Play();
+        Destroy(spawnedEffect.gameObject, 0.7f);
     }
 
 

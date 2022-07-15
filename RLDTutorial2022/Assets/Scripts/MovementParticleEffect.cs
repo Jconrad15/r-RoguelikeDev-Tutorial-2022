@@ -6,15 +6,12 @@ using UnityEngine.VFX;
 public class MovementParticleEffect : MonoBehaviour
 {
     [SerializeField]
-    private GameObject effectGO;
-    private VisualEffect effect;
+    private VisualEffect moveVisualEffectPrefab;
 
     private GameObject playerGO;
 
     public void Initialize()
     {
-        effect = effectGO.GetComponent<VisualEffect>();
-
         GameManager.Instance.EntityManager
             .RegisterOnPlayerCreated(OnPlayerCreated);
     
@@ -25,8 +22,6 @@ public class MovementParticleEffect : MonoBehaviour
     private void OnPlayerGOCreated(GameObject playerGO)
     {
         this.playerGO = playerGO;
-        effectGO.transform.position = GetPlayerPos();
-        effectGO.SetActive(true);
     }
 
     private void OnPlayerCreated(Entity player)
@@ -41,8 +36,20 @@ public class MovementParticleEffect : MonoBehaviour
 
     private void PlayMoveParticleEffect(Entity player)
     {
-        effectGO.transform.position = GetPlayerPos();
-        effect.Play();
+        Vector3 spawnPos = GetPlayerPos();
+        spawnPos.y -= 5f;
+
+        // Clone prefab effect
+        VisualEffect newMoveEffect = Instantiate(
+            moveVisualEffectPrefab,
+            spawnPos,
+            Quaternion.identity);
+
+        newMoveEffect.gameObject.SetActive(true);
+
+        newMoveEffect.Play();
+
+        Destroy(newMoveEffect.gameObject, 1f);
     }
 
     private Vector3 GetPlayerPos()

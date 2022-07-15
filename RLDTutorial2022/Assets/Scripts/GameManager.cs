@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
 
         EntityManager = FindObjectOfType<EntityManager>();
         FindObjectOfType<FieldOfView>().InitializeFOV();
+        FindObjectOfType<MovementParticleEffect>().Initialize();
         FindObjectOfType<SoundManager>().Initialize();
 
         // Create the grid of tiles

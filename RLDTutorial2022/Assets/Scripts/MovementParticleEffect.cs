@@ -49,7 +49,7 @@ public class MovementParticleEffect : MonoBehaviour
 
         newMoveEffect.Play();
 
-        Destroy(newMoveEffect.gameObject, 1f);
+        Destroy(newMoveEffect.gameObject, 2f);
     }
 
     private Vector3 GetPlayerPos()

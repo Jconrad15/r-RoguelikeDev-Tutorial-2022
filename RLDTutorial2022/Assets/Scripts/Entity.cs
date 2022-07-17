@@ -31,6 +31,11 @@ public class Entity
         BlocksMovement = blocksMovement;
     }
 
+    /// <summary>
+    /// Copy clone Constructor.
+    /// </summary>
+    /// <param name="entityToClone"></param>
+    /// <param name="targetTile"></param>
     private Entity(Entity entityToClone, Tile targetTile)
     {
         CurrentTile = targetTile;

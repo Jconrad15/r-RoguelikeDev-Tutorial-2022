@@ -18,7 +18,7 @@ public class Fighter : BaseComponent
         }
     }
 
-    public Fighter(int maxHP, int defense, int power)
+    public Fighter(int maxHP, int defense, int power) : base()
     {
         this.maxHP = maxHP;
         this.defense = defense;
@@ -26,8 +26,18 @@ public class Fighter : BaseComponent
         HP = maxHP;
     }
 
+    public Fighter(Fighter other)
+    : base(other)
+    {
+        maxHP = other.maxHP;
+        defense = other.defense;
+        power = other.power;
+        HP = other.maxHP;
+    }
 
-
-
+    public override object Clone()
+    {
+        return new Fighter(this);
+    }
 
 }

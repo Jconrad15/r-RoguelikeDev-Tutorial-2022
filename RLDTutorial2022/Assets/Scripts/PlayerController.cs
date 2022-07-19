@@ -48,7 +48,6 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator PlayerProcessing()
     {
-        Debug.Log("PlayerProcessing");
         // Leave loop and end turn when player moves
         bool playerActed = false;
         while (playerActed == false)

@@ -21,7 +21,8 @@ public class AITurnController : MonoBehaviour
     private IEnumerator AIProcessing()
     {
         List<Entity> entities = entityManager.GetNonPlayerEntities();
-
+        Debug.Log("Start AI processing for " +
+            entities.Count + " entities");
         // Loop through each entities turn
         foreach (Entity entity in entities)
         {
@@ -30,13 +31,15 @@ public class AITurnController : MonoBehaviour
             int counter = 0;
             while (entityActed == false)
             {
+                counter++;
+
                 entityActed = CheckEntityAction(entity);
 
-                // Abort if tried action too many times
-                counter++;
-                if (counter > 10)
+                // Abort if tried action more than 2 times
+                if (counter > 2 && entityActed == false)
                 {
-                    Debug.LogWarning("Exited entity try action loop.");
+                    Debug.LogWarning(
+                        "Exited entity try action loop.");
                     break;
                 }
             }
@@ -53,13 +56,13 @@ public class AITurnController : MonoBehaviour
         if (entity.Components == null) { return false; }
 
         // Search components list for AI component
-        //if (entity.Components.OfType<AI>().Any()) { }
+        // if (entity.Components.OfType<AI>().Any()) { }
         foreach (BaseComponent c in entity.Components)
         {
             if (c is AI)
             {
                 AI ai = c as AI;
-                return ai.TryAction();
+                return ai.TryAction(entity);
             }
         }
 

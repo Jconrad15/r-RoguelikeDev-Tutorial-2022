@@ -32,7 +32,21 @@ public class Entity
         VisibilityDistance = visibilityDistance;
         Color = color;
         BlocksMovement = blocksMovement;
-        Components = components;
+
+        Components = new List<BaseComponent>();
+        for (int i = 0; i < components.Count; i++)
+        {
+            var component = components[i].Clone();
+            if (component is AI)
+            {
+                Components.Add(component as AI);
+            }
+            else if (component is Fighter)
+            {
+                Components.Add(component as Fighter);
+            }
+        }
+
     }
 
     /// <summary>
@@ -67,8 +81,8 @@ public class Entity
         if (neighborTile == null) { return false; }
         if (neighborTile.IsWalkable == false) { return false; }
         
-        // if entity exists and blocks movement, Attack instead
-        if (neighborTile.entity != null) 
+        // If entity exists and blocks movement, Attack instead
+        if (neighborTile.entity != null)
         { 
             if (neighborTile.entity.BlocksMovement)
             {
@@ -79,6 +93,31 @@ public class Entity
 
         MoveTo(neighborTile);
         return true;
+    }
+
+    public bool TryAction(Tile targetTile)
+    {
+        if (targetTile == null) { return false; }
+        if (targetTile.IsWalkable == false) { return false; }
+
+        // If entity exists and blocks movement, Attack instead
+        if (targetTile.entity != null)
+        {
+            if (targetTile.entity.BlocksMovement)
+            {
+                Attack(targetTile);
+                return true;
+            }
+        }
+
+        MoveTo(targetTile);
+        return true;
+    }
+
+    private void Attack(Tile targetTile)
+    {
+        // TODO: this
+        Debug.Log("Attack target tile");
     }
 
     private void Attack(Tile neighborTile, Direction direction)

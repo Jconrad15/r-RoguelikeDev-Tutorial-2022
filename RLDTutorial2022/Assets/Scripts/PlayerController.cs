@@ -23,6 +23,9 @@ public class PlayerController : MonoBehaviour
     {
         FindObjectOfType<EntityManager>()
             .RegisterOnPlayerCreated(OnPlayerCreated);
+
+        TurnController.Instance
+            .RegisterOnStartPlayerTurn(OnStartTurn);
     }
 
     private void OnPlayerCreated(Entity player)
@@ -30,29 +33,51 @@ public class PlayerController : MonoBehaviour
         this.player = player;
     }
 
-    private void Update()
+    private void OnStartTurn()
     {
-        if (player == null) { return; }
-        CheckPlayerMovement();
+        if (player == null) 
+        {
+            Debug.LogError("No player entity");
+            // Turn is done
+            TurnController.Instance.NextTurn();
+            return;
+        }
+
+        StartCoroutine(PlayerProcessing());
     }
 
-    private void CheckPlayerMovement()
+    private IEnumerator PlayerProcessing()
+    {
+        Debug.Log("PlayerProcessing");
+        // Leave loop and end turn when player moves
+        bool playerActed = false;
+        while (playerActed == false)
+        {
+            playerActed = CheckPlayerAction();
+
+            yield return null;
+        }
+
+        // Turn is done
+        TurnController.Instance.NextTurn();
+    }
+
+    private bool CheckPlayerAction()
     {
         bool west = Input.GetKeyDown(westKey);
         bool east = Input.GetKeyDown(eastKey);
+
         if (west || east)
         {
             // move west or east
             if (west)
             { 
-                player.TryAction(Direction.W);
+                return player.TryAction(Direction.W);
             }
             else
             {
-                player.TryAction(Direction.E);
+                return player.TryAction(Direction.E);
             }
-
-            return;
         }
 
         bool northwest = Input.GetKeyDown(northwestKey);
@@ -62,13 +87,12 @@ public class PlayerController : MonoBehaviour
             // move northwest or southeast
             if (northwest)
             {
-                player.TryAction(Direction.NW);
+                return player.TryAction(Direction.NW);
             }
             else
             {
-                player.TryAction(Direction.SE);
+                return player.TryAction(Direction.SE);
             }
-            return;
         }
 
         bool southwest = Input.GetKeyDown(southwestKey);
@@ -78,13 +102,14 @@ public class PlayerController : MonoBehaviour
             // move southwest or northeast
             if (southwest)
             {
-                player.TryAction(Direction.SW);
+                return player.TryAction(Direction.SW);
             }
             else
             {
-                player.TryAction(Direction.NE);
+                return player.TryAction(Direction.NE);
             }
-            return;
         }
+
+        return false;
     }
 }

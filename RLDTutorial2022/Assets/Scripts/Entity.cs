@@ -19,8 +19,11 @@ public class Entity
 
     public bool BlocksMovement { get; private set; }
 
+    public List<BaseComponent> Components { get; private set; }
+
     public Entity(string character, Color color,
-        string entityName, int visibilityDistance = 5,
+        string entityName, List<BaseComponent> components, 
+        int visibilityDistance = 5,
         bool isPlayer = false, bool blocksMovement = true)
     {
         IsPlayer = isPlayer;
@@ -29,6 +32,7 @@ public class Entity
         VisibilityDistance = visibilityDistance;
         Color = color;
         BlocksMovement = blocksMovement;
+        Components = components;
     }
 
     /// <summary>
@@ -46,6 +50,7 @@ public class Entity
         Character = entityToClone.Character;
         Color = entityToClone.Color;
         BlocksMovement = entityToClone.BlocksMovement;
+        Components = entityToClone.Components;
     }
 
     public static Entity SpawnCloneAtTile(
@@ -54,13 +59,13 @@ public class Entity
         return new Entity(entityPrefab, tile);
     }
 
-    public void TryAction(Direction direction)
+    public bool TryAction(Direction direction)
     {
         Tile neighborTile = GameManager.Instance.Grid
             .GetTileInDirection(CurrentTile, direction);
 
-        if (neighborTile == null) { return; }
-        if (neighborTile.IsWalkable == false) { return; }
+        if (neighborTile == null) { return false; }
+        if (neighborTile.IsWalkable == false) { return false; }
         
         // if entity exists and blocks movement, Attack instead
         if (neighborTile.entity != null) 
@@ -68,11 +73,12 @@ public class Entity
             if (neighborTile.entity.BlocksMovement)
             {
                 Attack(neighborTile, direction);
-                return;
+                return true;
             }
         }
 
         MoveTo(neighborTile);
+        return true;
     }
 
     private void Attack(Tile neighborTile, Direction direction)

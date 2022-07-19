@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
         EntityManager.CreateEntities(Grid);
 
         FindObjectOfType<Display>().CreateInitialGrid();
+        TurnController.Instance.StartTurnSystem();
     }
 
 }

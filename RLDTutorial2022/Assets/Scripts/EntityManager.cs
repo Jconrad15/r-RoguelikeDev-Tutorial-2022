@@ -77,6 +77,21 @@ public class EntityManager : MonoBehaviour
         entities.Add(newEntity);
     }
 
+    public List<Entity> GetNonPlayerEntities()
+    {
+        List<Entity> nonPlayerEntities = entities;
+        for (int i = 0; i < nonPlayerEntities.Count; i++)
+        {
+            if (nonPlayerEntities[i].IsPlayer)
+            {
+                nonPlayerEntities.Remove(nonPlayerEntities[i]);
+                break;
+            }
+        }
+
+        return nonPlayerEntities;
+    }
+
     public void RegisterOnPlayerCreated(
         Action<Entity> callbackfunc)
     {

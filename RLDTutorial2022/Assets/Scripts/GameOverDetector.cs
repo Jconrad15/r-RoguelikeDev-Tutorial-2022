@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class GameOverDetector : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject gameOverArea;
+
+    private void Start()
+    {
+        gameOverArea.SetActive(false);
+    }
 
     public void Initialize()
     {
@@ -18,7 +25,7 @@ public class GameOverDetector : MonoBehaviour
 
     private void OnPlayerDied(Entity player)
     {
-        Debug.Log("Player Died!");
+        gameOverArea.SetActive(true);
     }
 
 }

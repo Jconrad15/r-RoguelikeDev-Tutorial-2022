@@ -156,6 +156,10 @@ public class Display : MonoBehaviour
 
     private void OnEntityMoved(Entity movedEntity)
     {
+        // When an entity moves, force tile visibility to update
+        OnTileVisibilityChanged(movedEntity.CurrentTile);
+
+        // Graphics location
         for (int i = 0; i < entityGOData.Count; i++)
         {
             if (entityGOData[i].ContainsEntity(movedEntity))

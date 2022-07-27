@@ -66,8 +66,6 @@ public class FieldOfView : MonoBehaviour
                             VisibilityLevel.PreviouslySeen);
                     }
 
-
-
                 }
 
                 i++;

@@ -6,6 +6,7 @@ using UnityEngine;
 public class AITurnController : MonoBehaviour
 {
     private EntityManager entityManager;
+    private readonly int maxAttempts = 2;
 
     void Start()
     {
@@ -21,22 +22,24 @@ public class AITurnController : MonoBehaviour
     private IEnumerator AIProcessing()
     {
         List<Entity> entities = entityManager.GetNonPlayerEntities();
-
+        //Debug.Log("Start AI processing for " + entities.Count + " entities");
         // Loop through each entities turn
         foreach (Entity entity in entities)
         {
             // Leave loop when entity acts
             bool entityActed = false;
-            int counter = 0;
+            int attemptCount = 0;
             while (entityActed == false)
             {
-                entityActed = CheckEntityAction(entity);
-
-                // Abort if tried action too many times
-                counter++;
-                if (counter > 10)
+                entityActed = CheckEntityAction(
+                    entity, attemptCount);
+                attemptCount++;
+                // Abort if tried action more than threshold times
+                if (attemptCount > maxAttempts &&
+                    entityActed == false)
                 {
-                    Debug.LogWarning("Exited entity try action loop.");
+                    Debug.LogWarning(
+                        "Exited entity try action loop.");
                     break;
                 }
             }
@@ -47,19 +50,19 @@ public class AITurnController : MonoBehaviour
         yield return null;
     }
 
-    private bool CheckEntityAction(Entity entity)
+    private bool CheckEntityAction(Entity entity, int attemptCount)
     {
         if (entity == null) { return false; }
         if (entity.Components == null) { return false; }
 
         // Search components list for AI component
-        //if (entity.Components.OfType<AI>().Any()) { }
+        // if (entity.Components.OfType<AI>().Any()) { }
         foreach (BaseComponent c in entity.Components)
         {
             if (c is AI)
             {
                 AI ai = c as AI;
-                return ai.TryAction();
+                return ai.TryAction(entity, attemptCount);
             }
         }
 

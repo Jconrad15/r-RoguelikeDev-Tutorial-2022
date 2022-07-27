@@ -14,7 +14,6 @@ public class EntityManager : MonoBehaviour
         Tile[] roomCenters = grid.GetAllRoomCenterTiles();
         Room[] rooms = grid.GetAllRoomsArray();
 
-
         CreatePlayer(roomCenters[0]);
 
         // Create NPCs -- Use index 1 to N
@@ -22,6 +21,8 @@ public class EntityManager : MonoBehaviour
         {
             CreateEntitiesInRoom(grid, rooms[i]);
         }
+
+        Debug.Log("Created " + entities.Count + " entities");
     }
 
     private void CreatePlayer(Tile tile)
@@ -79,7 +80,7 @@ public class EntityManager : MonoBehaviour
 
     public List<Entity> GetNonPlayerEntities()
     {
-        List<Entity> nonPlayerEntities = entities;
+        List<Entity> nonPlayerEntities = new List<Entity>(entities);
         for (int i = 0; i < nonPlayerEntities.Count; i++)
         {
             if (nonPlayerEntities[i].IsPlayer)
@@ -90,6 +91,19 @@ public class EntityManager : MonoBehaviour
         }
 
         return nonPlayerEntities;
+    }
+
+    public Entity GetPlayerEntity()
+    {
+        for (int i = 0; i < entities.Count; i++)
+        {
+            if (entities[i].IsPlayer)
+            {
+                return entities[i];
+            }
+        }
+
+        return null;
     }
 
     public void RegisterOnPlayerCreated(

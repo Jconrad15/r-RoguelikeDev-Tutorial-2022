@@ -36,6 +36,9 @@ public class GameManager : MonoBehaviour
 
         EntityManager.CreateEntities(Grid);
 
+        // Update tile graph based on entities for pathfinding
+        Grid.CreateNewTileGraph();
+
         FindObjectOfType<Display>().CreateInitialGrid();
         TurnController.Instance.StartTurnSystem();
     }

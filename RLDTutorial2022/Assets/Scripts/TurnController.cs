@@ -34,7 +34,7 @@ public class TurnController : MonoBehaviour
 
     private void StartPlayerTurn()
     {
-        Debug.Log("Start player turn");
+        //Debug.Log("Start player turn");
         cbOnStartPlayerTurn?.Invoke();
         state = TurnState.PlayerTurn;
     }
@@ -52,7 +52,7 @@ public class TurnController : MonoBehaviour
 
     public void NextTurn()
     {
-        Debug.Log("Next turn is triggered");
+        //Debug.Log("Next turn is triggered");
 
         if (state == TurnState.PlayerTurn)
         {

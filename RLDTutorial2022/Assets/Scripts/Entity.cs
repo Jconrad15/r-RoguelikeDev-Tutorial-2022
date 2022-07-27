@@ -32,7 +32,21 @@ public class Entity
         VisibilityDistance = visibilityDistance;
         Color = color;
         BlocksMovement = blocksMovement;
-        Components = components;
+
+        Components = new List<BaseComponent>();
+        for (int i = 0; i < components.Count; i++)
+        {
+            var component = components[i].Clone();
+            if (component is AI)
+            {
+                Components.Add(component as AI);
+            }
+            else if (component is Fighter)
+            {
+                Components.Add(component as Fighter);
+            }
+        }
+
     }
 
     /// <summary>
@@ -40,23 +54,28 @@ public class Entity
     /// </summary>
     /// <param name="entityToClone"></param>
     /// <param name="targetTile"></param>
-    private Entity(Entity entityToClone, Tile targetTile)
+    private static Entity EntityClone(
+        Entity entityToClone, Tile targetTile)
     {
-        CurrentTile = targetTile;
-        targetTile.entity = this;
+        Entity e = new Entity(
+            entityToClone.Character,
+            entityToClone.Color,
+            entityToClone.EntityName,
+            entityToClone.Components,
+            entityToClone.VisibilityDistance,
+            entityToClone.IsPlayer,
+            entityToClone.BlocksMovement);
 
-        EntityName = entityToClone.EntityName;
-        IsPlayer = entityToClone.IsPlayer;
-        Character = entityToClone.Character;
-        Color = entityToClone.Color;
-        BlocksMovement = entityToClone.BlocksMovement;
-        Components = entityToClone.Components;
+        e.CurrentTile = targetTile;
+        targetTile.entity = e;
+
+        return e;
     }
 
     public static Entity SpawnCloneAtTile(
         Entity entityPrefab, Tile tile)
     {
-        return new Entity(entityPrefab, tile);
+        return EntityClone(entityPrefab, tile);
     }
 
     public bool TryAction(Direction direction)
@@ -67,8 +86,8 @@ public class Entity
         if (neighborTile == null) { return false; }
         if (neighborTile.IsWalkable == false) { return false; }
         
-        // if entity exists and blocks movement, Attack instead
-        if (neighborTile.entity != null) 
+        // If entity exists and blocks movement, Attack instead
+        if (neighborTile.entity != null)
         { 
             if (neighborTile.entity.BlocksMovement)
             {
@@ -79,6 +98,36 @@ public class Entity
 
         MoveTo(neighborTile);
         return true;
+    }
+
+    public bool TryAction(Tile targetTile)
+    {
+        if (targetTile == null) { return false; }
+        if (targetTile.IsWalkable == false) { return false; }
+
+        // If entity exists and blocks movement, Attack instead
+        if (targetTile.entity != null)
+        {
+            if (targetTile.entity.IsPlayer)
+            {
+                Attack(targetTile);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        MoveTo(targetTile);
+        return true;
+    }
+
+    private void Attack(Tile targetTile)
+    {
+        // TODO: this
+        Debug.Log("Attack target tile");
     }
 
     private void Attack(Tile neighborTile, Direction direction)

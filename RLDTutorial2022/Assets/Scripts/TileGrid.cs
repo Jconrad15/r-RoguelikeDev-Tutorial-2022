@@ -7,17 +7,24 @@ public class TileGrid
     public int width;
     public int height;
 
+    public Path_TileGraph TileGraph { get; private set; }
+
 	public Tile[] Tiles { get; private set; }
     private List<RectangularRoom> rectRooms = new List<RectangularRoom>();
     private List<HexRoom> hexRooms = new List<HexRoom>();
     private List<Hallway> hallways = new List<Hallway>();
+
+    public void CreateNewTileGraph()
+    {
+        TileGraph = new Path_TileGraph(GameManager.Instance.Grid);
+    }
 
     public TileGrid(int width, int height)
     {
         this.width = width;
         this.height = height;
 
-		CreateGrid();
+        CreateGrid();
     }
 
     private void CreateGrid()
@@ -244,6 +251,48 @@ public class TileGrid
     {
         HexCoordinates startCoords = startTile.Coordinates;
         HexCoordinates endCoords;
+
+        // Check if at edge
+        (int, int) offsetStartCoords =
+            HexCoordinates.ToOffsetCoordinates(startCoords);
+
+        if (direction == Direction.NE ||
+            direction == Direction.E ||
+            direction == Direction.SE)
+        {
+            if (offsetStartCoords.Item1 >= width - 2)
+            {
+                return null;
+            }
+        }
+
+        if (direction == Direction.NW ||
+            direction == Direction.W ||
+            direction == Direction.SW)
+        {
+            if (offsetStartCoords.Item1 <= 0)
+            {
+                return null;
+            }
+        }
+
+        if (direction == Direction.NE ||
+            direction == Direction.NW )
+        {
+            if (offsetStartCoords.Item2 >= height - 2)
+            {
+                return null;
+            }
+        }
+
+        if (direction == Direction.SE ||
+            direction == Direction.SW)
+        {
+            if (offsetStartCoords.Item2 <= 0)
+            {
+                return null;
+            }
+        }
 
         switch (direction)
         {

@@ -122,12 +122,16 @@ public class Path_AStar
                     continue;
                 }
 
-                // If entity is in tile, ignore it.
+                // If entity is in tile, and blocks movement
+                // increase the movement score, so that this entity
+                // is more likely to go around.
                 float entityScore = 0f;
                 if (neighbor.data.entity != null)
                 {
-                    // increase score for this tile if entity is here
-                    entityScore += 10f;
+                    if (neighbor.data.entity.BlocksMovement == true)
+                    {
+                        entityScore += 10f;
+                    }
                 }
 
                 float movement_cost_to_neighbour =
@@ -288,7 +292,7 @@ public class Path_AStar
 
     public Tile Peek()
     {
-        return path.Peek();
+        return path.Count > 0 ? path.Peek() : null;
     }
 
     /// <summary>

@@ -139,6 +139,7 @@ public class Display : MonoBehaviour
         entityGO.GetComponent<EntityText>().SetText(tile.entity);
 
         tile.entity.RegisterOnEntityMoved(OnEntityMoved);
+        tile.entity.RegisterOnEntityDied(OnEntityDied);
 
         if (tile.entity.IsPlayer)
         {
@@ -152,6 +153,11 @@ public class Display : MonoBehaviour
             entityGO.GetComponent<LerpMovement>());
 
         entityGOData.Add(data);
+    }
+
+    private void OnEntityDied(Entity deadEntity)
+    {
+        OnEntityMoved(deadEntity);
     }
 
     private void OnEntityMoved(Entity movedEntity)

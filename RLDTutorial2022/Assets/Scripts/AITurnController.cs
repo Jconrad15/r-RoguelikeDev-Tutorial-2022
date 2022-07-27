@@ -6,6 +6,7 @@ using UnityEngine;
 public class AITurnController : MonoBehaviour
 {
     private EntityManager entityManager;
+    private readonly int maxAttempts = 2;
 
     void Start()
     {
@@ -28,15 +29,13 @@ public class AITurnController : MonoBehaviour
         {
             // Leave loop when entity acts
             bool entityActed = false;
-            int counter = 0;
+            int attemptCount = 0;
             while (entityActed == false)
             {
-                counter++;
-
-                entityActed = CheckEntityAction(entity);
-
-                // Abort if tried action more than 2 times
-                if (counter > 2 && entityActed == false)
+                entityActed = CheckEntityAction(entity, attemptCount);
+                attemptCount++;
+                // Abort if tried action more than threshold times
+                if (attemptCount > maxAttempts && entityActed == false)
                 {
                     Debug.LogWarning(
                         "Exited entity try action loop.");
@@ -50,7 +49,7 @@ public class AITurnController : MonoBehaviour
         yield return null;
     }
 
-    private bool CheckEntityAction(Entity entity)
+    private bool CheckEntityAction(Entity entity, int attemptCount)
     {
         if (entity == null) { return false; }
         if (entity.Components == null) { return false; }
@@ -62,7 +61,7 @@ public class AITurnController : MonoBehaviour
             if (c is AI)
             {
                 AI ai = c as AI;
-                return ai.TryAction(entity);
+                return ai.TryAction(entity, attemptCount);
             }
         }
 

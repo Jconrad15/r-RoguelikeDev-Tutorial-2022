@@ -59,7 +59,7 @@ public class Path_AStar
                     "isn't in the list of nodes");
                 return;
             }
-            goal = nodesDict[tileEnd]; 
+            goal = nodesDict[tileEnd];
         }
 
         // A star algorithm
@@ -121,6 +121,12 @@ public class Path_AStar
 
                 float movement_cost_to_neighbour =
                     Dist_Between(current, neighbor);
+                
+                if (movement_cost_to_neighbour > 1)
+                {
+                    Debug.LogError(
+                        "Cost to neighbor is greater than 1.");
+                }
 
                 float tentative_g_score =
                     g_score[current] + movement_cost_to_neighbour;
@@ -263,6 +269,11 @@ public class Path_AStar
             return 0;
         }
         return path.Count;
+    }
+
+    public Tile Peek()
+    {
+        return path.Peek();
     }
 
     /// <summary>

@@ -8,9 +8,7 @@ public class AI : BaseComponent
 
     public AI() : base()
     {
-        pathway = null;
-        Destination = null;
-        NextTile = null;
+        NullDataValues();
     }
 
     public override object Clone()
@@ -21,7 +19,7 @@ public class AI : BaseComponent
     public Tile Destination { get; private set; }
     public Tile NextTile { get; private set; }
 
-    public bool TryAction(Entity aiEntity)
+    public bool TryAction(Entity aiEntity, int attemptCount)
     {
         if (aiEntity == null)
         {
@@ -29,18 +27,26 @@ public class AI : BaseComponent
             return false;
         }
 
+        // Reset variables if multiple attempts
+        if (attemptCount > 0) { NullDataValues(); }
+
+        // Check if there is a destination
+        // and if the player is still there
+        bool playerAtDestination = false;
         if (Destination != null)
         {
-            Debug.Log("Destination is not null for " +
-                aiEntity.EntityName + ", " +
-                aiEntity.CurrentTile.Coordinates.ToString());
+            playerAtDestination = GameManager.Instance
+                .EntityManager.GetPlayerEntity()
+                .CurrentTile != Destination;
         }
 
-        // If no path, reached end of path, or no destination
+        // If no path, reached end of path, or no destination,
+        // or if player no longer at destination
         // make a new destination and pathway
         if (pathway == null || 
             aiEntity.CurrentTile == Destination ||
-            Destination == null)
+            Destination == null ||
+            playerAtDestination == false)
         {
             DetermineNewDestinationPath(aiEntity);
             // Exit if pathway is still null
@@ -48,14 +54,31 @@ public class AI : BaseComponent
         }
 
         // Try action at next pathway tile
-        if (pathway.Length() <= 0) 
+        if (pathway.Length() <= 0)
         {
             pathway = null;
             return false;
         }
-        NextTile = pathway.Dequeue();
-        //Debug.Log("Entity acted");
-        return aiEntity.TryAction(NextTile);
+        
+        // First peek at next tile. 
+        NextTile = pathway.Peek();
+
+        float distance = HexCoordinates.HexDistance(
+            NextTile.Coordinates,
+            aiEntity.CurrentTile.Coordinates);
+        if (distance > 1)
+        {
+            Debug.LogError("Next-current tile distance > 1.");
+        }
+
+        bool acted = aiEntity.TryAction(NextTile);
+        // If entity acts, then tile will be dequeued
+        if (acted)
+        {
+            _ = pathway.Dequeue();
+        }
+
+        return acted;
     }
 
     private void DetermineNewDestinationPath(Entity aiEntity)
@@ -86,10 +109,15 @@ public class AI : BaseComponent
                     aiEntity.CurrentTile,
                     Utility.GetRandomEnum<Direction>());
 
+            if (randomNeighborTile == null)
+            {
+                NullDataValues();
+                return;
+            }
+
             if (randomNeighborTile.IsWalkable == false)
             {
-                Destination = null;
-                pathway = null;
+                NullDataValues();
                 return;
             }
             Destination = randomNeighborTile;
@@ -99,6 +127,21 @@ public class AI : BaseComponent
         pathway = new Path_AStar(aiEntity.CurrentTile, Destination);
         // Trash first tile, this is the currentTile
         _ = pathway.Dequeue();
+
+        float distance = HexCoordinates.HexDistance(
+            pathway.Peek().Coordinates,
+            aiEntity.CurrentTile.Coordinates);
+        if (distance > 1)
+        {
+            Debug.LogError("Next-current tile distance > 1.");
+        }
+    }
+
+    private void NullDataValues()
+    {
+        Destination = null;
+        pathway = null;
+        NextTile = null;
     }
 
 }

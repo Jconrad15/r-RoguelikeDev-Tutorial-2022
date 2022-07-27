@@ -11,7 +11,8 @@ public class Entity
     public string EntityName { get; private set; }
 
     private Action<Entity> cbOnEntityMoved;
-    private Action<Entity, Direction> cbOnEntityAttack;
+    private Action<Entity, Direction> cbOnEntityAttackDirection;
+    private Action<Entity> cbOnEntityDied;
 
     public Tile CurrentTile { get; private set; }
 
@@ -43,7 +44,9 @@ public class Entity
             }
             else if (component is Fighter)
             {
-                Components.Add(component as Fighter);
+                Fighter f = component as Fighter;
+                Components.Add(f);
+                f.SetEntity(this);
             }
         }
 
@@ -126,16 +129,65 @@ public class Entity
 
     private void Attack(Tile targetTile)
     {
-        // TODO: this
-        Debug.Log("Attack target tile");
+        Fighter fighter = TryGetFighterComponent();
+        if (fighter == null) { return; }
+
+        Entity targetEntity = targetTile.entity;
+        if (targetEntity == null) { return; }
+
+        Fighter target = targetEntity.TryGetFighterComponent();
+        if (target == null) { return; }
+
+        int damage = fighter.power - target.defense;
+
+        if (damage > 0)
+        {
+            target.Damage(damage);
+            Debug.Log(EntityName +
+                " did " + damage + " damage to " +
+                targetEntity.EntityName);
+        }
+        else
+        {
+            Debug.Log("No damage");
+        }
+
+    }
+
+    public Fighter TryGetFighterComponent()
+    {
+        Fighter fighter = null;
+        for (int i = 0; i < Components.Count; i++)
+        {
+            var component = Components[i];
+            if (component is Fighter)
+            {
+                fighter = component as Fighter;
+            }
+        }
+
+        return fighter;
+    }
+
+    public AI TryGetAIComponent()
+    {
+        AI ai = null;
+        for (int i = 0; i < Components.Count; i++)
+        {
+            var component = Components[i];
+            if (component is AI)
+            {
+                ai = component as AI;
+            }
+        }
+
+        return ai;
     }
 
     private void Attack(Tile neighborTile, Direction direction)
     {
-        Debug.Log("You kick the " +
-            neighborTile.entity.EntityName);
-
-        cbOnEntityAttack?.Invoke(this, direction);
+        cbOnEntityAttackDirection?.Invoke(this, direction);
+        Attack(neighborTile);
     }
 
     private void MoveTo(Tile destination)
@@ -147,6 +199,29 @@ public class Entity
         CurrentTile.entity = this;
 
         cbOnEntityMoved?.Invoke(this);
+    }
+
+    public void Died()
+    {
+        if (!IsPlayer)
+        {
+            Debug.Log(EntityName + " is dead");
+        }
+
+        // Edit entity
+        Character = "%";
+        Color = new Color32(191, 0, 0, 255);
+        BlocksMovement = false;
+        EntityName = "Remains of " + EntityName;
+
+        // Remove components
+        for (int i = 0; i < Components.Count; i++)
+        {
+            Components[i].Destroy();
+            Components[i] = null;
+        }
+
+        cbOnEntityDied?.Invoke(this);
     }
 
     public void RegisterOnEntityMoved(
@@ -161,15 +236,27 @@ public class Entity
         cbOnEntityMoved -= callbackfunc;
     }
 
-    public void RegisterOnEntityAttack(
+    public void RegisterOnEntityAttackDirection(
         Action<Entity, Direction> callbackfunc)
     {
-        cbOnEntityAttack += callbackfunc;
+        cbOnEntityAttackDirection += callbackfunc;
     }
 
-    public void UnregisterOnEntityAttack(
+    public void UnregisterOnEntityAttackDirection(
         Action<Entity, Direction> callbackfunc)
     {
-        cbOnEntityAttack -= callbackfunc;
+        cbOnEntityAttackDirection -= callbackfunc;
+    }
+
+    public void RegisterOnEntityDied(
+    Action<Entity> callbackfunc)
+    {
+        cbOnEntityDied += callbackfunc;
+    }
+
+    public void UnregisterOnEntityDied(
+        Action<Entity> callbackfunc)
+    {
+        cbOnEntityDied -= callbackfunc;
     }
 }

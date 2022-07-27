@@ -1,10 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class BaseComponent: ICloneable
 {
+    public Entity e;
+
     public BaseComponent() { }
 
     protected BaseComponent(BaseComponent other) { }
@@ -12,5 +11,10 @@ public class BaseComponent: ICloneable
     public virtual object Clone()
     {
         return new BaseComponent(this);
+    }
+
+    public void Destroy()
+    {
+        e = null;
     }
 }

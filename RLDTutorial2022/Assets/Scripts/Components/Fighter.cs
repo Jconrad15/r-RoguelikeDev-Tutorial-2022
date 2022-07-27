@@ -15,7 +15,21 @@ public class Fighter : BaseComponent
         protected set
         {
             hp = Mathf.Clamp(value, 0, maxHP);
+            if (hp <= 0)
+            {
+                Died();
+            }
         }
+    }
+
+    public void Damage(int amount)
+    {
+        HP -= amount;
+    }
+
+    private void Died()
+    {
+        e.Died();
     }
 
     public Fighter(int maxHP, int defense, int power) : base()
@@ -35,9 +49,10 @@ public class Fighter : BaseComponent
         HP = other.maxHP;
     }
 
+    public void SetEntity(Entity entity) => e = entity;
+
     public override object Clone()
     {
         return new Fighter(this);
     }
-
 }

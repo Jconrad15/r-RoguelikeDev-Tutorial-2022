@@ -34,7 +34,8 @@ public class VisualEffectManager : MonoBehaviour
     private void OnPlayerCreated(Entity player)
     {
         player.RegisterOnEntityMoved(OnPlayerMoved);
-        player.RegisterOnEntityAttack(OnPlayerAttack);
+        player.RegisterOnEntityAttackDirection(
+            OnPlayerAttackDirection);
     }
 
     private void OnPlayerMoved(Entity player)
@@ -47,7 +48,7 @@ public class VisualEffectManager : MonoBehaviour
             Vector2.zero);
     }
 
-    private void OnPlayerAttack(
+    private void OnPlayerAttackDirection(
         Entity player, Direction direction)
     {
         Vector3 spawnPos = playerGO.transform.position;
@@ -74,12 +75,10 @@ public class VisualEffectManager : MonoBehaviour
 
         spawnedEffect.SetVector2("_direction", direction);
 
-
         // Create, play, destroy
         spawnedEffect.gameObject.SetActive(true);
         spawnedEffect.Play();
         Destroy(spawnedEffect.gameObject, 0.7f);
     }
-
 
 }

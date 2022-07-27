@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
         FindObjectOfType<FieldOfView>().InitializeFOV();
         FindObjectOfType<VisualEffectManager>().Initialize();
         FindObjectOfType<SoundManager>().Initialize();
+        FindObjectOfType<GameOverDetector>().Initialize();
 
         // Create the grid of tiles
         Grid = new TileGrid(50, 50);

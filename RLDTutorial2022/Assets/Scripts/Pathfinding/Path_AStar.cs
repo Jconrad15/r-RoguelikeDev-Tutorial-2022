@@ -292,7 +292,7 @@ public class Path_AStar
 
     public Tile Peek()
     {
-        return path.Peek();
+        return path.Count > 0 ? path.Peek() : null;
     }
 
     /// <summary>

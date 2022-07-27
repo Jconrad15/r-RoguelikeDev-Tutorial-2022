@@ -38,8 +38,6 @@ public class AITurnController : MonoBehaviour
                 if (attemptCount > maxAttempts &&
                     entityActed == false)
                 {
-                    Debug.LogWarning(
-                        "Exited entity try action loop.");
                     break;
                 }
             }

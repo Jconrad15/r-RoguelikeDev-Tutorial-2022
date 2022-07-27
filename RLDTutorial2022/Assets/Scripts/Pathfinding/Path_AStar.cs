@@ -117,7 +117,18 @@ public class Path_AStar
 
                 // If the set already includes the neighbor node,
                 // then ignore it.
-                if (ClosedSet.Contains(neighbor) == true) { continue; }
+                if (ClosedSet.Contains(neighbor) == true)
+                {
+                    continue;
+                }
+
+                // If entity is in tile, ignore it.
+                float entityScore = 0f;
+                if (neighbor.data.entity != null)
+                {
+                    // increase score for this tile if entity is here
+                    entityScore += 10f;
+                }
 
                 float movement_cost_to_neighbour =
                     Dist_Between(current, neighbor);
@@ -129,7 +140,9 @@ public class Path_AStar
                 }
 
                 float tentative_g_score =
-                    g_score[current] + movement_cost_to_neighbour;
+                    g_score[current] +
+                    movement_cost_to_neighbour + 
+                    entityScore;
 
                 if (OpenSet.Contains(neighbor) &&
                     tentative_g_score >= g_score[neighbor])
@@ -139,7 +152,8 @@ public class Path_AStar
 
                 Came_From[neighbor] = current;
                 g_score[neighbor] = tentative_g_score;
-                f_score[neighbor] = g_score[neighbor] +
+                f_score[neighbor] =
+                    tentative_g_score +
                     (HeuristicWeight *
                     Heuristic_cost_estimate(neighbor, goal));
 
@@ -150,7 +164,8 @@ public class Path_AStar
                 else
                 {
                     //upate the f score
-                    OpenSet.UpdatePriority(neighbor, f_score[neighbor]);
+                    OpenSet.UpdatePriority(
+                        neighbor, f_score[neighbor]);
                 }
 
             } // End foreach neighbour

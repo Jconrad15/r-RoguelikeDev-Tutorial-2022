@@ -45,8 +45,7 @@ public class Path_TileGraph
                 NodesDict.Add(t, n);
             }
         }
-        Debug.Log("Path_TileGraph: Created "
-            + NodesDict.Count + " nodes.");
+        //Debug.Log("Path_TileGraph: Created " + NodesDict.Count + " nodes.");
 
         // Now loop through all nodes
         // Create edges
@@ -56,7 +55,8 @@ public class Path_TileGraph
         {
             Path_Node<Tile> n = NodesDict[t];
 
-            List<Path_Edge<Tile>> edges = new List<Path_Edge<Tile>>();
+            List<Path_Edge<Tile>> edges =
+                new List<Path_Edge<Tile>>();
 
             // Get a list of neighbors for the tile
             // Note, some of the array spots could be null.
@@ -87,7 +87,7 @@ public class Path_TileGraph
             n.edges = edges.ToArray();
 
         }
-        Debug.Log("Path_TileGraph: Created " + edgeCount + " edges");
+        //Debug.Log("Path_TileGraph: Created " + edgeCount + " edges");
     }
 
     private Tile[] GetNeighborTiles(Tile t, TileGrid tileGrid)

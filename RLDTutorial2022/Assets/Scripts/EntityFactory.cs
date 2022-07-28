@@ -21,7 +21,7 @@ public class EntityFactory : MonoBehaviour
                 new List<BaseComponent>() 
                 {
                     new Fighter(30, 2, 5),
-                    new Inventory(26)
+                    new Inventory(5)
                 },
                 5,
                 true,

@@ -612,6 +612,7 @@ GameObject:
   - component: {fileID: 196022193}
   - component: {fileID: 196022192}
   - component: {fileID: 196022191}
+  - component: {fileID: 196022195}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -705,6 +706,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &196022195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 196022190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b403f21262a9cf4c806c320eac79a2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryItemPrefab: {fileID: 7292255494119074518, guid: cb407738c6058c44fbb161e5da6c1f4f, type: 3}
+  inventoryArea: {fileID: 1443467196}
+  inventoryItemContainer: {fileID: 620114299}
 --- !u!1 &196211175
 GameObject:
   m_ObjectHideFlags: 0
@@ -1257,6 +1273,7 @@ GameObject:
   m_Component:
   - component: {fileID: 620114300}
   - component: {fileID: 620114301}
+  - component: {fileID: 620114303}
   m_Layer: 5
   m_Name: InventoryItemContainer
   m_TagString: Untagged
@@ -1310,6 +1327,14 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!222 &620114303
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620114299}
+  m_CullTransparentMesh: 1
 --- !u!1 &655627667
 GameObject:
   m_ObjectHideFlags: 0
@@ -2488,7 +2513,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1443467197}
-  - component: {fileID: 1443467198}
   m_Layer: 5
   m_Name: InventoryArea
   m_TagString: Untagged
@@ -2517,20 +2541,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 600, y: 300}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1443467198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1443467196}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b403f21262a9cf4c806c320eac79a2c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inventoryItemPrefab: {fileID: 7292255494119074518, guid: cb407738c6058c44fbb161e5da6c1f4f, type: 3}
-  inventoryItemContainer: {fileID: 620114299}
 --- !u!1 &1460835577
 GameObject:
   m_ObjectHideFlags: 0

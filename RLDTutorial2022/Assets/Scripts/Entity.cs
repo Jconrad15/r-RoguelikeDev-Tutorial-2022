@@ -86,8 +86,18 @@ public class Entity
         Tile neighborTile = GameManager.Instance.Grid
             .GetTileInDirection(CurrentTile, direction);
 
-        if (neighborTile == null) { return false; }
-        if (neighborTile.IsWalkable == false) { return false; }
+        if (neighborTile == null)
+        {
+            InterfaceLogManager.Instance.LogMessage(
+                "The way is blocked.");
+            return false;
+        }
+        if (neighborTile.IsWalkable == false)
+        {
+            InterfaceLogManager.Instance.LogMessage(
+                "The way is blocked.");
+            return false;
+        }
         
         // If entity exists and blocks movement, Attack instead
         if (neighborTile.entity != null)
@@ -210,12 +220,12 @@ public class Entity
         {
             InterfaceLogManager.Instance.LogMessage(
                 EntityName + " is dead",
-                Color.red);
+                ColorDatabase.death);
         }
 
         // Edit entity
         Character = "%";
-        Color = new Color32(191, 0, 0, 255);
+        Color = ColorDatabase.death;
         BlocksMovement = false;
         EntityName = "Remains of " + EntityName;
 

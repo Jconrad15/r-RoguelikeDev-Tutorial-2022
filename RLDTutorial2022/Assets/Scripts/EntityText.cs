@@ -16,7 +16,7 @@ public class EntityText : MonoBehaviour
         if (t.VisibilityLevel == VisibilityLevel.NotVisible ||
             t.VisibilityLevel == VisibilityLevel.PreviouslySeen)
         {
-            selectedTextColor = new Color32(0, 0, 0, 0);
+            selectedTextColor = ColorDatabase.hidden;
         }
         else // Visible
         {

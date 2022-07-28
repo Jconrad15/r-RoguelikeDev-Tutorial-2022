@@ -7,9 +7,6 @@ using UnityEngine;
 /// </summary>
 public class EntityFactory : MonoBehaviour
 {
-    [SerializeField]
-    private Color playerColor;
-
     public Entity PlayerPrefab { get; private set; }
     public Entity OrcPrefab { get; private set; }
     public Entity TrollPrefab { get; private set; }
@@ -19,7 +16,7 @@ public class EntityFactory : MonoBehaviour
         PlayerPrefab =
             new Entity(
                 "@",
-                playerColor,
+                ColorDatabase.player,
                 "Player",
                 new List<BaseComponent>() 
                 {
@@ -32,7 +29,7 @@ public class EntityFactory : MonoBehaviour
         OrcPrefab =
             new Entity(
                 "o",
-                new Color32(63, 127, 63, 255),
+                ColorDatabase.orc,
                 "Orc",
                 new List<BaseComponent>()
                 {
@@ -42,7 +39,7 @@ public class EntityFactory : MonoBehaviour
         TrollPrefab =
             new Entity(
                 "t",
-                new Color32(0, 127, 0, 255),
+                ColorDatabase.troll,
                 "Troll",
                 new List<BaseComponent>()
                 {

@@ -30,6 +30,11 @@ public class Fighter : BaseComponent
         HP -= amount;
     }
 
+    public void Heal(int amount)
+    {
+        HP += amount;
+    }
+
     private void Died()
     {
         e.Died();

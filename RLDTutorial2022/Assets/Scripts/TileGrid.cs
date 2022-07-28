@@ -58,7 +58,7 @@ public class TileGrid
                 if (IsCenterPoint(x, y))
                 {
                     Tiles[i].backgroundColor = 
-                        new Color32(11, 37, 69, 255);
+                        ColorDatabase.roomCenterTile;
                 }
 
                 i++;

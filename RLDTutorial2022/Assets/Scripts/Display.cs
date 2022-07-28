@@ -77,7 +77,7 @@ public class Display : MonoBehaviour
         if (tile.VisibilityLevel ==
             VisibilityLevel.NotVisible)
         {
-            sr.color = new Color32(0, 0, 0, 255);
+            sr.color = ColorDatabase.black;
         }
         else if (tile.VisibilityLevel ==
             VisibilityLevel.PreviouslySeen)

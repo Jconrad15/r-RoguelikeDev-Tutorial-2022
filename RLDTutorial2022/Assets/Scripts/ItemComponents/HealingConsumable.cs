@@ -23,7 +23,7 @@ public class HealingConsumable : Consumable
 
     public override object Clone()
     {
-        return new Consumable(this);
+        return new HealingConsumable(this);
     }
 
     public override bool Activate(Entity entity)

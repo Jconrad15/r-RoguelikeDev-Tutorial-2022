@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class InventoryUI : MonoBehaviour
 {
+    private Inventory inventory;
+
     [SerializeField]
     private GameObject inventoryItemPrefab;
     [SerializeField]
@@ -58,7 +60,7 @@ public class InventoryUI : MonoBehaviour
 
     private void OnPlayerCreated(Entity player)
     {
-        Inventory inventory = player.TryGetInventoryComponent();
+        inventory = player.TryGetInventoryComponent();
 
         if (inventory == null)
         {
@@ -80,7 +82,13 @@ public class InventoryUI : MonoBehaviour
     {
         GameObject itemGO = Instantiate(
             inventoryItemPrefab, inventoryItemContainer.transform);
-        itemGO.GetComponent<InventoryItemUI>().Setup(item);
+        InventoryItemUI inventoryItemUI =
+            itemGO.GetComponent<InventoryItemUI>();
+
+        inventoryItemUI.Setup(item);
+        inventoryItemUI.RegisterScheduleToDestroy(
+            UsedInventoryItemUI);
+
         return itemGO;
     }
 
@@ -94,8 +102,23 @@ public class InventoryUI : MonoBehaviour
         }
 
         GameObject itemGO = itemGOs[item];
-        itemGOs.Remove(item);
+        _ = itemGOs.Remove(item);
         Destroy(itemGO);
     }
 
+    private void UsedInventoryItemUI(Item item)
+    {
+        if (itemGOs.ContainsKey(item) == false)
+        {
+            Debug.LogError("Removing an item that was" +
+                " not displayed in inventory UI??");
+            return;
+        }
+
+        GameObject itemGO = itemGOs[item];
+        _ = itemGOs.Remove(item);
+        Destroy(itemGO);
+
+        inventory.NotifyItemUsedInInventoryUI(item);
+    }
 }

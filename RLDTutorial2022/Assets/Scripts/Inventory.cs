@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class Inventory : BaseComponent
 {
@@ -55,11 +56,29 @@ public class Inventory : BaseComponent
                 "Inventory is full.");
             return false;
         }
+        else
+        {
+            InterfaceLogManager.Instance.LogMessage(
+                e.EntityName + " picked up a " + 
+                addItem.EntityName);
+        }
         
         Items.Add(addItem);
-        addItem.PickedUp();
+        addItem.PickedUp(e);
         cbOnItemAdded?.Invoke(addItem);
         return true;
+    }
+
+    public void NotifyItemUsedInInventoryUI(Item usedItem)
+    {
+        if (Items.Contains(usedItem) == false)
+        {
+            Debug.LogError("Used item is not in the inventory?");
+        }
+
+        Items.Remove(usedItem);
+
+        usedItem.Destroy();
     }
 
     public void RegisterOnItemAdded(
@@ -75,7 +94,7 @@ public class Inventory : BaseComponent
     }
 
     public void RegisterOnItemDropped(
-    Action<Item> callbackfunc)
+        Action<Item> callbackfunc)
     {
         cbOnItemDropped += callbackfunc;
     }
@@ -85,4 +104,5 @@ public class Inventory : BaseComponent
     {
         cbOnItemDropped -= callbackfunc;
     }
+
 }

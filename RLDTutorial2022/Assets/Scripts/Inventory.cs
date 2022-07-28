@@ -1,9 +1,11 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Inventory : BaseComponent
 {
+    private Action<Item> cbOnItemAdded;
+    private Action<Item> cbOnItemDropped;
+
     public int Capacity { get; protected set; }
     public List<Item> Items { get; protected set; }
 
@@ -40,6 +42,7 @@ public class Inventory : BaseComponent
         }
 
         Items.Remove(dropItem);
+        cbOnItemDropped?.Invoke(dropItem);
         return true;
     }
 
@@ -55,7 +58,31 @@ public class Inventory : BaseComponent
         
         Items.Add(addItem);
         addItem.PickedUp();
+        cbOnItemAdded?.Invoke(addItem);
         return true;
     }
 
+    public void RegisterOnItemAdded(
+        Action<Item> callbackfunc)
+    {
+        cbOnItemAdded += callbackfunc;
+    }
+
+    public void UnregisterOnItemAdded(
+        Action<Item> callbackfunc)
+    {
+        cbOnItemAdded -= callbackfunc;
+    }
+
+    public void RegisterOnItemDropped(
+    Action<Item> callbackfunc)
+    {
+        cbOnItemDropped += callbackfunc;
+    }
+
+    public void UnregisterOnItemDropped(
+        Action<Item> callbackfunc)
+    {
+        cbOnItemDropped -= callbackfunc;
+    }
 }

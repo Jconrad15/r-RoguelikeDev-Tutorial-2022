@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
         FindObjectOfType<GameOverDetector>().Initialize();
         InterfaceLogManager.Instance.Initialize();
         FindObjectOfType<PlayerHealthUI>().Initialize();
+        FindObjectOfType<InventoryUI>().Initialize();
 
         // Create the grid of tiles
         Grid = new TileGrid(50, 50);

@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
         FindObjectOfType<SoundManager>().Initialize();
         FindObjectOfType<GameOverDetector>().Initialize();
         InterfaceLogManager.Instance.Initialize();
+        FindObjectOfType<PlayerHealthUI>().Initialize();
 
         // Create the grid of tiles
         Grid = new TileGrid(50, 50);
@@ -43,6 +44,9 @@ public class GameManager : MonoBehaviour
 
         FindObjectOfType<Display>().CreateInitialGrid();
         TurnController.Instance.StartTurnSystem();
+
+        InterfaceLogManager.Instance.LogMessage(
+            "Welcome to Hex Caverns");
     }
 
 }

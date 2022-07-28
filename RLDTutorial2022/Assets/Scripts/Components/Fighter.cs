@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +8,8 @@ public class Fighter : BaseComponent
     public int defense;
     public int power;
 
+    private Action<int> cbOnFighterHealthChanged; 
+
     private int hp;
     public int HP
     {
@@ -15,6 +17,7 @@ public class Fighter : BaseComponent
         protected set
         {
             hp = Mathf.Clamp(value, 0, maxHP);
+            cbOnFighterHealthChanged?.Invoke(hp);
             if (hp <= 0)
             {
                 Died();
@@ -54,5 +57,17 @@ public class Fighter : BaseComponent
     public override object Clone()
     {
         return new Fighter(this);
+    }
+
+    public void RegisterOnFighterHealthChanged(
+        Action<int> callbackfunc)
+    {
+        cbOnFighterHealthChanged += callbackfunc;
+    }
+
+    public void UnregisterOnFighterHealthChanged(
+        Action<int> callbackfunc)
+    {
+        cbOnFighterHealthChanged -= callbackfunc;
     }
 }

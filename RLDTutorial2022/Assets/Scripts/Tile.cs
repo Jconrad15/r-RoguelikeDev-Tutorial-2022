@@ -13,6 +13,7 @@ public class Tile
     public HexCoordinates Coordinates { get; private set; }
 
     public Entity entity;
+    public Item item;
     public char Character { get; private set; }
 
     public bool IsWalkable { get; private set; }
@@ -29,6 +30,7 @@ public class Tile
     {
         Coordinates = coordinates;
         entity = null;
+        item = null;
         VisibilityLevel = VisibilityLevel.NotVisible;
 
         switch (type)

@@ -35,4 +35,7 @@ public static class ColorDatabase
         new Color32(11, 37, 69, 255);
 
     public static Color error = Color.magenta;
+
+    public static Color healthPotion =
+        new Color32(127, 0, 255, 255);
 }

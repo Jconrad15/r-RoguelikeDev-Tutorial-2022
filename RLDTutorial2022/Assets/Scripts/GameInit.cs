@@ -7,6 +7,7 @@ public class GameInit : MonoBehaviour
     public void StartButton()
     {
         EntityFactory.Instance.InitializeFactory();
+        ItemFactory.Instance.InitializeFactory();
         GameManager.Instance.GameStart();
     }
 

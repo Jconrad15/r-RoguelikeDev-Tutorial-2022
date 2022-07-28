@@ -1,6 +1,6 @@
 using System;
 
-public class BaseComponent: ICloneable
+public class BaseComponent : ICloneable
 {
     public Entity e;
 

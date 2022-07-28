@@ -118,7 +118,7 @@ public class EntityManager : MonoBehaviour
     }
 
     public void RegisterOnEntityCreated(
-    Action<Entity> callbackfunc)
+        Action<Entity> callbackfunc)
     {
         cbOnEntityCreated += callbackfunc;
     }

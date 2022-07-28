@@ -8,6 +8,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public EntityManager EntityManager { get; private set; }
+    private ItemManager itemManager;
 
     public static GameManager Instance { get; private set; }
     private void Awake()
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour
         // TODO: fix these calls. use event(s)
 
         EntityManager = FindObjectOfType<EntityManager>();
+        itemManager = FindObjectOfType<ItemManager>();
         FindObjectOfType<FieldOfView>().InitializeFOV();
         FindObjectOfType<VisualEffectManager>().Initialize();
         FindObjectOfType<SoundManager>().Initialize();
@@ -38,6 +40,7 @@ public class GameManager : MonoBehaviour
         Grid = new TileGrid(50, 50);
 
         EntityManager.CreateEntities(Grid);
+        itemManager.CreateItems(Grid);
 
         // Update tile graph based on entities for pathfinding
         Grid.CreateNewTileGraph();

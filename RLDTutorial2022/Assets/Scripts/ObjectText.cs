@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class EntityText : MonoBehaviour
+public class ObjectText : MonoBehaviour
 {
     public void SetText(Entity entity)
     {
@@ -27,5 +27,26 @@ public class EntityText : MonoBehaviour
         text.color = selectedTextColor;
     }
 
+    public void SetText(Item item)
+    {
+        TextMeshProUGUI text =
+            GetComponentInChildren<TextMeshProUGUI>();
+
+        Tile t = item.CurrentTile;
+
+        Color selectedTextColor;
+        if (t.VisibilityLevel == VisibilityLevel.NotVisible ||
+            t.VisibilityLevel == VisibilityLevel.PreviouslySeen)
+        {
+            selectedTextColor = ColorDatabase.hidden;
+        }
+        else // Visible
+        {
+            selectedTextColor = item.Color;
+        }
+
+        text.SetText(item.Character);
+        text.color = selectedTextColor;
+    }
 
 }

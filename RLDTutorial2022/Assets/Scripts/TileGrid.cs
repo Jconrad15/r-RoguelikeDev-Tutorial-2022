@@ -10,9 +10,14 @@ public class TileGrid
     public Path_TileGraph TileGraph { get; private set; }
 
 	public Tile[] Tiles { get; private set; }
-    private List<RectangularRoom> rectRooms = new List<RectangularRoom>();
-    private List<HexRoom> hexRooms = new List<HexRoom>();
-    private List<Hallway> hallways = new List<Hallway>();
+    private List<RectangularRoom> rectRooms =
+        new List<RectangularRoom>();
+
+    private List<HexRoom> hexRooms =
+        new List<HexRoom>();
+
+    private List<Hallway> hallways =
+        new List<Hallway>();
 
     public void CreateNewTileGraph()
     {

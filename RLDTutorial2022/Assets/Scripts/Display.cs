@@ -8,14 +8,19 @@ public class Display : MonoBehaviour
     private GameObject tilePrefab;
     [SerializeField]
     private GameObject entityPrefab;
+    [SerializeField]
+    private GameObject itemPrefab;
 
     [SerializeField]
     private GameObject tileContainer;
     [SerializeField]
     private GameObject entityContainer;
+    [SerializeField]
+    private GameObject itemContainer;
 
     private List<TileGOData> tileGOData;
     private List<EntityGOData> entityGOData;
+    private List<ItemGOData> itemGOData;
 
     private Action cbOnPlayerGOCreated;
 
@@ -29,6 +34,7 @@ public class Display : MonoBehaviour
 
         tileGOData = new List<TileGOData>();
         entityGOData = new List<EntityGOData>();
+        itemGOData = new List<ItemGOData>();
 
         for (int y = 0; y < height; y++)
         {
@@ -47,6 +53,11 @@ public class Display : MonoBehaviour
                 if (t.entity != null)
                 {
                     CreateEntityGraphic(x, y, t);
+                }
+
+                if (t.item != null)
+                {
+                    CreateItemGraphic(x, y, t);
                 }
             }
         }
@@ -109,6 +120,20 @@ public class Display : MonoBehaviour
                         if (entityGOData[j].ContainsEntity(t.entity))
                         {
                             UpdateEntityVisibility(entityGOData[j]);
+                            break; // when found
+                        }
+                    }
+                }
+
+                // if tile has an item update item visibility
+                if (t.item != null)
+                {
+                    for (int j = 0; j < itemGOData.Count; j++)
+                    {
+                        if (itemGOData[j].ContainsItem(t.item))
+                        {
+                            UpdateItemVisibility(itemGOData[j]);
+                            break; // when found
                         }
                     }
                 }
@@ -118,9 +143,15 @@ public class Display : MonoBehaviour
         }
     }
 
+    private void UpdateItemVisibility(ItemGOData itemGOData)
+    {
+        itemGOData.itemGO.GetComponent<ObjectText>()
+            .SetText(itemGOData.item);
+    }
+
     private void UpdateEntityVisibility(EntityGOData entityGOData)
     {
-        entityGOData.entityGO.GetComponent<EntityText>()
+        entityGOData.entityGO.GetComponent<ObjectText>()
             .SetText(entityGOData.entity);
     }
 
@@ -137,7 +168,7 @@ public class Display : MonoBehaviour
         entityGO.transform.localPosition = position;
 
         // Setup components
-        entityGO.GetComponent<EntityText>()
+        entityGO.GetComponent<ObjectText>()
             .SetText(tile.entity);
         entityGO.GetComponent<MouseOverEntity>()
             .SetEntity(tile.entity);
@@ -159,6 +190,30 @@ public class Display : MonoBehaviour
             entityGO.GetComponent<LerpMovement>());
 
         entityGOData.Add(data);
+    }
+
+    private void CreateItemGraphic(int x, int y, Tile tile)
+    {
+        Vector3 position;
+        position.x = (x + (y * 0.5f) - (y / 2)) *
+                     (HexMetrics.innerRadius * 2f);
+        position.y = y * (HexMetrics.outerRadius * 1.5f);
+        position.z = 0;
+
+        GameObject itemGO = Instantiate(
+            itemPrefab, itemContainer.transform);
+        itemGO.transform.localPosition = position;
+
+        // Setup components
+        itemGO.GetComponent<ObjectText>()
+            .SetText(tile.item);
+
+        // Store item with gameobject
+        ItemGOData data = new ItemGOData(
+            itemGO,
+            tile.item);
+
+        itemGOData.Add(data);
     }
 
     private void OnEntityDied(Entity deadEntity)

@@ -20,7 +20,8 @@ public class EntityFactory : MonoBehaviour
                 "Player",
                 new List<BaseComponent>() 
                 {
-                    new Fighter(30, 2, 5)
+                    new Fighter(30, 2, 5),
+                    new Inventory(26)
                 },
                 5,
                 true,

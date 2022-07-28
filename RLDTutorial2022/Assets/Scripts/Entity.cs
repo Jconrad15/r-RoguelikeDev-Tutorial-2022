@@ -37,6 +37,7 @@ public class Entity
         Components = new List<BaseComponent>();
         for (int i = 0; i < components.Count; i++)
         {
+            // Clone the prefab's component
             var component = components[i].Clone();
             if (component is AI)
             {
@@ -47,6 +48,12 @@ public class Entity
                 Fighter f = component as Fighter;
                 Components.Add(f);
                 f.SetEntity(this);
+            }
+            else if (component is Inventory)
+            {
+                Inventory inv = component as Inventory;
+                Components.Add(inv);
+                inv.SetEntity(this);
             }
         }
 
@@ -79,6 +86,24 @@ public class Entity
         Entity entityPrefab, Tile tile)
     {
         return EntityClone(entityPrefab, tile);
+    }
+
+    public bool TryPickUpItem()
+    {
+        if (CurrentTile.item == null)
+        {
+            InterfaceLogManager.Instance.LogMessage(
+                "No item to pick up.");
+            return false;
+        }
+
+        Inventory inventory = TryGetInventoryComponent();
+        if (inventory == null)
+        {
+            Debug.LogError("No inventory");
+        }
+
+        return inventory.TryAddItem(CurrentTile.item);
     }
 
     public bool TryAction(Direction direction)
@@ -165,6 +190,21 @@ public class Entity
                 targetEntity.EntityName + "for no damage");
         }
 
+    }
+
+    public Inventory TryGetInventoryComponent()
+    {
+        Inventory inventory = null;
+        for (int i = 0; i < Components.Count; i++)
+        {
+            var component = Components[i];
+            if (component is Inventory)
+            {
+                inventory = component as Inventory;
+            }
+        }
+
+        return inventory;
     }
 
     public Fighter TryGetFighterComponent()

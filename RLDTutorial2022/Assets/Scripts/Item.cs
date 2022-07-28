@@ -60,6 +60,21 @@ public class Item
         return ItemClone(itemPrefab, tile);
     }
 
+    public bool TryPlaceAtTile(Tile targetTile)
+    {
+        if (targetTile == null) { return false; }
+        if (targetTile.item != null) { return false; }
 
+        targetTile.item = this;
+        CurrentTile = targetTile;
+        return true;
+    }
+
+    public void PickedUp()
+    {
+        // Remove self from tile
+        CurrentTile.item = null;
+        CurrentTile = null;
+    }
 
 }

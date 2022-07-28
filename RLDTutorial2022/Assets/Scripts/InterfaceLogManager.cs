@@ -13,7 +13,7 @@ public class InterfaceLogManager : MonoBehaviour
     private GameObject logItemContainer;
 
     private readonly int maxLogItems = 5;
-
+    public static readonly Color defaultColor = Color.white;
     private Queue<GameObject> logItems;
 
     public static InterfaceLogManager Instance { get; private set; }
@@ -33,12 +33,17 @@ public class InterfaceLogManager : MonoBehaviour
         logItemContainer.SetActive(true);
     }
 
-    public void LogMessage(string message)
+    public void LogMessage(string message, Color color = default)
     {
-        AddLogItem(message);
+        if (color == default)
+        {
+            color = Color.white;
+        }
+
+        AddLogItem(message, color);
     }
 
-    private void AddLogItem(string logText)
+    private void AddLogItem(string logText, Color color)
     {
         GameObject newLogItem = Instantiate(
             logItemPrefab, logItemContainer.transform);
@@ -48,7 +53,7 @@ public class InterfaceLogManager : MonoBehaviour
         InterfaceLogUI logUI =
             newLogItem.GetComponent<InterfaceLogUI>();
 
-        logUI.Setup(logText);
+        logUI.Setup(logText, color);
         CheckLogLength();
     }
 

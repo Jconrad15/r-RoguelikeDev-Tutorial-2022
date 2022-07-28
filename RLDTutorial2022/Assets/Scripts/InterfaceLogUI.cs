@@ -5,12 +5,13 @@ using TMPro;
 
 public class InterfaceLogUI : MonoBehaviour
 {
-    public void Setup(string logText)
+    public void Setup(string logText, Color color)
     {
         TextMeshProUGUI textObject =
             GetComponentInChildren<TextMeshProUGUI>();
 
         textObject.SetText(logText);
+        textObject.color = color;
     }
 
 }

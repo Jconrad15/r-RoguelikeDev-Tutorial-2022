@@ -209,7 +209,8 @@ public class Entity
         if (!IsPlayer)
         {
             InterfaceLogManager.Instance.LogMessage(
-                EntityName + " is dead");
+                EntityName + " is dead",
+                Color.red);
         }
 
         // Edit entity

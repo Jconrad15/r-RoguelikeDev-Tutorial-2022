@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
     private readonly float speed = 2f;
     private readonly float distanceThreshold = 0.01f;
     
-    private readonly float maxDistance = 100f;
+    private readonly float maxDistance = 70f;
     private bool coroutineRunning = false;
 
     private bool isDebugZoomOut = false;
@@ -73,12 +73,22 @@ public class CameraController : MonoBehaviour
                 GetPlayerPos(),
                 speed * distance * Time.deltaTime);
 
+            // Lerp quicker if near end
+            if (distance < 5f)
+            {
+                transform.position = Vector3.MoveTowards(
+                    transform.position,
+                    GetPlayerPos(),
+                    speed * Time.deltaTime);
+            }
+
             distance = Vector3.Distance(
                 transform.position, GetPlayerPos());
+
             yield return null;
         }
 
-        // set to end player pos
+        // Set to end player pos
         transform.position = GetPlayerPos();
         coroutineRunning = false;
     }

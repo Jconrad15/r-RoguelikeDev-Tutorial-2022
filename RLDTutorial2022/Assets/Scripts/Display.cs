@@ -136,8 +136,13 @@ public class Display : MonoBehaviour
             entityPrefab, entityContainer.transform);
         entityGO.transform.localPosition = position;
 
-        entityGO.GetComponent<EntityText>().SetText(tile.entity);
+        // Setup components
+        entityGO.GetComponent<EntityText>()
+            .SetText(tile.entity);
+        entityGO.GetComponent<MouseOverEntity>()
+            .SetEntity(tile.entity);
 
+        // Register events
         tile.entity.RegisterOnEntityMoved(OnEntityMoved);
         tile.entity.RegisterOnEntityDied(OnEntityDied);
 
@@ -147,6 +152,7 @@ public class Display : MonoBehaviour
             cbOnPlayerGOCreated?.Invoke();
         }
 
+        // Store entity with gameobject
         EntityGOData data = new EntityGOData(
             entityGO,
             tile.entity,

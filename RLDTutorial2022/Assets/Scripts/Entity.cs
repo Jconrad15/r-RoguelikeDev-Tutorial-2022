@@ -142,14 +142,17 @@ public class Entity
 
         if (damage > 0)
         {
-            target.Damage(damage);
-            Debug.Log(EntityName +
+            InterfaceLogManager.Instance.LogMessage(EntityName +
                 " did " + damage + " damage to " +
                 targetEntity.EntityName);
+            // Do the damage
+            target.Damage(damage);
         }
         else
         {
-            Debug.Log("No damage");
+            InterfaceLogManager.Instance.LogMessage(
+                EntityName + " attacked " +
+                targetEntity.EntityName + "for no damage");
         }
 
     }
@@ -205,7 +208,9 @@ public class Entity
     {
         if (!IsPlayer)
         {
-            Debug.Log(EntityName + " is dead");
+            InterfaceLogManager.Instance.LogMessage(
+                EntityName + " is dead",
+                Color.red);
         }
 
         // Edit entity
@@ -259,4 +264,5 @@ public class Entity
     {
         cbOnEntityDied -= callbackfunc;
     }
+
 }

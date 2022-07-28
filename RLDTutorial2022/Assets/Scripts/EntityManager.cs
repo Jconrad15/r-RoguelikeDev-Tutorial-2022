@@ -8,6 +8,7 @@ public class EntityManager : MonoBehaviour
     private List<Entity> entities = new List<Entity>();
 
     private Action<Entity> cbOnPlayerCreated;
+    private Action<Entity> cbOnEntityCreated;
 
     public void CreateEntities(TileGrid grid)
     {
@@ -22,16 +23,13 @@ public class EntityManager : MonoBehaviour
             CreateEntitiesInRoom(grid, rooms[i]);
         }
 
-        Debug.Log("Created " + entities.Count + " entities");
+        //Debug.Log("Created " + entities.Count + " entities");
     }
 
     private void CreatePlayer(Tile tile)
     {
         Entity newPlayer = Entity.SpawnCloneAtTile(
             EntityFactory.Instance.PlayerPrefab, tile);
-
-        Debug.Log("player at " +
-            tile.Coordinates.ToString());
 
         entities.Add(newPlayer);
         cbOnPlayerCreated?.Invoke(newPlayer);
@@ -75,6 +73,7 @@ public class EntityManager : MonoBehaviour
                 EntityFactory.Instance.TrollPrefab, tile);
         }
 
+        cbOnEntityCreated?.Invoke(newEntity);
         entities.Add(newEntity);
     }
 
@@ -116,5 +115,17 @@ public class EntityManager : MonoBehaviour
         Action<Entity> callbackfunc)
     {
         cbOnPlayerCreated -= callbackfunc;
+    }
+
+    public void RegisterOnEntityCreated(
+    Action<Entity> callbackfunc)
+    {
+        cbOnEntityCreated += callbackfunc;
+    }
+
+    public void UnregisterOnEntityCreated(
+        Action<Entity> callbackfunc)
+    {
+        cbOnEntityCreated -= callbackfunc;
     }
 }

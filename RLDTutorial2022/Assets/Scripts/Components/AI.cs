@@ -27,8 +27,8 @@ public class AI : BaseComponent
             return false;
         }
 
-        // Reset variables if multiple attempts
-        if (attemptCount > 0) { NullDataValues(); }
+        // Reset variables for each attempt
+        NullDataValues();
 
         // Check if there is a destination
         // and if the player is still there

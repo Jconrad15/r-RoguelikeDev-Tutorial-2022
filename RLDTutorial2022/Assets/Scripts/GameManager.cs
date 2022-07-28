@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
         FindObjectOfType<VisualEffectManager>().Initialize();
         FindObjectOfType<SoundManager>().Initialize();
         FindObjectOfType<GameOverDetector>().Initialize();
+        InterfaceLogManager.Instance.Initialize();
 
         // Create the grid of tiles
         Grid = new TileGrid(50, 50);

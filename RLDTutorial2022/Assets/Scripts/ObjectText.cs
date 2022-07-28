@@ -35,7 +35,11 @@ public class ObjectText : MonoBehaviour
         Tile t = item.CurrentTile;
 
         Color selectedTextColor;
-        if (t.VisibilityLevel == VisibilityLevel.NotVisible ||
+        if (t == null)
+        {
+            selectedTextColor = ColorDatabase.hidden;
+        }
+        else if (t.VisibilityLevel == VisibilityLevel.NotVisible ||
             t.VisibilityLevel == VisibilityLevel.PreviouslySeen)
         {
             selectedTextColor = ColorDatabase.hidden;

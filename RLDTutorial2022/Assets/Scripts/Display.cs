@@ -128,14 +128,7 @@ public class Display : MonoBehaviour
                 // if tile has an item update item visibility
                 if (t.item != null)
                 {
-                    for (int j = 0; j < itemGOData.Count; j++)
-                    {
-                        if (itemGOData[j].ContainsItem(t.item))
-                        {
-                            UpdateItemVisibility(itemGOData[j]);
-                            break; // when found
-                        }
-                    }
+                    UpdateItemVisibility(t.item);
                 }
 
                 break; // when found
@@ -143,11 +136,28 @@ public class Display : MonoBehaviour
         }
     }
 
-    private void UpdateItemVisibility(ItemGOData itemGOData)
+    private void UpdateItemVisibility(Item item)
     {
-        itemGOData.itemGO.GetComponent<ObjectText>()
-            .SetText(itemGOData.item);
+        GameObject itemGO = null;
+
+        // Find item object
+        for (int j = 0; j < itemGOData.Count; j++)
+        {
+            if (itemGOData[j].ContainsItem(item))
+            {
+                itemGO = itemGOData[j].itemGO;
+                break; // when found
+            }
+        }
+
+        if (itemGO == null)
+        {
+            Debug.LogError("No itemGO");
+        }
+
+        itemGO.GetComponent<ObjectText>().SetText(item);
     }
+
 
     private void UpdateEntityVisibility(EntityGOData entityGOData)
     {
@@ -204,6 +214,10 @@ public class Display : MonoBehaviour
             itemPrefab, itemContainer.transform);
         itemGO.transform.localPosition = position;
 
+        // Register events
+        tile.item.RegisterOnItemDropped(OnItemLocationChanged);
+        tile.item.RegisterOnItemPickedUp(OnItemLocationChanged);
+
         // Setup components
         itemGO.GetComponent<ObjectText>()
             .SetText(tile.item);
@@ -214,6 +228,11 @@ public class Display : MonoBehaviour
             tile.item);
 
         itemGOData.Add(data);
+    }
+
+    private void OnItemLocationChanged(Item item)
+    {
+        UpdateItemVisibility(item);
     }
 
     private void OnEntityDied(Entity deadEntity)

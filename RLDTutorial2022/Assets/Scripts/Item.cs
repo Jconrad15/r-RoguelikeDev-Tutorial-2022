@@ -1,9 +1,12 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Item
 {
+    private Action<Item> cbOnItemPickedUp;
+    private Action<Item> cbOnItemDropped;
+
     public string Character { get; private set; }
     public string EntityName { get; private set; }
 
@@ -67,6 +70,7 @@ public class Item
 
         targetTile.item = this;
         CurrentTile = targetTile;
+        cbOnItemDropped?.Invoke(this);
         return true;
     }
 
@@ -75,6 +79,30 @@ public class Item
         // Remove self from tile
         CurrentTile.item = null;
         CurrentTile = null;
+        cbOnItemPickedUp?.Invoke(this);
     }
 
+    public void RegisterOnItemPickedUp(
+        Action<Item> callbackfunc)
+    {
+        cbOnItemPickedUp += callbackfunc;
+    }
+
+    public void UnregisterOnItemPickedUp(
+        Action<Item> callbackfunc)
+    {
+        cbOnItemPickedUp -= callbackfunc;
+    }
+
+    public void RegisterOnItemDropped(
+        Action<Item> callbackfunc)
+    {
+        cbOnItemDropped += callbackfunc;
+    }
+
+    public void UnregisterOnItemDropped(
+        Action<Item> callbackfunc)
+    {
+        cbOnItemDropped -= callbackfunc;
+    }
 }

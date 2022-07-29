@@ -5,6 +5,7 @@ using UnityEngine;
 public class ItemFactory : MonoBehaviour
 {
     public Item HealthPotionPrefab { get; private set; }
+    public Item LightingScrollPrefab { get; private set; }
 
     public void InitializeFactory()
     {
@@ -16,6 +17,17 @@ public class ItemFactory : MonoBehaviour
                 new List<BaseItemComponent>()
                 {
                     new HealingConsumable(4)
+                },
+                false);
+
+        LightingScrollPrefab =
+            new Item(
+                "~",
+                ColorDatabase.yellow,
+                "Lightning Scroll",
+                new List<BaseItemComponent>()
+                {
+                    new LightningDamageConsumable(20, 5)
                 },
                 false);
     }

@@ -38,4 +38,7 @@ public static class ColorDatabase
 
     public static Color healthPotion =
         new Color32(127, 0, 255, 255);
+
+    public static Color yellow =
+        new Color32(255, 255, 0, 255);
 }

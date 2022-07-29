@@ -24,7 +24,7 @@ public class ItemManager : MonoBehaviour
 
     private void CreateItemsInRoom(TileGrid grid, Room room)
     {
-        int itemCount = 1;
+        int itemCount = UnityEngine.Random.Range(1, 3);
         List<(int, int)> locations = room.InnerArea;
 
         for (int i = 0; i < itemCount; i++)
@@ -48,8 +48,17 @@ public class ItemManager : MonoBehaviour
 
     private void PlaceItemAtTile(Tile tile)
     {
-        Item newItem = Item.SpawnCloneAtTile(
-            ItemFactory.Instance.HealthPotionPrefab, tile);
+        Item newItem;
+        if (UnityEngine.Random.value < 0.7)
+        {
+            newItem = Item.SpawnCloneAtTile(
+                ItemFactory.Instance.HealthPotionPrefab, tile);
+        }
+        else
+        {
+            newItem = Item.SpawnCloneAtTile(
+                ItemFactory.Instance.LightingScrollPrefab, tile);
+        }
         
         cbOnItemCreated?.Invoke(newItem);
         items.Add(newItem);

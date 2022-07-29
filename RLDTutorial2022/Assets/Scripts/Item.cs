@@ -39,6 +39,13 @@ public class Item
                 Components.Add(hc);
                 hc.SetItem(this);
             }
+            else if (component is LightningDamageConsumable)
+            {
+                LightningDamageConsumable ldc =
+                    component as LightningDamageConsumable;
+                Components.Add(ldc);
+                ldc.SetItem(this);
+            }
         }
     }
 
@@ -91,10 +98,21 @@ public class Item
     /// <returns></returns>
     public bool TryUseItem()
     {
-        HealingConsumable hc = TryGetHealingConsumableComponent();
-        if (hc == null) { return false; }
+        Debug.Log("TryUseItem");
 
-        return hc.Activate(CurrentEntity);
+        // Try to use each component, note only uses one component
+        for (int i = 0; i < Components.Count; i++)
+        {
+            var component = Components[i];
+            
+            if (component is Consumable)
+            {
+                Consumable c = component as Consumable;
+                return c.Activate(CurrentEntity);
+            }
+        }
+
+        return false;
     }
 
     public HealingConsumable TryGetHealingConsumableComponent()

@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EntityManager : MonoBehaviour
@@ -92,6 +92,12 @@ public class EntityManager : MonoBehaviour
         return nonPlayerEntities;
     }
 
+    public List<Entity> GetAllEntities()
+    {
+        List<Entity> allEntities = new List<Entity>(entities);
+        return allEntities;
+    }
+
     public Entity GetPlayerEntity()
     {
         for (int i = 0; i < entities.Count; i++)
@@ -103,6 +109,49 @@ public class EntityManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    public Entity GetNearestFighterEntity(Entity startingEntity)
+    {
+        Entity[] otherEntities =
+            GetOtherEntitiesWithFighterComponent(startingEntity);
+
+        float[] distances = new float[otherEntities.Length];
+        for (int i = 0; i < otherEntities.Length; i++)
+        {
+            float distance = HexCoordinates.HexDistance(
+                startingEntity.CurrentTile.Coordinates,
+                otherEntities[i].CurrentTile.Coordinates);
+            distances[i] = distance;
+        }
+
+        int index = Array.IndexOf(distances, distances.Min());
+
+        return otherEntities[index];
+    }
+
+    /// <summary>
+    /// Gets entities with fighter component
+    /// other than the provided starting entity.
+    /// </summary>
+    /// <param name="startingEntity"></param>
+    /// <returns></returns>
+    private Entity[] GetOtherEntitiesWithFighterComponent(
+        Entity startingEntity)
+    {
+        List<Entity> tempOtherEntities = new List<Entity>(entities);
+        // Remove the starting entity
+        tempOtherEntities.Remove(startingEntity);
+        // Get entities with fighter components
+        for (int i = tempOtherEntities.Count - 1; i >= 0; i--)
+        {
+            Fighter f = tempOtherEntities[i].TryGetFighterComponent();
+            if (f == null)
+            {
+                tempOtherEntities.Remove(tempOtherEntities[i]);
+            }
+        }
+        return tempOtherEntities.ToArray();
     }
 
     public void RegisterOnPlayerCreated(

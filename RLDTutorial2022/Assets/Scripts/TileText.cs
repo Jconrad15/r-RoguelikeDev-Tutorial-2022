@@ -14,7 +14,7 @@ public class TileText : MonoBehaviour
         if (t.VisibilityLevel ==
             VisibilityLevel.NotVisible)
         {
-            selectedTextColor = new Color32(0, 0, 0, 0);
+            selectedTextColor = ColorDatabase.hidden;
         }
         else if (t.VisibilityLevel ==
             VisibilityLevel.PreviouslySeen)

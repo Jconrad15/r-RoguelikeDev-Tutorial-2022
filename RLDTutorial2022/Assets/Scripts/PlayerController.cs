@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     private KeyCode southeastKey = KeyCode.X;
     [SerializeField]
     private KeyCode southwestKey = KeyCode.Z;
+    [SerializeField]
+    private KeyCode pickUpItemKey = KeyCode.G;
 
     private Entity player;
 
@@ -63,6 +65,12 @@ public class PlayerController : MonoBehaviour
 
     private bool CheckPlayerAction()
     {
+        if (Input.GetKeyDown(pickUpItemKey))
+        {
+            return player.TryPickUpItem();
+        }
+
+
         bool west = Input.GetKeyDown(westKey);
         bool east = Input.GetKeyDown(eastKey);
 

@@ -10,9 +10,14 @@ public class TileGrid
     public Path_TileGraph TileGraph { get; private set; }
 
 	public Tile[] Tiles { get; private set; }
-    private List<RectangularRoom> rectRooms = new List<RectangularRoom>();
-    private List<HexRoom> hexRooms = new List<HexRoom>();
-    private List<Hallway> hallways = new List<Hallway>();
+    private List<RectangularRoom> rectRooms =
+        new List<RectangularRoom>();
+
+    private List<HexRoom> hexRooms =
+        new List<HexRoom>();
+
+    private List<Hallway> hallways =
+        new List<Hallway>();
 
     public void CreateNewTileGraph()
     {
@@ -58,7 +63,7 @@ public class TileGrid
                 if (IsCenterPoint(x, y))
                 {
                     Tiles[i].backgroundColor = 
-                        new Color32(11, 37, 69, 255);
+                        ColorDatabase.roomCenterTile;
                 }
 
                 i++;

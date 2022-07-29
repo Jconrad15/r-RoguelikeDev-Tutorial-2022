@@ -8,20 +8,12 @@ public class Tile
     private Action<Tile> cbOnVisibilityChanged;
 
     public Color backgroundColor;
-    public static readonly Color defaultBackgroundColor =
-        new Color32(15, 76, 92, 255);
-
     public Color foregroundColor;
-    public static readonly Color defaultForegroundColor =
-        new Color32(251, 139, 36, 255);
-
-    public static readonly Color defaultWallBackgroundColor =
-        new Color32(95, 15, 64, 255);
-
 
     public HexCoordinates Coordinates { get; private set; }
 
     public Entity entity;
+    public Item item;
     public char Character { get; private set; }
 
     public bool IsWalkable { get; private set; }
@@ -38,6 +30,7 @@ public class Tile
     {
         Coordinates = coordinates;
         entity = null;
+        item = null;
         VisibilityLevel = VisibilityLevel.NotVisible;
 
         switch (type)
@@ -54,8 +47,8 @@ public class Tile
 
     private void CreateFloorTile()
     {
-        backgroundColor = defaultBackgroundColor;
-        foregroundColor = defaultForegroundColor;
+        backgroundColor = ColorDatabase.defaultTileBackground;
+        foregroundColor = ColorDatabase.defaultTileForeground;
         IsWalkable = true;
         IsTransparent = true;
         Character = ' ';
@@ -63,8 +56,8 @@ public class Tile
 
     private void CreateWallTile()
     {
-        backgroundColor = defaultWallBackgroundColor;
-        foregroundColor = defaultForegroundColor;
+        backgroundColor = ColorDatabase.defaultTileWallBackground;
+        foregroundColor = ColorDatabase.defaultTileForeground;
         IsWalkable = false;
         IsTransparent = false;
         Character = '#';

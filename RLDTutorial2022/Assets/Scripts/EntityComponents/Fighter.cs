@@ -30,6 +30,16 @@ public class Fighter : BaseComponent
         HP -= amount;
     }
 
+    public int Heal(int amount)
+    {
+        if (HP == maxHP) { return 0; }
+
+        int HPDownBy = maxHP - HP;
+        HP += amount;
+        // Return whichever is smaller
+        return HPDownBy >= amount ? amount : HPDownBy;
+    }
+
     private void Died()
     {
         e.Died();

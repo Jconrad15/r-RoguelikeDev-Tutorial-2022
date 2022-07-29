@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6fbd92914a208a447b0e51eda56800cc
+guid: 0fa1b770d8e68c940a65d9e54b372cbd
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Diplomata
+  - Righteous
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

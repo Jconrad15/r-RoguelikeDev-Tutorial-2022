@@ -37,6 +37,7 @@ public class Entity
         Components = new List<BaseComponent>();
         for (int i = 0; i < components.Count; i++)
         {
+            // Clone the prefab's component
             var component = components[i].Clone();
             if (component is AI)
             {
@@ -47,6 +48,12 @@ public class Entity
                 Fighter f = component as Fighter;
                 Components.Add(f);
                 f.SetEntity(this);
+            }
+            else if (component is Inventory)
+            {
+                Inventory inv = component as Inventory;
+                Components.Add(inv);
+                inv.SetEntity(this);
             }
         }
 
@@ -81,13 +88,41 @@ public class Entity
         return EntityClone(entityPrefab, tile);
     }
 
+    public bool TryPickUpItem()
+    {
+        if (CurrentTile.item == null)
+        {
+            InterfaceLogManager.Instance.LogMessage(
+                "No item to pick up.");
+            return false;
+        }
+
+        Inventory inventory = TryGetInventoryComponent();
+        if (inventory == null)
+        {
+            Debug.LogError("No inventory");
+        }
+
+        return inventory.TryAddItem(CurrentTile.item);
+    }
+
     public bool TryAction(Direction direction)
     {
         Tile neighborTile = GameManager.Instance.Grid
             .GetTileInDirection(CurrentTile, direction);
 
-        if (neighborTile == null) { return false; }
-        if (neighborTile.IsWalkable == false) { return false; }
+        if (neighborTile == null)
+        {
+            InterfaceLogManager.Instance.LogMessage(
+                "The way is blocked.");
+            return false;
+        }
+        if (neighborTile.IsWalkable == false)
+        {
+            InterfaceLogManager.Instance.LogMessage(
+                "The way is blocked.");
+            return false;
+        }
         
         // If entity exists and blocks movement, Attack instead
         if (neighborTile.entity != null)
@@ -157,6 +192,21 @@ public class Entity
 
     }
 
+    public Inventory TryGetInventoryComponent()
+    {
+        Inventory inventory = null;
+        for (int i = 0; i < Components.Count; i++)
+        {
+            var component = Components[i];
+            if (component is Inventory)
+            {
+                inventory = component as Inventory;
+            }
+        }
+
+        return inventory;
+    }
+
     public Fighter TryGetFighterComponent()
     {
         Fighter fighter = null;
@@ -210,12 +260,12 @@ public class Entity
         {
             InterfaceLogManager.Instance.LogMessage(
                 EntityName + " is dead",
-                Color.red);
+                ColorDatabase.death);
         }
 
         // Edit entity
         Character = "%";
-        Color = new Color32(191, 0, 0, 255);
+        Color = ColorDatabase.death;
         BlocksMovement = false;
         EntityName = "Remains of " + EntityName;
 

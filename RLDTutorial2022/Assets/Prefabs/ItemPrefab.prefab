@@ -93,8 +93,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25
-  m_fontSizeBase: 25
+  m_fontSize: 22
+  m_fontSizeBase: 22
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -147,11 +147,9 @@ GameObject:
   - component: {fileID: 895455293862660579}
   - component: {fileID: 895455293862660574}
   - component: {fileID: 5817987725977763639}
-  - component: {fileID: -3024718161551790939}
-  - component: {fileID: 2315302878914967310}
   - component: {fileID: 2935816431377772109}
   m_Layer: 0
-  m_Name: EntityPrefab
+  m_Name: ItemPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -217,30 +215,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6484a1dd46167847a6e710791d7751d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &-3024718161551790939
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 895455293862660578}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f11e4eeb557796349afbd5b62c6e978b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2315302878914967310
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 895455293862660578}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c8c5bbe816629f42b553c49d68a9509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!61 &2935816431377772109

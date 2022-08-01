@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     private bool isTargeting;
 
     private Entity player;
+    private EscapeMenuManager escManager;
 
     private void Start()
     {
@@ -30,6 +31,8 @@ public class PlayerController : MonoBehaviour
 
         TurnController.Instance
             .RegisterOnStartPlayerTurn(OnStartTurn);
+
+        escManager = FindObjectOfType<EscapeMenuManager>();
     }
 
     private void OnPlayerCreated(Entity player)
@@ -48,7 +51,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        StartCoroutine(PlayerProcessing());
+        _ = StartCoroutine(PlayerProcessing());
     }
 
     private IEnumerator PlayerProcessing()
@@ -57,8 +60,9 @@ public class PlayerController : MonoBehaviour
         bool playerActed = false;
         while (playerActed == false)
         {
-            // selecting a target or not
-            if (isTargeting == false)
+            // Can act if not targeting and escape menu is closed
+            if (isTargeting == false &&
+                escManager.IsOpen == false)
             {
                 playerActed = CheckDirectionalAction();
             }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class TargetingSystem : MonoBehaviour
     private PlayerController playerController;
 
     private List<Tile> highlightedTiles;
+
+    private Action<bool> cbOnTargetingStatusChanged;
 
     public static TargetingSystem Instance { get; private set; }
     private void Awake()
@@ -206,5 +209,17 @@ public class TargetingSystem : MonoBehaviour
         InterfaceLogManager.Instance.LogMessage(
             "Targeting " + targetType +
             ". Left click to select - Esc to cancel.");
+    }
+
+    public void RegisterOnTargetingStatusChanged(
+        Action<bool> callbackfunc)
+    {
+        cbOnTargetingStatusChanged += callbackfunc;
+    }
+
+    public void UnregisterOnTargetingStatusChanged(
+        Action<bool> callbackfunc)
+    {
+        cbOnTargetingStatusChanged -= callbackfunc;
     }
 }

@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private KeyCode pickUpItemKey = KeyCode.G;
 
+    private bool isTargeting;
+
     private Entity player;
 
     private void Start()
@@ -33,6 +35,7 @@ public class PlayerController : MonoBehaviour
     private void OnPlayerCreated(Entity player)
     {
         this.player = player;
+        isTargeting = false;
     }
 
     private void OnStartTurn()
@@ -54,7 +57,11 @@ public class PlayerController : MonoBehaviour
         bool playerActed = false;
         while (playerActed == false)
         {
-            playerActed = CheckPlayerAction();
+            // selecting a target or not
+            if (isTargeting == false)
+            {
+                playerActed = CheckDirectionalAction();
+            }
 
             yield return null;
         }
@@ -63,7 +70,7 @@ public class PlayerController : MonoBehaviour
         TurnController.Instance.NextTurn();
     }
 
-    private bool CheckPlayerAction()
+    private bool CheckDirectionalAction()
     {
         if (Input.GetKeyDown(pickUpItemKey))
         {
@@ -118,5 +125,15 @@ public class PlayerController : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void StartTargeting()
+    {
+        isTargeting = true;
+    }
+
+    public void StopTargeting()
+    {
+        isTargeting = false;
     }
 }

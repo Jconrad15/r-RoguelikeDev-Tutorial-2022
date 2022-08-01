@@ -6,6 +6,7 @@ public class ItemFactory : MonoBehaviour
 {
     public Item HealthPotionPrefab { get; private set; }
     public Item LightingScrollPrefab { get; private set; }
+    public Item ConfusionScrollPrefab { get; private set; }
 
     public void InitializeFactory()
     {
@@ -28,6 +29,17 @@ public class ItemFactory : MonoBehaviour
                 new List<BaseItemComponent>()
                 {
                     new LightningDamageConsumable(20, 5)
+                },
+                false);
+
+        ConfusionScrollPrefab =
+            new Item(
+                "~",
+                new Color32(207, 63, 255, 255),
+                "Confusion Scroll",
+                new List<BaseItemComponent>()
+                {
+                    new ConfusionConsumable(4)
                 },
                 false);
     }

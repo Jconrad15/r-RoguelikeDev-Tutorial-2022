@@ -62,8 +62,6 @@ public class Fighter : BaseComponent
         HP = other.maxHP;
     }
 
-    public void SetEntity(Entity entity) => e = entity;
-
     public override object Clone()
     {
         return new Fighter(this);

@@ -31,6 +31,8 @@ public class EntityManager : MonoBehaviour
         Entity newPlayer = Entity.SpawnCloneAtTile(
             EntityFactory.Instance.PlayerPrefab, tile);
 
+        Debug.Log("Player at " + tile.Coordinates.ToString());
+
         entities.Add(newPlayer);
         cbOnPlayerCreated?.Invoke(newPlayer);
     }

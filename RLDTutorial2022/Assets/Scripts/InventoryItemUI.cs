@@ -18,11 +18,18 @@ public class InventoryItemUI : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        // Use item when clicked
-        if (item.TryUseItem())
+        // Try use item when clicked
+        if (item.TryUseItem(this))
         {
-            cbScheduleToDestroy?.Invoke(item);
+            ItemUsed();
         }
+    }
+
+    public void ItemUsedThroughTargeting() => ItemUsed();
+
+    private void ItemUsed()
+    {
+        cbScheduleToDestroy?.Invoke(item);
     }
 
     public void RegisterScheduleToDestroy(

@@ -23,8 +23,6 @@ public class Inventory : BaseComponent
         Items = other.Items;
     }
 
-    public void SetEntity(Entity entity) => e = entity;
-
     public override object Clone()
     {
         return new Inventory(this);

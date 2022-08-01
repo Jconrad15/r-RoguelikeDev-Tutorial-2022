@@ -18,6 +18,8 @@ public class Item
 
     public List<BaseItemComponent> Components { get; private set; }
 
+    private InventoryItemUI calledFromItemUI;
+
     public Item(
         string character, Color color, string entityName,
         List<BaseItemComponent> components, bool blocksMovement)
@@ -45,6 +47,13 @@ public class Item
                     component as LightningDamageConsumable;
                 Components.Add(ldc);
                 ldc.SetItem(this);
+            }
+            else if (component is ConfusionConsumable)
+            {
+                ConfusionConsumable cc =
+                    component as ConfusionConsumable;
+                Components.Add(cc);
+                cc.SetItem(this);
             }
         }
     }
@@ -96,9 +105,10 @@ public class Item
     /// Returns true if the item was used.
     /// </summary>
     /// <returns></returns>
-    public bool TryUseItem()
+    public bool TryUseItem(InventoryItemUI inventoryItemUI)
     {
-        Debug.Log("TryUseItem");
+        // Temporary storage of what UI to callback if needed
+        calledFromItemUI = inventoryItemUI;
 
         // Try to use each component, note only uses one component
         for (int i = 0; i < Components.Count; i++)
@@ -115,19 +125,13 @@ public class Item
         return false;
     }
 
-    public HealingConsumable TryGetHealingConsumableComponent()
+    /// <summary>
+    /// Try callback to most recent stored inventory item UI,
+    /// when item is used through the targeting system
+    /// </summary>
+    public void ItemUsedThroughTargeting()
     {
-        HealingConsumable hc = null;
-        for (int i = 0; i < Components.Count; i++)
-        {
-            var component = Components[i];
-            if (component is HealingConsumable)
-            {
-                hc = component as HealingConsumable;
-            }
-        }
-
-        return hc;
+        calledFromItemUI.ItemUsedThroughTargeting();
     }
 
     public void Destroy()

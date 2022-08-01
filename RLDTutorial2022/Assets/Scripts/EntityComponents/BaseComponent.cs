@@ -2,7 +2,7 @@ using System;
 
 public class BaseComponent : ICloneable
 {
-    public Entity e;
+    protected Entity e;
 
     public BaseComponent() { }
 
@@ -17,4 +17,7 @@ public class BaseComponent : ICloneable
     {
         e = null;
     }
+
+    public void SetEntity(Entity entity) => e = entity;
+
 }

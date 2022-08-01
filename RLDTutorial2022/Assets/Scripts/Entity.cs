@@ -41,7 +41,9 @@ public class Entity
             var component = components[i].Clone();
             if (component is AI)
             {
-                Components.Add(component as AI);
+                AI ai = component as AI;
+                Components.Add(ai);
+                ai.SetEntity(this);
             }
             else if (component is Fighter)
             {

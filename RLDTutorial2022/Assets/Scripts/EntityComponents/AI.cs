@@ -6,6 +6,8 @@ public class AI : BaseComponent
 {
     private Path_AStar pathway;
 
+    private int isConfusedForTurns = 0;
+
     public AI() : base()
     {
         NullDataValues();
@@ -93,11 +95,12 @@ public class AI : BaseComponent
             pathway = null;
             return;
         }
-
-        if (HexCoordinates.HexDistance(
+        bool isVisibilityDistToPlayer = HexCoordinates.HexDistance(
             aiEntity.CurrentTile.Coordinates,
             player.CurrentTile.Coordinates) <=
-            aiEntity.VisibilityDistance)
+            aiEntity.VisibilityDistance;
+
+        if (isVisibilityDistToPlayer && isConfusedForTurns <= 0)
         {
             Destination = player.CurrentTile;
         }
@@ -135,6 +138,28 @@ public class AI : BaseComponent
         {
             Debug.LogError("Next-current tile distance > 1.");
         }
+
+        TryDecreaseConfusion();
+    }
+
+    private void TryDecreaseConfusion()
+    {
+        if (isConfusedForTurns > 0)
+        {
+            isConfusedForTurns -= 1;
+
+            if (isConfusedForTurns == 0)
+            {
+                InterfaceLogManager.Instance.LogMessage(
+                    e.EntityName + " is no longer confused.");
+            }
+        }
+
+    }
+
+    public void ConfuseAI(int turns)
+    {
+        isConfusedForTurns = turns;
     }
 
     private void NullDataValues()

@@ -48,16 +48,23 @@ public class ItemManager : MonoBehaviour
 
     private void PlaceItemAtTile(Tile tile)
     {
+        // Randomly choose which item
         Item newItem;
-        if (UnityEngine.Random.value < 0.7)
+        float randomValue = UnityEngine.Random.value;
+        if (randomValue < 0.1f)
         {
             newItem = Item.SpawnCloneAtTile(
                 ItemFactory.Instance.HealthPotionPrefab, tile);
         }
-        else
+        else if (randomValue < 0.2f)
         {
             newItem = Item.SpawnCloneAtTile(
                 ItemFactory.Instance.LightingScrollPrefab, tile);
+        }
+        else
+        {
+            newItem = Item.SpawnCloneAtTile(
+                ItemFactory.Instance.ConfusionScrollPrefab, tile);
         }
         
         cbOnItemCreated?.Invoke(newItem);

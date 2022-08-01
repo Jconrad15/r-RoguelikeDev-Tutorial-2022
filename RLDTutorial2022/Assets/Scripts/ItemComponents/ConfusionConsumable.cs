@@ -59,7 +59,6 @@ public class ConfusionConsumable : Consumable
             return;
         }
 
-        // Confuse the target
         if (targetEntity == currentEntity)
         {
             InterfaceLogManager.Instance.LogMessage(
@@ -68,6 +67,7 @@ public class ConfusionConsumable : Consumable
             return;
         }
 
+        // Confuse the target
         targetEntity.TryGetAIComponent().ConfuseAI(NumberOfTurns);
         InterfaceLogManager.Instance.LogMessage(
                 targetEntity.EntityName + " is confused for " +

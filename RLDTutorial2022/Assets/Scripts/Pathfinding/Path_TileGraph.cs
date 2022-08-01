@@ -60,7 +60,7 @@ public class Path_TileGraph
 
             // Get a list of neighbors for the tile
             // Note, some of the array spots could be null.
-            Tile[] neighbors = GetNeighborTiles(t, tileGrid);
+            Tile[] neighbors = t.GetNeighboringTiles();
 
             // If neighbour is walkable,
             // create an edge to the relevant node.
@@ -88,20 +88,6 @@ public class Path_TileGraph
 
         }
         //Debug.Log("Path_TileGraph: Created " + edgeCount + " edges");
-    }
-
-    private Tile[] GetNeighborTiles(Tile t, TileGrid tileGrid)
-    {
-        Tile[] neighbours = new Tile[6];
-
-        for (int i = 0; i < neighbours.Length; i++)
-        {
-            // Cast i as each direction
-            neighbours[i] = tileGrid.GetTileInDirection(
-                t, (Direction)i);
-        }
-
-        return neighbours;
     }
 
 }

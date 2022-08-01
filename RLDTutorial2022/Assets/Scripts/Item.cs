@@ -55,6 +55,13 @@ public class Item
                 Components.Add(cc);
                 cc.SetItem(this);
             }
+            else if (component is FireballDamageConsumable)
+            {
+                FireballDamageConsumable fdc =
+                    component as FireballDamageConsumable;
+                Components.Add(fdc);
+                fdc.SetItem(this);
+            }
         }
     }
 

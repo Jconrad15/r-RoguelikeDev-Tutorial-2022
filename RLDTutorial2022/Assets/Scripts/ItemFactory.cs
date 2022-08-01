@@ -7,6 +7,7 @@ public class ItemFactory : MonoBehaviour
     public Item HealthPotionPrefab { get; private set; }
     public Item LightingScrollPrefab { get; private set; }
     public Item ConfusionScrollPrefab { get; private set; }
+    public Item FireballScrollPrefab { get; private set; }
 
     public void InitializeFactory()
     {
@@ -40,6 +41,17 @@ public class ItemFactory : MonoBehaviour
                 new List<BaseItemComponent>()
                 {
                     new ConfusionConsumable(4)
+                },
+                false);
+
+        FireballScrollPrefab =
+            new Item(
+                "~",
+                ColorDatabase.fire,
+                "Fireball Scroll",
+                new List<BaseItemComponent>()
+                {
+                    new FireballDamageConsumable(12)
                 },
                 false);
     }

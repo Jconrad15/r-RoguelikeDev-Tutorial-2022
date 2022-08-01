@@ -6,6 +6,8 @@ public enum TileType { Floor, Wall };
 public class Tile
 {
     private Action<Tile> cbOnVisibilityChanged;
+    private Action<Tile> cbOnHighlighted;
+    private Action<Tile> cbOnDehighlighted;
 
     public Color backgroundColor;
     public Color foregroundColor;
@@ -63,6 +65,30 @@ public class Tile
         Character = '#';
     }
 
+    public Tile[] GetNeighboringTiles()
+    {
+        Tile[] neighbours = new Tile[6];
+        for (int i = 0; i < neighbours.Length; i++)
+        {
+            // Cast i as each direction
+            neighbours[i] = GameManager.Instance.Grid
+                .GetTileInDirection(
+                this, (Direction)i);
+        }
+
+        return neighbours;
+    }
+
+    public void Highlight()
+    {
+        cbOnHighlighted?.Invoke(this);
+    }
+
+    public void Dehighlight()
+    {
+        cbOnDehighlighted?.Invoke(this);
+    }
+
     public void RegisterOnVisibilityChanged(
         Action<Tile> callbackfunc)
     {
@@ -73,5 +99,29 @@ public class Tile
         Action<Tile> callbackfunc)
     {
         cbOnVisibilityChanged -= callbackfunc;
+    }
+
+    public void RegisterOnHighlighted(
+    Action<Tile> callbackfunc)
+    {
+        cbOnHighlighted += callbackfunc;
+    }
+
+    public void UnregisterOnHighlighted(
+        Action<Tile> callbackfunc)
+    {
+        cbOnHighlighted -= callbackfunc;
+    }
+
+    public void RegisterOnDehighlighted(
+        Action<Tile> callbackfunc)
+    {
+        cbOnDehighlighted += callbackfunc;
+    }
+
+    public void UnregisterOnDehighlighted(
+        Action<Tile> callbackfunc)
+    {
+        cbOnDehighlighted -= callbackfunc;
     }
 }

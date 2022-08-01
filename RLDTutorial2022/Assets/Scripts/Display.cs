@@ -79,6 +79,41 @@ public class Display : MonoBehaviour
         tileGOData.Add(new TileGOData(tileGO, tile));
 
         tile.RegisterOnVisibilityChanged(OnTileVisibilityChanged);
+        tile.RegisterOnHighlighted(OnTileHighlighted);
+        tile.RegisterOnDehighlighted(OnTileDehighlighted);
+    }
+
+    private void OnTileHighlighted(Tile tile)
+    {
+        // Find gameobject for the tile
+        GameObject tileGO = GetTileGameObject(tile);
+        if (tileGO == null) { return; }
+
+        SpriteRenderer sr = tileGO.GetComponent<SpriteRenderer>();
+
+        sr.color = ColorDatabase.highlight;
+    }
+
+    private void OnTileDehighlighted(Tile tile)
+    {
+        // Find gameobject for the tile
+        GameObject tileGO = GetTileGameObject(tile);
+        if (tileGO == null) { return; }
+        SetTileColor(tile, tileGO);
+    }
+
+    private GameObject GetTileGameObject(Tile tile)
+    {
+        for (int i = 0; i < tileGOData.Count; i++)
+        {
+            if (tileGOData[i].ContainsTile(tile))
+            {
+                return tileGOData[i].tileGO;
+            }
+        }
+
+        Debug.LogError("No gameobject for this tile");
+        return null;
     }
 
     private static void SetTileColor(Tile tile, GameObject tileGO)

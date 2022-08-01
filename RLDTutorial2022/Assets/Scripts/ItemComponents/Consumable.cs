@@ -21,5 +21,5 @@ public class Consumable : BaseItemComponent
     public virtual bool Activate(Entity entity) { return false; }
 
     public virtual void EntityTargeted(Entity entity) { }
-
+    public virtual void TileTargeted(Tile tile) { }
 }

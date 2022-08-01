@@ -56,6 +56,11 @@ public class ItemManager : MonoBehaviour
             newItem = Item.SpawnCloneAtTile(
                 ItemFactory.Instance.HealthPotionPrefab, tile);
         }
+        else if (randomValue < 0.8f)
+        {
+            newItem = Item.SpawnCloneAtTile(
+                ItemFactory.Instance.FireballScrollPrefab, tile);
+        }
         else if (randomValue < 0.9f)
         {
             newItem = Item.SpawnCloneAtTile(
@@ -66,7 +71,12 @@ public class ItemManager : MonoBehaviour
             newItem = Item.SpawnCloneAtTile(
                 ItemFactory.Instance.LightingScrollPrefab, tile);
         }
+
+        // Debug only
+        newItem = Item.SpawnCloneAtTile(
+            ItemFactory.Instance.FireballScrollPrefab, tile);
         
+
         cbOnItemCreated?.Invoke(newItem);
         items.Add(newItem);
     }

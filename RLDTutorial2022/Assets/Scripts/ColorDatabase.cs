@@ -41,4 +41,10 @@ public static class ColorDatabase
 
     public static Color yellow =
         new Color32(255, 255, 0, 255);
+
+    public static Color fire =
+        new Color32(255, 0, 0, 255);
+
+    public static Color highlight =
+        new Color32(245, 243, 154, 255);
 }

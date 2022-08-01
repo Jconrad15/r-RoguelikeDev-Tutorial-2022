@@ -20,22 +20,34 @@ public class TargetingSystem : MonoBehaviour
         }
         Instance = this;
     }
-    public void TryGetTarget(Consumable targetingItem)
+
+    public void TryGetTarget(
+        Consumable targetingItem, bool isTargetingEntity = true,
+        int radius = 0)
     {
-        StartCoroutine(Targeting(targetingItem));
+        StartCoroutine(Targeting(
+            targetingItem, isTargetingEntity, radius));
     }
 
-    private IEnumerator Targeting(Consumable targetingItem)
+    private IEnumerator Targeting(
+        Consumable targetingItem, bool isTargetingEntity,
+        int radius)
     {
-        InterfaceLogManager.Instance.LogMessage(
-                "Targeting. Left click to select - Esc to cancel.");
+        // Wait for end of frame, so that previous
+        // clicks don't trigger location selection
+        yield return new WaitForEndOfFrame();
 
         // Start targeting
+        TargetingMessage(isTargetingEntity);
         playerController.StartTargeting();
         Entity targetedEntity = null;
+        Tile targetedTile = null;
 
+        List<Tile> highlightedTiles = new List<Tile>();
+
+        bool targetFound = false;
         // Player selection of target
-        while (targetedEntity == null)
+        while (targetFound == false)
         {
             // Exit if player hits escape
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -45,45 +57,111 @@ public class TargetingSystem : MonoBehaviour
                 break;
             }
 
-            // Check for click targeting
-            bool clicked = Input.GetMouseButtonDown(0);
-            if (clicked)
-            {
-                targetedEntity = TryGetEntity();
-                // Exit if entity targeted
-                if (targetedEntity != null)
-                {
-                    InterfaceLogManager.Instance.LogMessage(
-                        "Target identified.");
-                }
-                else
-                {
-                    InterfaceLogManager.Instance.LogMessage(
-                        "No target present.");
-                }
-            }
+            // Display targeting area
+            DetermineHighlighting(radius, highlightedTiles);
+
+            CheckForClick(isTargetingEntity, ref targetedEntity,
+                ref targetedTile, ref targetFound);
 
             yield return null;
-        }
+        } // end while
+
+        // dehighlight all
+        DehighlightAll(highlightedTiles);
 
         // Stop targeting
         playerController.StopTargeting();
-        targetingItem.EntityTargeted(targetedEntity);
+        if (isTargetingEntity)
+        {
+            targetingItem.EntityTargeted(targetedEntity);
+        }
+        else
+        {
+            targetingItem.TileTargeted(targetedTile);
+        }
+    }
+
+    private static void DetermineHighlighting(
+        int radius, List<Tile> highlightedTiles)
+    {
+        List<Tile> hoveredTiles = new List<Tile>();
+        Tile mainHoveredTile = TryGetTile();
+        hoveredTiles.Add(mainHoveredTile);
+        for (int i = 0; i < radius; i++)
+        {
+            // TODO: get surrounding tiles
+        }
+
+        // highlight
+        for (int i = 0; i < hoveredTiles.Count; i++)
+        {
+            // if hovered tile is not highlighted
+            if (highlightedTiles.Contains(hoveredTiles[i]) ==
+                false)
+            {
+                hoveredTiles[i].Highlight();
+                highlightedTiles.Add(hoveredTiles[i]);
+            }
+        }
+        // dehighlight
+        for (int i = 0; i < highlightedTiles.Count; i++)
+        {
+            // if highlighted tile is not hovered
+            if (hoveredTiles.Contains(highlightedTiles[i]) ==
+                false)
+            {
+                highlightedTiles[i].Dehighlight();
+                highlightedTiles.Remove(highlightedTiles[i]);
+            }
+        }
+    }
+
+    private static void DehighlightAll(
+        List<Tile> highlightedTiles)
+    {
+        for (int i = 0; i < highlightedTiles.Count; i++)
+        {
+            highlightedTiles[i].Dehighlight();
+            highlightedTiles.Remove(highlightedTiles[i]);
+        }
+    }
+
+    private static void CheckForClick(
+        bool isTargetingEntity, ref Entity targetedEntity,
+        ref Tile targetedTile, ref bool targetFound)
+    {
+        bool clicked = Input.GetMouseButtonDown(0);
+        if (clicked)
+        {
+            if (isTargetingEntity)
+            {
+                targetedEntity = TryGetEntity();
+            }
+            else
+            {
+                targetedTile = TryGetTile();
+            }
+
+            // Exit if entity targeted
+            if (targetedEntity != null ||
+                targetedTile != null)
+            {
+                InterfaceLogManager.Instance.LogMessage(
+                    "Target identified.");
+                targetFound = true;
+            }
+            else
+            {
+                InterfaceLogManager.Instance.LogMessage(
+                    "No target present.");
+            }
+        }
     }
 
     private static Entity TryGetEntity()
     {
         Entity targetedEntity;
-        // Get world position under mouse click
-        Vector2 mousePos = Input.mousePosition;
-        Vector2 worldPos = Camera.main.ScreenToWorldPoint(
-            new Vector3(mousePos.x, mousePos.y, 0));
-
-        // Get tile at world position
-        HexCoordinates coordinates =
-            HexCoordinates.FromPosition(worldPos);
-        Tile targetedTile = GameManager.Instance.Grid
-            .GetTileAtHexCoords(coordinates);
+        Tile targetedTile = TryGetTile();
 
         if (targetedTile == null)
         {
@@ -95,5 +173,30 @@ public class TargetingSystem : MonoBehaviour
         // Get entity at tile
         targetedEntity = targetedTile.entity;
         return targetedEntity;
+    }
+
+    private static Tile TryGetTile()
+    {
+        Tile targetedTile;
+        // Get world position under mouse click
+        Vector2 mousePos = Input.mousePosition;
+        Vector2 worldPos = Camera.main.ScreenToWorldPoint(
+            new Vector3(mousePos.x, mousePos.y, 0));
+
+        // Get tile at world position
+        HexCoordinates coordinates =
+            HexCoordinates.FromPosition(worldPos);
+        targetedTile = GameManager.Instance.Grid
+            .GetTileAtHexCoords(coordinates);
+
+        return targetedTile;
+    }
+
+    private static void TargetingMessage(bool isTargetingEntity)
+    {
+        string targetType = isTargetingEntity ? "entity" : "tile";
+        InterfaceLogManager.Instance.LogMessage(
+            "Targeting " + targetType +
+            ". Left click to select - Esc to cancel.");
     }
 }

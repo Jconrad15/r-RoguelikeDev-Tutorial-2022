@@ -13,3 +13,6 @@
 
 # Parts 4-5 - Field of view and initial combat framework
 ![FOV](https://user-images.githubusercontent.com/83470418/178847808-1b7cd6ba-3c5c-4b11-be65-127134e564d7.gif)
+
+# Parts 6-9 - Combat, log, items, and targeting
+![RangedAttack](https://raw.githubusercontent.com/Jconrad15/r-RoguelikeDev-Tutorial-2022/main/RLDTutorial2022/Screenshots/RangedAttack.gif)

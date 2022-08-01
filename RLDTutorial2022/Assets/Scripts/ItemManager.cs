@@ -72,11 +72,6 @@ public class ItemManager : MonoBehaviour
                 ItemFactory.Instance.LightingScrollPrefab, tile);
         }
 
-        // Debug only
-        newItem = Item.SpawnCloneAtTile(
-            ItemFactory.Instance.FireballScrollPrefab, tile);
-        
-
         cbOnItemCreated?.Invoke(newItem);
         items.Add(newItem);
     }

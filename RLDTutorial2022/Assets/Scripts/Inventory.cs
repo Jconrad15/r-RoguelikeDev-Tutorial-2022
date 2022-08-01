@@ -58,7 +58,7 @@ public class Inventory : BaseComponent
         {
             InterfaceLogManager.Instance.LogMessage(
                 e.EntityName + " picked up a " + 
-                addItem.EntityName);
+                addItem.ItemName);
         }
         
         Items.Add(addItem);

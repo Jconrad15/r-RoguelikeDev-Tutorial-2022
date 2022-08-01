@@ -8,7 +8,7 @@ public class Item
     private Action<Item> cbOnItemDropped;
 
     public string Character { get; private set; }
-    public string EntityName { get; private set; }
+    public string ItemName { get; private set; }
 
     public Color Color { get; private set; }
 
@@ -21,12 +21,12 @@ public class Item
     private InventoryItemUI calledFromItemUI;
 
     public Item(
-        string character, Color color, string entityName,
+        string character, Color color, string itemName,
         List<BaseItemComponent> components, bool blocksMovement)
     {
         Character = character;
         Color = color;
-        EntityName = entityName;
+        ItemName = itemName;
         BlocksMovement = blocksMovement;
 
         // Clone the components
@@ -71,7 +71,7 @@ public class Item
         Item item = new Item(
             ItemToClone.Character,
             ItemToClone.Color,
-            ItemToClone.EntityName,
+            ItemToClone.ItemName,
             ItemToClone.Components,
             ItemToClone.BlocksMovement);
 

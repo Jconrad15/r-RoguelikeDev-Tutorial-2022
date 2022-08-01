@@ -1,5 +1,6 @@
 using System;
 
+[Serializable]
 public class BaseComponent : ICloneable
 {
     protected Entity e;

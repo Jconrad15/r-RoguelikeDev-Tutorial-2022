@@ -53,4 +53,12 @@ public class GameManager : MonoBehaviour
             "Welcome to Hex Caverns");
     }
 
+    public void LoadGame()
+    {
+        SaveObject saveObject = LoadSaveGame.Load();
+
+
+
+    }
+
 }

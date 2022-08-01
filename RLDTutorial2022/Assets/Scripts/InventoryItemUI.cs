@@ -13,7 +13,7 @@ public class InventoryItemUI : MonoBehaviour, IPointerDownHandler
         TextMeshProUGUI itemText =
             GetComponentInChildren<TextMeshProUGUI>();
 
-        itemText.SetText(item.EntityName);
+        itemText.SetText(item.ItemName);
     }
 
     public void OnPointerDown(PointerEventData eventData)

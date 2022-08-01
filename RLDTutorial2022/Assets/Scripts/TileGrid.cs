@@ -32,6 +32,25 @@ public class TileGrid
         CreateGrid();
     }
 
+    /// <summary>
+    /// Create tile grid from saved data.
+    /// </summary>
+    /// <param name="saveObject"></param>
+    public TileGrid(SaveObject saveObject)
+    {
+        width = saveObject.savedTileGrid.width;
+        height = saveObject.savedTileGrid.height;
+
+        // Load tiles
+        SavedTile[] savedTiles = saveObject.savedTileGrid.savedTiles;
+        Tiles = new Tile[savedTiles.Length];
+        for (int i = 0; i < savedTiles.Length; i++)
+        {
+            Tiles[i] = new Tile(savedTiles[i]);
+        }
+
+    }
+
     private void CreateGrid()
     {
         Tiles = new Tile[height * width];

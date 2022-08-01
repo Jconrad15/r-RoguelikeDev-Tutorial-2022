@@ -62,6 +62,28 @@ public class Entity
     }
 
     /// <summary>
+    /// Constructor that creates entities from loaded data.
+    /// </summary>
+    /// <param name="savedEntity"></param>
+    public Entity(SavedEntity savedEntity, Tile tile)
+    {
+        IsPlayer = savedEntity.isPlayer;
+        Character = savedEntity.character;
+        EntityName = savedEntity.entityName;
+        VisibilityDistance = savedEntity.visibilityDistance;
+        Color = SavedColor.LoadToColor(savedEntity.color);
+        BlocksMovement = savedEntity.blocksMovement;
+        CurrentTile = tile;
+
+        Components = savedEntity.components;
+
+        for (int i = 0; i < Components.Count; i++)
+        {
+            Components[i].SetEntity(this);
+        }
+    }
+
+    /// <summary>
     /// Copy clone Constructor.
     /// </summary>
     /// <param name="entityToClone"></param>

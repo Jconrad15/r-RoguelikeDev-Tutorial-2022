@@ -131,4 +131,13 @@ public class SavedColor
         b = color.b;
         a = color.a;
     }
+
+    public static Color LoadToColor(SavedColor savedColor)
+    {
+        return new Color(
+            savedColor.r,
+            savedColor.g,
+            savedColor.b,
+            savedColor.a);
+    }
 }

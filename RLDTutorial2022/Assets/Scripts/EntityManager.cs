@@ -26,6 +26,33 @@ public class EntityManager : MonoBehaviour
         //Debug.Log("Created " + entities.Count + " entities");
     }
 
+    public void LoadEntities(TileGrid grid, SaveObject saveObject)
+    {
+        // Load tiles
+        SavedTile[] savedTiles = saveObject.savedTileGrid.savedTiles;
+        for (int i = 0; i < savedTiles.Length; i++)
+        {
+            // Add the saved entity to the tile
+            if (savedTiles[i].savedEntity != null)
+            {
+                Entity loadedEntity = new Entity(
+                    savedTiles[i].savedEntity, grid.Tiles[i]);
+
+                if (loadedEntity.IsPlayer)
+                {
+                    entities.Add(loadedEntity);
+                    cbOnPlayerCreated?.Invoke(loadedEntity);
+                }
+                else
+                {
+                    cbOnEntityCreated?.Invoke(loadedEntity);
+                    entities.Add(loadedEntity);
+                }
+
+            }
+        }
+    }
+
     private void CreatePlayer(Tile tile)
     {
         Entity newPlayer = Entity.SpawnCloneAtTile(

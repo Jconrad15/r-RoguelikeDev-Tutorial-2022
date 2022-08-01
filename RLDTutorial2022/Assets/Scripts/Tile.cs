@@ -47,6 +47,24 @@ public class Tile
         }
     }
 
+    /// <summary>
+    /// Constructor to create tile from loaded data.
+    /// </summary>
+    /// <param name="savedTile"></param>
+    public Tile (SavedTile savedTile)
+    {
+        backgroundColor = SavedColor.LoadToColor(
+            savedTile.backgroundColor);
+        foregroundColor = SavedColor.LoadToColor(
+            savedTile.foregroundColor);
+        Coordinates = savedTile.coordinates;
+
+        Character = savedTile.character;
+        IsWalkable = savedTile.isWalkable;
+        IsTransparent = savedTile.isTransparent;
+        VisibilityLevel = (VisibilityLevel)savedTile.visibilityLevel;
+    }
+
     private void CreateFloorTile()
     {
         backgroundColor = ColorDatabase.defaultTileBackground;

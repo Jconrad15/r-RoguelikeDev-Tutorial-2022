@@ -22,6 +22,25 @@ public class ItemManager : MonoBehaviour
         //Debug.Log("Created " + items.Count + " items");
     }
 
+    public void LoadItems(TileGrid grid, SaveObject saveObject)
+    {
+        // Load tiles
+        SavedTile[] savedTiles = saveObject.savedTileGrid.savedTiles;
+        for (int i = 0; i < savedTiles.Length; i++)
+        {
+            // Add the saved item to the tile
+            if (savedTiles[i].savedItem != null)
+            {
+                Item loadedItem = new Item(
+                    savedTiles[i].savedItem, grid.Tiles[i]);
+
+                cbOnItemCreated?.Invoke(loadedItem);
+                items.Add(loadedItem);
+            }
+        }
+
+    }
+
     private void CreateItemsInRoom(TileGrid grid, Room room)
     {
         int itemCount = UnityEngine.Random.Range(1, 3);

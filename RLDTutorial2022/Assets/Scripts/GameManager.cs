@@ -27,15 +27,7 @@ public class GameManager : MonoBehaviour
     {
         // TODO: fix these calls. use event(s)
 
-        EntityManager = FindObjectOfType<EntityManager>();
-        itemManager = FindObjectOfType<ItemManager>();
-        FindObjectOfType<FieldOfView>().InitializeFOV();
-        FindObjectOfType<VisualEffectManager>().Initialize();
-        FindObjectOfType<SoundManager>().Initialize();
-        FindObjectOfType<GameOverDetector>().Initialize();
-        InterfaceLogManager.Instance.Initialize();
-        FindObjectOfType<PlayerHealthUI>().Initialize();
-        FindObjectOfType<InventoryUI>().Initialize();
+        Initialization();
 
         // Create the grid of tiles
         Grid = new TileGrid(50, 50);
@@ -43,6 +35,23 @@ public class GameManager : MonoBehaviour
         EntityManager.CreateEntities(Grid);
         itemManager.CreateItems(Grid);
 
+        FinishGameSetup();
+    }
+
+    public void LoadGame()
+    {
+        SaveObject saveObject = LoadSaveGame.Load();
+        Initialization();
+        Grid = new TileGrid(saveObject);
+
+        EntityManager.LoadEntities(Grid, saveObject);
+        itemManager.LoadItems(Grid, saveObject);
+
+        FinishGameSetup();
+    }
+
+    private void FinishGameSetup()
+    {
         // Update tile graph based on entities for pathfinding
         Grid.CreateNewTileGraph();
 
@@ -53,12 +62,17 @@ public class GameManager : MonoBehaviour
             "Welcome to Hex Caverns");
     }
 
-    public void LoadGame()
+    private void Initialization()
     {
-        SaveObject saveObject = LoadSaveGame.Load();
-
-
-
+        EntityManager = FindObjectOfType<EntityManager>();
+        itemManager = FindObjectOfType<ItemManager>();
+        FindObjectOfType<FieldOfView>().InitializeFOV();
+        FindObjectOfType<VisualEffectManager>().Initialize();
+        FindObjectOfType<SoundManager>().Initialize();
+        FindObjectOfType<GameOverDetector>().Initialize();
+        InterfaceLogManager.Instance.Initialize();
+        FindObjectOfType<PlayerHealthUI>().Initialize();
+        FindObjectOfType<InventoryUI>().Initialize();
     }
 
 }

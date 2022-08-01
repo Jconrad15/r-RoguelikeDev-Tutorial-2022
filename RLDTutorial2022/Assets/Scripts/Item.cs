@@ -65,6 +65,21 @@ public class Item
         }
     }
 
+    public Item(SavedItem savedItem, Tile tile)
+    {
+        Character = savedItem.character;
+        Color = SavedColor.LoadToColor(savedItem.color);
+        ItemName = savedItem.itemName;
+        BlocksMovement = savedItem.blocksMovement;
+        CurrentTile = tile;
+        Components = savedItem.components;
+
+        for (int i = 0; i < Components.Count; i++)
+        {
+            Components[i].SetItem(this);
+        }
+    }
+
     private static Item ItemClone(
         Item ItemToClone, Tile targetTile)
     {

@@ -22,6 +22,7 @@ public class FireballDamageConsumable : Consumable
         FireballDamageConsumable other) : base(other)
     {
         DamageAmount = other.DamageAmount;
+        Radius = other.Radius;
     }
 
     public override object Clone()

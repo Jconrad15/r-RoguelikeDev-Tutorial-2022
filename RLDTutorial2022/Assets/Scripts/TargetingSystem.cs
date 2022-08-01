@@ -10,6 +10,8 @@ public class TargetingSystem : MonoBehaviour
     [SerializeField]
     private PlayerController playerController;
 
+    private List<Tile> highlightedTiles;
+
     public static TargetingSystem Instance { get; private set; }
     private void Awake()
     {
@@ -43,7 +45,7 @@ public class TargetingSystem : MonoBehaviour
         Entity targetedEntity = null;
         Tile targetedTile = null;
 
-        List<Tile> highlightedTiles = new List<Tile>();
+        highlightedTiles = new List<Tile>();
 
         bool targetFound = false;
         // Player selection of target
@@ -58,7 +60,7 @@ public class TargetingSystem : MonoBehaviour
             }
 
             // Display targeting area
-            DetermineHighlighting(radius, highlightedTiles);
+            DetermineHighlighting(radius);
 
             CheckForClick(isTargetingEntity, ref targetedEntity,
                 ref targetedTile, ref targetFound);
@@ -67,7 +69,7 @@ public class TargetingSystem : MonoBehaviour
         } // end while
 
         // dehighlight all
-        DehighlightAll(highlightedTiles);
+        DehighlightAll();
 
         // Stop targeting
         playerController.StopTargeting();
@@ -81,15 +83,22 @@ public class TargetingSystem : MonoBehaviour
         }
     }
 
-    private static void DetermineHighlighting(
-        int radius, List<Tile> highlightedTiles)
+    private void DetermineHighlighting(
+        int radius)
     {
         List<Tile> hoveredTiles = new List<Tile>();
         Tile mainHoveredTile = TryGetTile();
         hoveredTiles.Add(mainHoveredTile);
-        for (int i = 0; i < radius; i++)
+
+        // TODO: better method of getting surrounding tiles
+        if (radius == 1)
         {
-            // TODO: get surrounding tiles
+            Tile[] neighbors = mainHoveredTile.GetNeighboringTiles();
+            foreach (Tile neighbor in neighbors)
+            {
+                if (neighbor == null) { continue; }
+                hoveredTiles.Add(neighbor);
+            }
         }
 
         // highlight
@@ -116,14 +125,13 @@ public class TargetingSystem : MonoBehaviour
         }
     }
 
-    private static void DehighlightAll(
-        List<Tile> highlightedTiles)
+    private void DehighlightAll()
     {
         for (int i = 0; i < highlightedTiles.Count; i++)
         {
             highlightedTiles[i].Dehighlight();
-            highlightedTiles.Remove(highlightedTiles[i]);
         }
+        highlightedTiles = null;
     }
 
     private static void CheckForClick(

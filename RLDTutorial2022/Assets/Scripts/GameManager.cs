@@ -22,11 +22,10 @@ public class GameManager : MonoBehaviour
     }
 
     public TileGrid CurrentGrid { get; private set; }
+    private TileGrid[] dungeonGrids;
 
     public void GameStart()
     {
-        // TODO: fix these calls. use event(s)
-
         Initialization();
 
         // Create the grid of tiles
@@ -64,6 +63,7 @@ public class GameManager : MonoBehaviour
 
     private void Initialization()
     {
+        // TODO: fix these calls. use event(s)
         EntityManager = FindObjectOfType<EntityManager>();
         itemManager = FindObjectOfType<ItemManager>();
         FindObjectOfType<FieldOfView>().InitializeFOV();
@@ -73,6 +73,11 @@ public class GameManager : MonoBehaviour
         InterfaceLogManager.Instance.Initialize();
         FindObjectOfType<PlayerHealthUI>().Initialize();
         FindObjectOfType<InventoryUI>().Initialize();
+    }
+
+    public void GoDownStairs()
+    {
+
     }
 
 }

@@ -27,7 +27,8 @@ public class TileGrid
 
     public void CreateNewTileGraph()
     {
-        TileGraph = new Path_TileGraph(GameManager.Instance.CurrentGrid);
+        TileGraph = new Path_TileGraph(
+            GameManager.Instance.CurrentGrid);
     }
 
     public TileGrid(int width, int height)

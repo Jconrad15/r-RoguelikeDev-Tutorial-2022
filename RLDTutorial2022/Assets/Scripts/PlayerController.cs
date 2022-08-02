@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private KeyCode southwestKey = KeyCode.Z;
     [SerializeField]
-    private KeyCode pickUpItemKey = KeyCode.G;
+    private KeyCode actionKey = KeyCode.E;
 
     private bool isTargeting;
 
@@ -76,11 +76,20 @@ public class PlayerController : MonoBehaviour
 
     private bool CheckDirectionalAction()
     {
-        if (Input.GetKeyDown(pickUpItemKey))
+        if (Input.GetKeyDown(actionKey))
         {
-            return player.TryPickUpItem();
-        }
+            // Actions
 
+            // Try pick up item
+            bool itemPickedUp = player.TryPickUpItem();
+            if (itemPickedUp == true) { return itemPickedUp; }
+
+            // Try use down stairs
+            bool goDownStairs = false;
+            if (goDownStairs == false) { return goDownStairs; }
+
+            return false;
+        }
 
         bool west = Input.GetKeyDown(westKey);
         bool east = Input.GetKeyDown(eastKey);

@@ -160,6 +160,16 @@ public class Entity
         return inventory.TryAddItem(CurrentTile.item);
     }
 
+    public bool TryGoDownStairs()
+    {
+        // Check if on stairs
+        if (CurrentTile.Character != '>') { return false; }
+
+
+        GameManager.Instance.GoDownStairs();
+        return true;
+    }
+
     public bool TryAction(Direction direction)
     {
         Tile neighborTile = GameManager.Instance.CurrentGrid

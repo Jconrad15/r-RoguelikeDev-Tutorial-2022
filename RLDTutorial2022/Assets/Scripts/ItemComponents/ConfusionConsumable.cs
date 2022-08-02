@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,9 @@ public class ConfusionConsumable : Consumable
     {
         NumberOfTurns = numberOfTurns;
     }
+
+    [JsonConstructor]
+    private ConfusionConsumable() { }
 
     /// <summary>
     /// Copy constructor.

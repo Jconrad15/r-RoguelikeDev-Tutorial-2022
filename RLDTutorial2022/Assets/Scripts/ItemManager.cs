@@ -28,12 +28,7 @@ public class ItemManager : MonoBehaviour
         SavedTile[] savedTiles = saveObject.savedTileGrid.savedTiles;
         for (int i = 0; i < savedTiles.Length; i++)
         {
-            // Unity JSON serializes null items. 
-            // These have been saved with the name NULL
-            if (savedTiles[i].savedItem.itemName == "NULL")
-            {
-                continue;
-            }
+            if (savedTiles[i].savedItem == null) { continue; }
 
             Item loadedItem = new Item(
                 savedTiles[i].savedItem, grid.Tiles[i]);

@@ -32,12 +32,7 @@ public class EntityManager : MonoBehaviour
         SavedTile[] savedTiles = saveObject.savedTileGrid.savedTiles;
         for (int i = 0; i < savedTiles.Length; i++)
         {
-            // Unity JSON serializes null enities. 
-            // These have been saved with the name NULL
-            if (savedTiles[i].savedEntity.entityName == "NULL")
-            {
-                continue;
-            }
+            if (savedTiles[i].savedEntity == null) { continue; }
 
             // Add the saved entity to the tile
             Entity loadedEntity = new Entity(

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,9 @@ public class HealingConsumable : Consumable
 {
 
     public int Amount { get; protected set; }
+
+    [JsonConstructor]
+    private HealingConsumable() { }
 
     public HealingConsumable(int amount) : base()
     {

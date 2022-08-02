@@ -1,7 +1,8 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
+using Newtonsoft.Json;
 
 public class Entity
 {
@@ -15,6 +16,7 @@ public class Entity
     private Action<Entity, Direction> cbOnEntityAttackDirection;
     private Action<Entity> cbOnEntityDied;
 
+    [JsonIgnore]
     public Tile CurrentTile { get; private set; }
 
     public Color Color { get; private set; }
@@ -81,7 +83,7 @@ public class Entity
         Character = savedEntity.character;
         EntityName = savedEntity.entityName;
         VisibilityDistance = savedEntity.visibilityDistance;
-        Color = savedEntity.color;
+        Color = SavedColor.LoadColor(savedEntity.color);
         BlocksMovement = savedEntity.blocksMovement;
         CurrentTile = tile;
 

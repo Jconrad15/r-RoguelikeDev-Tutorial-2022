@@ -54,8 +54,8 @@ public class Tile
     /// <param name="savedTile"></param>
     public Tile (SavedTile savedTile)
     {
-        backgroundColor = savedTile.backgroundColor;
-        foregroundColor = savedTile.foregroundColor;
+        backgroundColor = SavedColor.LoadColor(savedTile.backgroundColor);
+        foregroundColor = SavedColor.LoadColor(savedTile.foregroundColor);
         Coordinates = savedTile.coordinates;
 
         Character = savedTile.character;

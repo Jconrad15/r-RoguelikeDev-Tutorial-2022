@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,9 @@ public class Inventory : BaseComponent
     private List<Item> items;
 
     public List<Item> GetItems() => items;
+
+    [JsonConstructor]
+    private Inventory() { }
 
     public Inventory(int capacity) : base()
     {

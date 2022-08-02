@@ -11,9 +11,14 @@ public class LoadSaveGame : MonoBehaviour
         SaveObject saveObject = new SaveObject(tileGrid);
 
         string path = Path.Combine(
-            Application.persistentDataPath, "save.dat");
+            Application.persistentDataPath, "save.json");
 
-        string json = JsonConvert.SerializeObject(saveObject, Formatting.Indented);
+        JsonSerializerSettings settings =
+            new JsonSerializerSettings
+            { TypeNameHandling = TypeNameHandling.All };
+
+        string json = JsonConvert.SerializeObject(
+            saveObject, Formatting.Indented, settings);
 
         File.WriteAllText(path, json);
     }
@@ -21,14 +26,19 @@ public class LoadSaveGame : MonoBehaviour
     public static SaveObject Load()
     {
         string path = Path.Combine(
-            Application.persistentDataPath, "save.dat");
+            Application.persistentDataPath, "save.json");
         bool pathExists = File.Exists(path);
 
         if (pathExists)
         {
             string json = File.ReadAllText(path);
+
+            JsonSerializerSettings settings =
+                new JsonSerializerSettings
+                { TypeNameHandling = TypeNameHandling.All };
+
             SaveObject saveObject =
-                JsonConvert.DeserializeObject<SaveObject>(json);
+                JsonConvert.DeserializeObject<SaveObject>(json, settings);
             return saveObject;
         }
         

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -45,6 +46,9 @@ public class Fighter : BaseComponent
     {
         e.Died();
     }
+
+    [JsonConstructor]
+    private Fighter() { }
 
     public Fighter(int maxHP, int defense, int power) : base()
     {

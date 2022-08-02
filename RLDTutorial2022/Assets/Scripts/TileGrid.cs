@@ -1,21 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 public class TileGrid
 {
     public int width;
     public int height;
 
+    [JsonIgnore]
     public Path_TileGraph TileGraph { get; private set; }
 
 	public Tile[] Tiles { get; private set; }
+
+    [JsonIgnore]
     private List<RectangularRoom> rectRooms =
         new List<RectangularRoom>();
-
+    [JsonIgnore]
     private List<HexRoom> hexRooms =
         new List<HexRoom>();
-
+    [JsonIgnore]
     private List<Hallway> hallways =
         new List<Hallway>();
 
@@ -48,7 +52,6 @@ public class TileGrid
         {
             Tiles[i] = new Tile(savedTiles[i]);
         }
-
     }
 
     private void CreateGrid()

@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 [Serializable]
 public class SaveObject
 {
     public SavedTileGrid savedTileGrid;
+
+    [JsonConstructor]
+    private SaveObject() { }
 
     public SaveObject(TileGrid tileGrid)
     {
@@ -19,6 +23,10 @@ public class SavedTileGrid
     public int width;
     public int height;
     public SavedTile[] savedTiles;
+
+    [JsonConstructor]
+    private SavedTileGrid() { }
+
     public SavedTileGrid(TileGrid tileGrid)
     {
         width = tileGrid.width;
@@ -42,8 +50,8 @@ public class SavedTileGrid
 [Serializable]
 public class SavedTile
 {
-    public Color backgroundColor;
-    public Color foregroundColor;
+    public SavedColor backgroundColor;
+    public SavedColor foregroundColor;
     public HexCoordinates coordinates;
     public SavedEntity savedEntity;
     public SavedItem savedItem;
@@ -52,10 +60,13 @@ public class SavedTile
     public bool isTransparent;
     public int visibilityLevel;
 
+    [JsonConstructor]
+    private SavedTile() { }
+
     public SavedTile(Tile tile)
     {
-        backgroundColor = tile.backgroundColor;
-        foregroundColor = tile.foregroundColor;
+        backgroundColor = new SavedColor(tile.backgroundColor);
+        foregroundColor = new SavedColor(tile.foregroundColor);
         coordinates = tile.Coordinates;
 
         if (tile.entity != null)
@@ -92,11 +103,14 @@ public class SavedEntity
     public string character;
     public int visibilityDistance;
     public string entityName;
-    public Color color;
+    public SavedColor color;
     public bool blocksMovement;
     public BaseComponent[] components;
 
     public SavedItem[] savedItemsFromInventoryComponent;
+
+    [JsonConstructor]
+    private SavedEntity() { }
 
     public SavedEntity(Entity entity)
     {
@@ -104,7 +118,7 @@ public class SavedEntity
         character = entity.Character;
         visibilityDistance = entity.VisibilityDistance;
         entityName = entity.EntityName;
-        color = entity.Color;
+        color = new SavedColor(entity.Color);
         blocksMovement = entity.BlocksMovement;
 
         List<BaseComponent> tempComponents = new List<BaseComponent>();
@@ -138,17 +152,48 @@ public class SavedItem
 {
     public string character;
     public string itemName;
-    public Color color;
+    public SavedColor color;
     public bool blocksMovement;
     public List<BaseItemComponent> components;
+
+    [JsonConstructor]
+    private SavedItem() { }
 
     public SavedItem(Item item)
     {
         character = item.Character;
         itemName = item.ItemName;
-        color = item.Color;
+        color = new SavedColor(item.Color);
         blocksMovement = item.BlocksMovement;
         components = item.Components;
     }
 }
 
+[Serializable]
+public class SavedColor
+{
+    public float r;
+    public float g;
+    public float b;
+    public float a;
+
+    [JsonConstructor]
+    private SavedColor() { }
+
+    public SavedColor(Color color)
+    {
+        r = color.r;
+        g = color.g;
+        b = color.b;
+        a = color.a;
+    }
+
+    public static Color LoadColor(SavedColor savedColor)
+    {
+        return new Color(
+            savedColor.r,
+            savedColor.g,
+            savedColor.b,
+            savedColor.a);
+    }
+}

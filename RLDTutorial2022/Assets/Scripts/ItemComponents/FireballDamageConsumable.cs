@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,9 @@ public class FireballDamageConsumable : Consumable
 {
     public int DamageAmount { get; protected set; }
     public int Radius { get; protected set; }
+
+    [JsonConstructor]
+    private FireballDamageConsumable() { }
 
     public FireballDamageConsumable(
         int damage) : base()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 public class Item
 {
@@ -14,6 +15,7 @@ public class Item
 
     public bool BlocksMovement { get; private set; }
 
+    [JsonIgnore]
     public Tile CurrentTile { get; private set; }
     public Entity CurrentEntity { get; private set; }
 
@@ -69,7 +71,7 @@ public class Item
     public Item(SavedItem savedItem, Tile tile)
     {
         Character = savedItem.character;
-        Color = savedItem.color;
+        Color = SavedColor.LoadColor(savedItem.color);
         ItemName = savedItem.itemName;
         BlocksMovement = savedItem.blocksMovement;
         CurrentTile = tile;

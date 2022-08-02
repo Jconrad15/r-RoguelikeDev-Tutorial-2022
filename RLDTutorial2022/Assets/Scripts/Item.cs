@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 public class Item
 {
@@ -8,11 +9,13 @@ public class Item
     private Action<Item> cbOnItemDropped;
 
     public string Character { get; private set; }
-    public string EntityName { get; private set; }
+    public string ItemName { get; private set; }
 
     public Color Color { get; private set; }
 
     public bool BlocksMovement { get; private set; }
+
+    [JsonIgnore]
     public Tile CurrentTile { get; private set; }
     public Entity CurrentEntity { get; private set; }
 
@@ -21,12 +24,12 @@ public class Item
     private InventoryItemUI calledFromItemUI;
 
     public Item(
-        string character, Color color, string entityName,
+        string character, Color color, string itemName,
         List<BaseItemComponent> components, bool blocksMovement)
     {
         Character = character;
         Color = color;
-        EntityName = entityName;
+        ItemName = itemName;
         BlocksMovement = blocksMovement;
 
         // Clone the components
@@ -65,13 +68,28 @@ public class Item
         }
     }
 
+    private Item(SavedItem savedItem, Tile tile)
+    {
+        Character = savedItem.character;
+        Color = SavedColor.LoadColor(savedItem.color);
+        ItemName = savedItem.itemName;
+        BlocksMovement = savedItem.blocksMovement;
+        CurrentTile = tile;
+        Components = savedItem.components;
+
+        for (int i = 0; i < Components.Count; i++)
+        {
+            Components[i].SetItem(this);
+        }
+    }
+
     private static Item ItemClone(
         Item ItemToClone, Tile targetTile)
     {
         Item item = new Item(
             ItemToClone.Character,
             ItemToClone.Color,
-            ItemToClone.EntityName,
+            ItemToClone.ItemName,
             ItemToClone.Components,
             ItemToClone.BlocksMovement);
 
@@ -79,6 +97,23 @@ public class Item
         targetTile.item = item;
 
         return item;
+    }
+
+    private static Item ItemClone(
+        SavedItem savedItemToClone, Tile targetTile)
+    {
+        Item item = new Item(savedItemToClone, targetTile);
+
+        item.CurrentTile = targetTile;
+        targetTile.item = item;
+
+        return item;
+    }
+
+    public static Item SpawnCloneAtTile(
+        SavedItem savedItem, Tile tile)
+    {
+        return ItemClone(savedItem, tile);
     }
 
     public static Item SpawnCloneAtTile(

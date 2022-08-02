@@ -1,15 +1,18 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class Fighter : BaseComponent
 {
     public int maxHP;
     public int defense;
     public int power;
 
-    private Action<int> cbOnFighterHealthChanged; 
+    private Action<int> cbOnFighterHealthChanged;
 
+    [JsonProperty]
     private int hp;
     public int HP
     {
@@ -44,6 +47,9 @@ public class Fighter : BaseComponent
     {
         e.Died();
     }
+
+    [JsonConstructor]
+    private Fighter() { }
 
     public Fighter(int maxHP, int defense, int power) : base()
     {

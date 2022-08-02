@@ -1,12 +1,20 @@
-using System.Collections;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class LightningDamageConsumable : Consumable
 {
 
+    [JsonProperty]
     public int DamageAmount { get; protected set; }
+    [JsonProperty]
     public int MaximumRange { get; protected set; }
+
+    [JsonConstructor]
+    private LightningDamageConsumable() { }
+
     public LightningDamageConsumable(
         int amount, int maximumRange) : base()
     {

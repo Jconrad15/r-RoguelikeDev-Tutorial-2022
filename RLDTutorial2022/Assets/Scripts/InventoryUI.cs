@@ -66,6 +66,7 @@ public class InventoryUI : MonoBehaviour
         {
             Debug.LogError(
                 "Player does not have an inventory component");
+            return;
         }
 
         inventory.RegisterOnItemDropped(OnItemDropped);

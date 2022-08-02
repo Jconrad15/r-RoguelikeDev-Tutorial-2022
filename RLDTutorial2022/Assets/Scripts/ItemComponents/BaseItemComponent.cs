@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class BaseItemComponent : ICloneable
 {
+    [NonSerialized]
     public Item item;
     public void SetItem(Item item) => this.item = item;
 

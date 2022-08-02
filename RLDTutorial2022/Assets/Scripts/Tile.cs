@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum TileType { Floor, Wall };
+[Serializable]
 public class Tile
 {
     private Action<Tile> cbOnVisibilityChanged;
@@ -45,6 +46,22 @@ public class Tile
                 CreateWallTile();
                 break;
         }
+    }
+
+    /// <summary>
+    /// Constructor to create tile from loaded data.
+    /// </summary>
+    /// <param name="savedTile"></param>
+    public Tile (SavedTile savedTile)
+    {
+        backgroundColor = SavedColor.LoadColor(savedTile.backgroundColor);
+        foregroundColor = SavedColor.LoadColor(savedTile.foregroundColor);
+        Coordinates = savedTile.coordinates;
+
+        Character = savedTile.character;
+        IsWalkable = savedTile.isWalkable;
+        IsTransparent = savedTile.isTransparent;
+        VisibilityLevel = (VisibilityLevel)savedTile.visibilityLevel;
     }
 
     private void CreateFloorTile()

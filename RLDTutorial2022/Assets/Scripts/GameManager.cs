@@ -27,6 +27,43 @@ public class GameManager : MonoBehaviour
     {
         // TODO: fix these calls. use event(s)
 
+        Initialization();
+
+        // Create the grid of tiles
+        Grid = new TileGrid(50, 50);
+
+        EntityManager.CreateEntities(Grid);
+        itemManager.CreateItems(Grid);
+
+        FinishGameSetup();
+    }
+
+    public void LoadGame()
+    {
+        SaveObject saveObject = LoadSaveGame.Load();
+        Initialization();
+        Grid = new TileGrid(saveObject);
+
+        EntityManager.LoadEntities(Grid, saveObject);
+        itemManager.LoadItems(Grid, saveObject);
+
+        FinishGameSetup();
+    }
+
+    private void FinishGameSetup()
+    {
+        // Update tile graph based on entities for pathfinding
+        Grid.CreateNewTileGraph();
+
+        FindObjectOfType<Display>().CreateInitialGrid();
+        TurnController.Instance.StartTurnSystem();
+
+        InterfaceLogManager.Instance.LogMessage(
+            "Welcome to Hex Caverns");
+    }
+
+    private void Initialization()
+    {
         EntityManager = FindObjectOfType<EntityManager>();
         itemManager = FindObjectOfType<ItemManager>();
         FindObjectOfType<FieldOfView>().InitializeFOV();
@@ -36,21 +73,6 @@ public class GameManager : MonoBehaviour
         InterfaceLogManager.Instance.Initialize();
         FindObjectOfType<PlayerHealthUI>().Initialize();
         FindObjectOfType<InventoryUI>().Initialize();
-
-        // Create the grid of tiles
-        Grid = new TileGrid(50, 50);
-
-        EntityManager.CreateEntities(Grid);
-        itemManager.CreateItems(Grid);
-
-        // Update tile graph based on entities for pathfinding
-        Grid.CreateNewTileGraph();
-
-        FindObjectOfType<Display>().CreateInitialGrid();
-        TurnController.Instance.StartTurnSystem();
-
-        InterfaceLogManager.Instance.LogMessage(
-            "Welcome to Hex Caverns");
     }
 
 }

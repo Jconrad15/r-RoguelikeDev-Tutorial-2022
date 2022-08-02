@@ -6,9 +6,20 @@ public class GameInit : MonoBehaviour
 {
     public void StartButton()
     {
+        InitializeFactories();
+        GameManager.Instance.GameStart();
+    }
+
+    private static void InitializeFactories()
+    {
         EntityFactory.Instance.InitializeFactory();
         ItemFactory.Instance.InitializeFactory();
-        GameManager.Instance.GameStart();
+    }
+
+    public void LoadButton()
+    {
+        InitializeFactories();
+        GameManager.Instance.LoadGame();
     }
 
 }

@@ -1,7 +1,9 @@
 using System;
+using Newtonsoft.Json;
 
 public class BaseComponent : ICloneable
 {
+    [JsonIgnore]
     protected Entity e;
 
     public BaseComponent() { }

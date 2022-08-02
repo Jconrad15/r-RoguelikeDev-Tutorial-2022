@@ -22,6 +22,60 @@ public class ItemManager : MonoBehaviour
         //Debug.Log("Created " + items.Count + " items");
     }
 
+    public void LoadItems(TileGrid grid, SaveObject saveObject)
+    {
+        SavedTile[] savedTiles = saveObject.savedTileGrid.savedTiles;
+        for (int i = 0; i < savedTiles.Length; i++)
+        {
+            CheckLoadInventoryItems(grid, savedTiles, i);
+
+            // Check if the tile has an item
+            if (savedTiles[i].savedItem == null) { continue; }
+
+            Item loadedItem = Item.SpawnCloneAtTile(
+                savedTiles[i].savedItem, grid.Tiles[i]);
+
+            cbOnItemCreated?.Invoke(loadedItem);
+            items.Add(loadedItem);
+        }
+
+    }
+
+    private void CheckLoadInventoryItems(
+        TileGrid grid, SavedTile[] savedTiles, int index)
+    {
+        // Check if inventory items were saved for entity on tile
+        if (savedTiles[index].savedEntity == null) { return; }
+
+        SavedItem[] savedItems = savedTiles[index]
+            .savedEntity.savedItemsFromInventoryComponent;
+        if (savedItems == null) { return; }
+
+        // Get the loaded entity and inventory
+        Entity loadedEntity = grid.Tiles[index].entity;
+        Inventory inv = loadedEntity.TryGetInventoryComponent();
+
+        if (inv == null)
+        {
+            Debug.LogError(
+                "Loading items into null inventory component");
+            return;
+        }
+
+        for (int j = 0; j < savedItems.Length; j++)
+        {
+            // Create item at the tile
+            Item loadedInventoryItem = Item.SpawnCloneAtTile(
+                savedTiles[index].savedItem, grid.Tiles[index]);
+            // Entity picks up item to inventory
+            loadedEntity.TryPickUpItem();
+
+            cbOnItemCreated?.Invoke(loadedInventoryItem);
+            items.Add(loadedInventoryItem);
+        }
+        
+    }
+
     private void CreateItemsInRoom(TileGrid grid, Room room)
     {
         int itemCount = UnityEngine.Random.Range(1, 3);

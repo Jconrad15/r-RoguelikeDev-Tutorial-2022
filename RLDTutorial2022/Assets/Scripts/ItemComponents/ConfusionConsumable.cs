@@ -1,16 +1,23 @@
-using System.Collections;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class ConfusionConsumable : Consumable
 {
+    [NonSerialized]
     private Entity currentEntity;
+    [JsonProperty]
     public int NumberOfTurns { get; protected set; }
     public ConfusionConsumable(
         int numberOfTurns) : base()
     {
         NumberOfTurns = numberOfTurns;
     }
+
+    [JsonConstructor]
+    private ConfusionConsumable() { }
 
     /// <summary>
     /// Copy constructor.

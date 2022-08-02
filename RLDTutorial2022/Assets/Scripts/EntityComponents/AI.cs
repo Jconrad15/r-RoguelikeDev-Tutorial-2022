@@ -1,9 +1,11 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class AI : BaseComponent
 {
+    [NonSerialized]
     private Path_AStar pathway;
 
     private int isConfusedForTurns = 0;
@@ -18,8 +20,10 @@ public class AI : BaseComponent
         return new AI();
     }
 
-    public Tile Destination { get; private set; }
-    public Tile NextTile { get; private set; }
+    [NonSerialized]
+    private Tile destination;
+    [NonSerialized]
+    private Tile nextTile;
 
     public bool TryAction(Entity aiEntity, int attemptCount)
     {
@@ -35,19 +39,19 @@ public class AI : BaseComponent
         // Check if there is a destination
         // and if the player is still there
         bool playerAtDestination = false;
-        if (Destination != null)
+        if (destination != null)
         {
             playerAtDestination = GameManager.Instance
                 .EntityManager.GetPlayerEntity()
-                .CurrentTile != Destination;
+                .CurrentTile != destination;
         }
 
         // If no path, reached end of path, or no destination,
         // or if player no longer at destination
         // make a new destination and pathway
         if (pathway == null || 
-            aiEntity.CurrentTile == Destination ||
-            Destination == null ||
+            aiEntity.CurrentTile == destination ||
+            destination == null ||
             playerAtDestination == false)
         {
             DetermineNewDestinationPath(aiEntity);
@@ -63,17 +67,17 @@ public class AI : BaseComponent
         }
         
         // First peek at next tile. 
-        NextTile = pathway.Peek();
+        nextTile = pathway.Peek();
 
         float distance = HexCoordinates.HexDistance(
-            NextTile.Coordinates,
+            nextTile.Coordinates,
             aiEntity.CurrentTile.Coordinates);
         if (distance > 1)
         {
             Debug.LogError("Next-current tile distance > 1.");
         }
 
-        bool acted = aiEntity.TryAction(NextTile);
+        bool acted = aiEntity.TryAction(nextTile);
         // If entity acts, then tile will be dequeued
         if (acted)
         {
@@ -102,7 +106,7 @@ public class AI : BaseComponent
 
         if (isVisibilityDistToPlayer && isConfusedForTurns <= 0)
         {
-            Destination = player.CurrentTile;
+            destination = player.CurrentTile;
         }
         else
         {
@@ -123,11 +127,11 @@ public class AI : BaseComponent
                 NullDataValues();
                 return;
             }
-            Destination = randomNeighborTile;
+            destination = randomNeighborTile;
         }
 
         // Create new pathway based on destination
-        pathway = new Path_AStar(aiEntity.CurrentTile, Destination);
+        pathway = new Path_AStar(aiEntity.CurrentTile, destination);
         // Trash first tile, this is the currentTile
         _ = pathway.Dequeue();
 
@@ -164,9 +168,9 @@ public class AI : BaseComponent
 
     private void NullDataValues()
     {
-        Destination = null;
+        destination = null;
         pathway = null;
-        NextTile = null;
+        nextTile = null;
     }
 
 }

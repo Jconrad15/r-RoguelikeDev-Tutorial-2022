@@ -18,6 +18,7 @@ public class Entity
 
     [JsonIgnore]
     public Tile CurrentTile { get; private set; }
+    public void SetTile(Tile t) => CurrentTile = t;
 
     public Color Color { get; private set; }
 
@@ -358,6 +359,11 @@ public class Entity
         EntityName = null;
         Components = null;
 
+        ClearCallbacks();
+    }
+
+    public void ClearCallbacks()
+    {
         cbOnEntityAttackDirection = null;
         cbOnEntityDied = null;
         cbOnEntityMoved = null;

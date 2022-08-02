@@ -10,16 +10,6 @@ public class ItemManager : MonoBehaviour
 
     private Action<Item> cbOnItemCreated;
 
-    private void Start()
-    {
-        GameManager.Instance.RegisterOnSwitchLevel(OnSwitchLevel);
-    }
-
-    private void OnSwitchLevel()
-    {
-        items = new List<Item>();
-    }
-
     public void CreateItems(TileGrid grid, int seed)
     {
         // Create seed based state
@@ -38,6 +28,22 @@ public class ItemManager : MonoBehaviour
         Random.state = oldState;
     }
 
+/*    /// <summary>
+    /// Create items when transfering player inventory to new level.
+    /// </summary>
+    /// <param name="grid"></param>
+    /// <param name="seed"></param>
+    /// <param name="playerInventoryItems"></param>
+    public void CreateItems(
+        TileGrid grid, int seed, List<Item> playerInventoryItems)
+    {
+        // Load the player inventory items from previous level
+        TransferInventoryItemsToLevel(playerInventoryItems);
+
+        // Normally create items
+        CreateItems(grid, seed);
+    }*/
+    
     public void LoadItems(TileGrid grid, SaveObject saveObject)
     {
         SavedTile[] savedTiles = saveObject.savedTileGrid.savedTiles;
@@ -54,8 +60,26 @@ public class ItemManager : MonoBehaviour
             cbOnItemCreated?.Invoke(loadedItem);
             items.Add(loadedItem);
         }
-
     }
+
+/*    public void TransferInventoryItemsToLevel(
+        List<Item> inventoryItems)
+    {
+        Entity player = GameManager.Instance
+            .EntityManager.GetPlayerEntity();
+
+        for (int i = 0; i < inventoryItems.Count; i++)
+        {
+            // Create item at the tile
+            Item loadedInventoryItem = Item.SpawnCloneAtTile(
+                inventoryItems[i], player.CurrentTile);
+            // Entity picks up item to inventory
+            player.TryPickUpItem();
+
+            cbOnItemCreated?.Invoke(loadedInventoryItem);
+            items.Add(loadedInventoryItem);
+        }
+    }*/
 
     private void CheckLoadInventoryItems(
         TileGrid grid, SavedTile[] savedTiles, int index)
@@ -127,6 +151,8 @@ public class ItemManager : MonoBehaviour
     {
         // Create seed based state
         Random.State oldState = Random.state;
+        // Use seed for this tile
+        seed += tile.Coordinates.X + tile.Coordinates.Z;
         Random.InitState(seed);
 
         // Randomly choose which item

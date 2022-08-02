@@ -69,6 +69,14 @@ public class InventoryUI : MonoBehaviour
             return;
         }
 
+        // Add already existing inventory items to UI gameobjects
+        List<Item> items = inventory.GetItems();
+        for (int i = 0; i < items.Count; i++)
+        {
+            GameObject itemGO = CreateInventoryItemGO(items[i]);
+            itemGOs.Add(items[i], itemGO);
+        }
+
         inventory.RegisterOnItemDropped(OnItemDropped);
         inventory.RegisterOnItemAdded(OnItemAdded);
     }
@@ -81,8 +89,28 @@ public class InventoryUI : MonoBehaviour
 
     private GameObject CreateInventoryItemGO(Item item)
     {
+        if (item == null)
+        {
+            Debug.LogError("Trying to create inventory item" +
+                "gameobject for a null item");
+            return null;
+        }
+
+        if (inventoryItemContainer == null)
+        {
+            Debug.LogError("InventoryItemContainer is null. WHY?");
+            return null;
+        }
+
+        if (inventoryItemPrefab == null)
+        {
+            Debug.LogError("inventoryItemPrefab is null. WHY?");
+            return null;
+        }
+
         GameObject itemGO = Instantiate(
             inventoryItemPrefab, inventoryItemContainer.transform);
+
         InventoryItemUI inventoryItemUI =
             itemGO.GetComponent<InventoryItemUI>();
 

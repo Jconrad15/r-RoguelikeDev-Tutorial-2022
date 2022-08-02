@@ -82,11 +82,6 @@ public class CameraController : MonoBehaviour
 
     private Vector3 GetPlayerPos()
     {
-        if (playerGO == null)
-        {
-            return Vector3.zero;
-        }
-
         Vector3 playerPos = playerGO.transform.position;
         playerPos.z = defaultZ;
         return playerPos;

@@ -10,8 +10,6 @@ public class GameManager : MonoBehaviour
     public EntityManager EntityManager { get; private set; }
     private ItemManager itemManager;
 
-    private Action cbOnSwitchLevel;
-
     public static GameManager Instance { get; private set; }
     private void Awake()
     {
@@ -25,34 +23,63 @@ public class GameManager : MonoBehaviour
 
     public TileGrid CurrentGrid { get; private set; }
     public int CurrentGridSeed { get; private set; }
-    public int[] DungeonGridSeeds { get; private set; }
+    public Dungeon CurrentDungeon { get; private set; }
 
+    /// <summary>
+    /// Starts a new game or a new level.
+    /// </summary>
     public void GameStart()
     {
         Initialization();
 
-        // Create dungeon
-        DungeonGridSeeds = new int[3];
-        DungeonGridSeeds[0] = 0;
-        DungeonGridSeeds[1] = 2;
-        DungeonGridSeeds[2] = 8;
+        // Check if a seed was stored in SceneBus for current level
+        if (SceneBus.Instance.MoveToSeed != int.MaxValue)
+        {
+            // Use stored dungeon and seed
+            CurrentDungeon = SceneBus.Instance.currentDungeon;
+            CurrentGridSeed = SceneBus.Instance.MoveToSeed;
 
-        CurrentGridSeed = DungeonGridSeeds[0];
+            // Create the grid of tiles
+            CurrentGrid = new TileGrid(50, 50, CurrentGridSeed);
+            EntityManager.CreateEntities(
+                CurrentGrid,
+                CurrentGridSeed,
+                SceneBus.Instance.PlayerEntity);
 
-        // Create the grid of tiles
-        CurrentGrid = new TileGrid(50, 50, CurrentGridSeed);
+            itemManager.CreateItems(
+                CurrentGrid,
+                CurrentGridSeed);
 
-        EntityManager.CreateEntities(CurrentGrid, CurrentGridSeed);
-        itemManager.CreateItems(CurrentGrid, CurrentGridSeed);
+            
+        }
+        else
+        {
+            // Otherwise create dungeon and use the first seed
+            CurrentDungeon = Dungeon.RandomDungeon();
+            CurrentGridSeed = CurrentDungeon.dungeonGridSeeds[0];
+
+            // Create the grid of tiles
+            CurrentGrid = new TileGrid(50, 50, CurrentGridSeed);
+            EntityManager.CreateEntities(
+                CurrentGrid,
+                CurrentGridSeed);
+
+            itemManager.CreateItems(
+                CurrentGrid,
+                CurrentGridSeed);
+        }
 
         FinishGameSetup();
     }
 
+    /// <summary>
+    /// Loads a game from disk.
+    /// </summary>
     public void LoadGame()
     {
         SaveObject saveObject = LoadSaveGame.Load();
         Initialization();
-        DungeonGridSeeds = saveObject.dungeonGridSeeds;
+        CurrentDungeon = new Dungeon(saveObject.dungeonGridSeeds);
         CurrentGridSeed = saveObject.currentGridSeed;
         CurrentGrid = new TileGrid(saveObject);
 
@@ -90,53 +117,37 @@ public class GameManager : MonoBehaviour
 
     public void GoDownStairs()
     {
-        _ = StartCoroutine(SwitchToNextLevel());
+        SwitchToNextLevel();
     }
 
-    private IEnumerator SwitchToNextLevel()
+    private void SwitchToNextLevel()
     {
-        Debug.Log("Go down stairs");
-        // Need to clean up everything
-        cbOnSwitchLevel?.Invoke();
-        CurrentGrid.Destroy();
-
-        // Wait for everything to clean up
-        yield return new WaitForSeconds(1f);
-
-        // Create new tileGrid
         SwitchToNextSeed();
-        CurrentGrid = new TileGrid(50, 50, CurrentGridSeed);
 
-        EntityManager.CreateEntities(CurrentGrid, CurrentGridSeed);
-        itemManager.CreateItems(CurrentGrid, CurrentGridSeed);
+        Debug.Log("Go down stairs");
 
-        FinishGameSetup();
+        // Set sceneBus data
+        SceneBus.Instance.currentDungeon = CurrentDungeon;
+        SceneBus.Instance.SetPlayerEntity(
+            EntityManager.GetPlayerEntity());
+
+        FindObjectOfType<SceneChanger>()
+            .MoveToNextLevel(CurrentGridSeed);
     }
 
     private void SwitchToNextSeed()
     {
         int currentIndex = Array.IndexOf(
-            DungeonGridSeeds, CurrentGridSeed);
+            CurrentDungeon.dungeonGridSeeds, CurrentGridSeed);
 
         int nextIndex = currentIndex + 1;
-        if (nextIndex >= DungeonGridSeeds.Length)
+        if (nextIndex >= CurrentDungeon.dungeonGridSeeds.Length)
         {
             Debug.Log("You reached the end!");
             return;
         }
 
-        CurrentGridSeed = DungeonGridSeeds[nextIndex];
+        CurrentGridSeed = CurrentDungeon.dungeonGridSeeds[nextIndex];
     }
 
-    public void RegisterOnSwitchLevel(
-        Action callbackfunc)
-    {
-        cbOnSwitchLevel += callbackfunc;
-    }
-
-    public void UnregisterOnSwitchLevel(
-        Action callbackfunc)
-    {
-        cbOnSwitchLevel -= callbackfunc;
-    }
 }

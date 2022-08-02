@@ -26,34 +26,6 @@ public class Display : MonoBehaviour
 
     public GameObject PlayerGO { get; private set; }
 
-    private void Start()
-    {
-        GameManager.Instance.RegisterOnSwitchLevel(OnSwitchLevel);
-    }
-
-    private void OnSwitchLevel()
-    {
-        for (int i = tileGOData.Count - 1; i >= 0; i--)
-        {
-            Destroy(tileGOData[i].tileGO);
-        }
-        tileGOData.Clear();
-
-        for (int i = entityGOData.Count - 1; i >= 0; i--)
-        {
-            Destroy(entityGOData[i].entityGO);
-        }
-        entityGOData.Clear();
-
-        for (int i = itemGOData.Count - 1; i >= 0; i--)
-        {
-            Destroy(itemGOData[i].itemGO);
-        }
-        itemGOData.Clear();
-
-        Destroy(PlayerGO);
-    }
-
     public void CreateInitialGrid()
     {
         TileGrid tileGrid = GameManager.Instance.CurrentGrid;

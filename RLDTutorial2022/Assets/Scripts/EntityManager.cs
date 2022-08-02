@@ -11,16 +11,6 @@ public class EntityManager : MonoBehaviour
     private Action<Entity> cbOnPlayerCreated;
     private Action<Entity> cbOnEntityCreated;
 
-    private void Start()
-    {
-        GameManager.Instance.RegisterOnSwitchLevel(OnSwitchLevel);
-    }
-
-    private void OnSwitchLevel()
-    {
-        entities = new List<Entity>();
-    }
-
     public void CreateEntities(TileGrid grid, int seed)
     {
         // Create seed based state
@@ -31,6 +21,34 @@ public class EntityManager : MonoBehaviour
         Room[] rooms = grid.GetAllRoomsArray();
 
         CreatePlayer(roomCenters[0]);
+
+        // Create NPCs -- Use index 1 to N
+        for (int i = 1; i < roomCenters.Length; i++)
+        {
+            CreateEntitiesInRoom(grid, rooms[i], seed);
+        }
+
+        // Restore state
+        Random.state = oldState;
+    }
+
+    /// <summary>
+    /// Create entities and load player entity from previous level
+    /// </summary>
+    /// <param name="grid"></param>
+    /// <param name="seed"></param>
+    /// <param name="playerEntity"></param>
+    public void CreateEntities(
+        TileGrid grid, int seed, Entity playerEntity)
+    {
+        // Create seed based state
+        Random.State oldState = Random.state;
+        Random.InitState(seed);
+
+        Tile[] roomCenters = grid.GetAllRoomCenterTiles();
+        Room[] rooms = grid.GetAllRoomsArray();
+
+        CreatePlayer(roomCenters[0], playerEntity);
 
         // Create NPCs -- Use index 1 to N
         for (int i = 1; i < roomCenters.Length; i++)
@@ -78,6 +96,23 @@ public class EntityManager : MonoBehaviour
         cbOnPlayerCreated?.Invoke(newPlayer);
     }
 
+    /// <summary>
+    /// Load player Entity from previous level.
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="playerEntity"></param>
+    private void CreatePlayer(Tile tile, Entity playerEntity)
+    {
+        Entity newPlayer = playerEntity;
+        newPlayer.SetTile(tile);
+        tile.entity = newPlayer;
+
+        Debug.Log("Player at " + tile.Coordinates.ToString());
+
+        entities.Add(newPlayer);
+        cbOnPlayerCreated?.Invoke(newPlayer);
+    }
+
     private void CreateEntitiesInRoom(
         TileGrid grid, Room room, int seed)
     {
@@ -113,6 +148,8 @@ public class EntityManager : MonoBehaviour
     {
         // Create seed based state
         Random.State oldState = Random.state;
+        // Use seed for this tile
+        seed += tile.Coordinates.X + tile.Coordinates.Z;
         Random.InitState(seed);
 
         Entity newEntity;

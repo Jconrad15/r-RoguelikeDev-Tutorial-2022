@@ -10,7 +10,7 @@ public class LoadSaveGame : MonoBehaviour
         SaveObject saveObject = new SaveObject(
             GameManager.Instance.CurrentGrid,
             GameManager.Instance.CurrentGridSeed,
-            GameManager.Instance.DungeonGridSeeds);
+            GameManager.Instance.CurrentDungeon.dungeonGridSeeds);
 
         string path = Path.Combine(
             Application.persistentDataPath, "save.json");

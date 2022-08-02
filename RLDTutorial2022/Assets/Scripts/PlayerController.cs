@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private KeyCode southwestKey = KeyCode.Z;
     [SerializeField]
-    private KeyCode actionKey = KeyCode.E;
+    private KeyCode actionKey = KeyCode.Space;
 
     private bool isTargeting;
 
@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
             if (itemPickedUp == true) { return itemPickedUp; }
 
             // Try use down stairs
-            bool goDownStairs = false;
+            bool goDownStairs = player.TryGoDownStairs();
             if (goDownStairs == false) { return goDownStairs; }
 
             return false;

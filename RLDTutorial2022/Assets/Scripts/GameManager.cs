@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
 {
     public EntityManager EntityManager { get; private set; }
     private ItemManager itemManager;
+
+    private Action cbOnSwitchLevel;
 
     public static GameManager Instance { get; private set; }
     private void Awake()
@@ -22,17 +24,26 @@ public class GameManager : MonoBehaviour
     }
 
     public TileGrid CurrentGrid { get; private set; }
-    private TileGrid[] dungeonGrids;
+    public int CurrentGridSeed { get; private set; }
+    public int[] DungeonGridSeeds { get; private set; }
 
     public void GameStart()
     {
         Initialization();
 
-        // Create the grid of tiles
-        CurrentGrid = new TileGrid(50, 50);
+        // Create dungeon
+        DungeonGridSeeds = new int[3];
+        DungeonGridSeeds[0] = 0;
+        DungeonGridSeeds[1] = 2;
+        DungeonGridSeeds[2] = 8;
 
-        EntityManager.CreateEntities(CurrentGrid);
-        itemManager.CreateItems(CurrentGrid);
+        CurrentGridSeed = DungeonGridSeeds[0];
+
+        // Create the grid of tiles
+        CurrentGrid = new TileGrid(50, 50, CurrentGridSeed);
+
+        EntityManager.CreateEntities(CurrentGrid, CurrentGridSeed);
+        itemManager.CreateItems(CurrentGrid, CurrentGridSeed);
 
         FinishGameSetup();
     }
@@ -41,6 +52,8 @@ public class GameManager : MonoBehaviour
     {
         SaveObject saveObject = LoadSaveGame.Load();
         Initialization();
+        DungeonGridSeeds = saveObject.dungeonGridSeeds;
+        CurrentGridSeed = saveObject.currentGridSeed;
         CurrentGrid = new TileGrid(saveObject);
 
         EntityManager.LoadEntities(CurrentGrid, saveObject);
@@ -77,7 +90,53 @@ public class GameManager : MonoBehaviour
 
     public void GoDownStairs()
     {
-
+        _ = StartCoroutine(SwitchToNextLevel());
     }
 
+    private IEnumerator SwitchToNextLevel()
+    {
+        Debug.Log("Go down stairs");
+        // Need to clean up everything
+        cbOnSwitchLevel?.Invoke();
+        CurrentGrid.Destroy();
+
+        // Wait for everything to clean up
+        yield return new WaitForSeconds(1f);
+
+        // Create new tileGrid
+        SwitchToNextSeed();
+        CurrentGrid = new TileGrid(50, 50, CurrentGridSeed);
+
+        EntityManager.CreateEntities(CurrentGrid, CurrentGridSeed);
+        itemManager.CreateItems(CurrentGrid, CurrentGridSeed);
+
+        FinishGameSetup();
+    }
+
+    private void SwitchToNextSeed()
+    {
+        int currentIndex = Array.IndexOf(
+            DungeonGridSeeds, CurrentGridSeed);
+
+        int nextIndex = currentIndex + 1;
+        if (nextIndex >= DungeonGridSeeds.Length)
+        {
+            Debug.Log("You reached the end!");
+            return;
+        }
+
+        CurrentGridSeed = DungeonGridSeeds[nextIndex];
+    }
+
+    public void RegisterOnSwitchLevel(
+        Action callbackfunc)
+    {
+        cbOnSwitchLevel += callbackfunc;
+    }
+
+    public void UnregisterOnSwitchLevel(
+        Action callbackfunc)
+    {
+        cbOnSwitchLevel -= callbackfunc;
+    }
 }

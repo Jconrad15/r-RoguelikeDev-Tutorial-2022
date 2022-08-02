@@ -125,6 +125,22 @@ public class Tile
         cbOnDehighlighted?.Invoke(this);
     }
 
+    public void Destroy()
+    {
+        if (entity != null)
+        {
+            entity.Destroy();
+        }
+        if (item != null)
+        {
+            item.Destroy();
+        }
+
+        cbOnDehighlighted = null;
+        cbOnHighlighted = null;
+        cbOnVisibilityChanged = null;
+    }
+
     public void RegisterOnVisibilityChanged(
         Action<Tile> callbackfunc)
     {

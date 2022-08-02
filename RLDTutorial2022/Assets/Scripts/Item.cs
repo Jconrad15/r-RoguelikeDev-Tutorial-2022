@@ -186,6 +186,9 @@ public class Item
             CurrentTile = null;
         }
         Components = null;
+
+        cbOnItemDropped = null;
+        cbOnItemPickedUp = null;
     }
 
     public void RegisterOnItemPickedUp(

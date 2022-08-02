@@ -3014,7 +3014,7 @@ MonoBehaviour:
   northwestKey: 113
   southeastKey: 120
   southwestKey: 122
-  pickUpItemKey: 103
+  actionKey: 32
 --- !u!4 &1074856121
 Transform:
   m_ObjectHideFlags: 0

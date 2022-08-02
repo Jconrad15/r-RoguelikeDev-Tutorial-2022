@@ -118,10 +118,18 @@ public class Entity
         Entity e = new Entity(
             savedEntityToClone, targetTile);
 
-        // Set entity in components 
-        for (int i = 0; i < e.Components.Count; i++)
+        if (e.Components != null)
         {
-            e.Components[i].SetEntity(e);
+            // Set entity in components 
+            for (int i = 0; i < e.Components.Count; i++)
+            {
+                if (e.Components[i] == null)
+                {
+                    continue;
+                }
+
+                e.Components[i].SetEntity(e);
+            }
         }
 
         e.CurrentTile = targetTile;
@@ -339,8 +347,20 @@ public class Entity
             Components[i].Destroy();
             Components[i] = null;
         }
+        Components = new List<BaseComponent>();
 
         cbOnEntityDied?.Invoke(this);
+    }
+
+    public void Destroy()
+    {
+        Character = null;
+        EntityName = null;
+        Components = null;
+
+        cbOnEntityAttackDirection = null;
+        cbOnEntityDied = null;
+        cbOnEntityMoved = null;
     }
 
     public void RegisterOnEntityMoved(

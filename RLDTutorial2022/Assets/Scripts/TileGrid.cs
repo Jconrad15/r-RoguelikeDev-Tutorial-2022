@@ -31,12 +31,12 @@ public class TileGrid
             GameManager.Instance.CurrentGrid);
     }
 
-    public TileGrid(int width, int height)
+    public TileGrid(int width, int height, int seed)
     {
         this.width = width;
         this.height = height;
 
-        CreateGrid();
+        CreateGrid(seed);
     }
 
     /// <summary>
@@ -57,12 +57,15 @@ public class TileGrid
         }
     }
 
-    private void CreateGrid()
+    private void CreateGrid(int seed)
     {
+        Random.State oldState = Random.state;
+        Random.InitState(seed);
+
         Tiles = new Tile[height * width];
 
-        CreateRooms();
-        CreateHallways();
+        CreateRooms(seed);
+        CreateHallways(seed);
 
         for (int y = 0, i = 0; y < height; y++)
         {
@@ -102,6 +105,8 @@ public class TileGrid
                 i++;
             }
         }
+
+        Random.state = oldState;
     }
 
     private bool IsDownStairs(int x, int y)
@@ -130,39 +135,57 @@ public class TileGrid
         return false;
     }
 
-    private void CreateHallways()
+    private void CreateHallways(int seed)
     {
+        // Create seed based state
+        Random.State oldState = Random.state;
+        Random.InitState(seed);
+
         // Rectangular rooms
         for (int i = 1; i < rectRooms.Count; i++)
         {
             hallways.Add(new Hallway(
-                rectRooms[i - 1].Center, rectRooms[i].Center));
+                rectRooms[i - 1].Center,
+                rectRooms[i].Center));
         }
+
         // also add hallway from first to last rectRoom
         hallways.Add(new Hallway(
-            rectRooms[0].Center, rectRooms[rectRooms.Count - 1].Center));
+            rectRooms[0].Center,
+            rectRooms[rectRooms.Count - 1].Center));
 
         // Hexagonal rooms
         for (int i = 1; i < hexRooms.Count; i++)
         {
             hallways.Add(new Hallway(
-                hexRooms[i - 1].Center, hexRooms[i].Center));
+                hexRooms[i - 1].Center,
+                hexRooms[i].Center));
         }
         
         
         // also add hallway from last rect room to first hex room
         hallways.Add(new Hallway(
-            rectRooms[0].Center, hexRooms[hexRooms.Count - 1].Center));
+            rectRooms[0].Center,
+            hexRooms[hexRooms.Count - 1].Center));
 
+        // Restore state
+        Random.state = oldState;
     }
 
-    private void CreateRooms()
+    private void CreateRooms(int seed)
     {
+        // Create seed based state
+        Random.State oldState = Random.state;
+        Random.InitState(seed);
+
         int rectRoomCount = Random.Range(7, 9);
         int hexRoomCount = Random.Range(5, 8);
 
-        CreateRectRooms(rectRoomCount);
-        CreateHexRooms(hexRoomCount);
+        CreateRectRooms(rectRoomCount, seed);
+        CreateHexRooms(hexRoomCount, seed);
+
+        // Restore state
+        Random.state = oldState;
     }
 
     private void CreateDownStairsLocation(Room room)
@@ -171,8 +194,12 @@ public class TileGrid
         downStairsXY = room.GetRandomCoordInRoom();
     }
 
-    private void CreateHexRooms(int hexRoomCount)
+    private void CreateHexRooms(int hexRoomCount, int seed)
     {
+        // Create seed based state
+        Random.State oldState = Random.state;
+        Random.InitState(seed);
+
         // Determine which room to place down stairs in
         int downStairsRoomIndex = Random.Range(0, hexRoomCount);
 
@@ -195,10 +222,17 @@ public class TileGrid
                 CreateDownStairsLocation(newRoom);
             }
         }
+
+        // Restore state
+        Random.state = oldState;
     }
 
-    private void CreateRectRooms(int rectRoomCount)
+    private void CreateRectRooms(int rectRoomCount, int seed)
     {
+        // Create seed based state
+        Random.State oldState = Random.state;
+        Random.InitState(seed);
+
         int maxIterations = 100;
 
         for (int i = 0; i < rectRoomCount; i++)
@@ -230,6 +264,9 @@ public class TileGrid
                 counter++;
             }
         }
+
+        // Restore state
+        Random.state = oldState;
     }
 
     /// <summary>
@@ -455,5 +492,18 @@ public class TileGrid
         return roomCenterTiles;
     }
 
+    public void Destroy()
+    {
+        TileGraph = null;
+        rectRooms = null;
+        hexRooms = null;
+        hallways = null;
+
+        for (int i = Tiles.Length - 1; i >= 0; i--)
+        {
+            if (Tiles[i] == null) { continue; }
+            Tiles[i].Destroy();
+        }
+    }
 
 }

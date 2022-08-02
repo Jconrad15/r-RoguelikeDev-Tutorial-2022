@@ -7,13 +7,19 @@ using Newtonsoft.Json;
 public class SaveObject
 {
     public SavedTileGrid savedTileGrid;
+    public int currentGridSeed;
+    public int[] dungeonGridSeeds;
 
     [JsonConstructor]
     private SaveObject() { }
 
-    public SaveObject(TileGrid tileGrid)
+    public SaveObject(
+        TileGrid tileGrid, int currentGridSeed,
+        int[] dungeonGridSeeds)
     {
         savedTileGrid = new SavedTileGrid(tileGrid);
+        this.currentGridSeed = currentGridSeed;
+        this.dungeonGridSeeds = dungeonGridSeeds;
     }
 }
 

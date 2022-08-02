@@ -32,11 +32,12 @@ public class EntityManager : MonoBehaviour
         SavedTile[] savedTiles = saveObject.savedTileGrid.savedTiles;
         for (int i = 0; i < savedTiles.Length; i++)
         {
-            if (savedTiles[i].savedEntity == null) { continue; }
+            SavedEntity savedEntity = savedTiles[i].savedEntity;
+            if (savedEntity == null) { continue; }
 
             // Add the saved entity to the tile
-            Entity loadedEntity = new Entity(
-                savedTiles[i].savedEntity, grid.Tiles[i]);
+            Entity loadedEntity = Entity.SpawnCloneAtTile(
+                savedEntity, grid.Tiles[i]);
 
             if (loadedEntity.IsPlayer)
             {
@@ -47,7 +48,6 @@ public class EntityManager : MonoBehaviour
                 cbOnEntityCreated?.Invoke(loadedEntity);
             }
             entities.Add(loadedEntity);
-            
         }
     }
 

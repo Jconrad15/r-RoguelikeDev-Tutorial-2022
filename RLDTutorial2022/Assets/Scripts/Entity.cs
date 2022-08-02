@@ -77,7 +77,7 @@ public class Entity
     /// Constructor that creates entities from loaded data.
     /// </summary>
     /// <param name="savedEntity"></param>
-    public Entity(SavedEntity savedEntity, Tile tile)
+    private Entity(SavedEntity savedEntity, Tile targetTile)
     {
         IsPlayer = savedEntity.isPlayer;
         Character = savedEntity.character;
@@ -85,9 +85,8 @@ public class Entity
         VisibilityDistance = savedEntity.visibilityDistance;
         Color = SavedColor.LoadColor(savedEntity.color);
         BlocksMovement = savedEntity.blocksMovement;
-        CurrentTile = tile;
-
-        CloneComponents(savedEntity.components.ToList());
+        CurrentTile = targetTile;
+        Components = savedEntity.components.ToList();
     }
 
     /// <summary>
@@ -111,6 +110,30 @@ public class Entity
         targetTile.entity = e;
 
         return e;
+    }
+
+    private static Entity EntityClone(
+        SavedEntity savedEntityToClone, Tile targetTile)
+    {
+        Entity e = new Entity(
+            savedEntityToClone, targetTile);
+
+        // Set entity in components 
+        for (int i = 0; i < e.Components.Count; i++)
+        {
+            e.Components[i].SetEntity(e);
+        }
+
+        e.CurrentTile = targetTile;
+        targetTile.entity = e;
+
+        return e;
+    }
+
+    public static Entity SpawnCloneAtTile(
+        SavedEntity savedEntity, Tile tile)
+    {
+        return EntityClone(savedEntity, tile);
     }
 
     public static Entity SpawnCloneAtTile(

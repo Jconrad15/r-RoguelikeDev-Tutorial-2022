@@ -7,7 +7,9 @@ using UnityEngine;
 public class LightningDamageConsumable : Consumable
 {
 
+    [JsonProperty]
     public int DamageAmount { get; protected set; }
+    [JsonProperty]
     public int MaximumRange { get; protected set; }
 
     [JsonConstructor]

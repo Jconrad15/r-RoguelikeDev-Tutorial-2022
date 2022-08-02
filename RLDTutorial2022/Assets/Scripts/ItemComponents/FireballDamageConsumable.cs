@@ -6,7 +6,9 @@ using UnityEngine;
 [Serializable]
 public class FireballDamageConsumable : Consumable
 {
+    [JsonProperty]
     public int DamageAmount { get; protected set; }
+    [JsonProperty]
     public int Radius { get; protected set; }
 
     [JsonConstructor]

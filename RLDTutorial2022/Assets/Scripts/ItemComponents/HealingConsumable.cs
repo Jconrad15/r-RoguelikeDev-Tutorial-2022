@@ -7,6 +7,7 @@ using UnityEngine;
 public class HealingConsumable : Consumable
 {
 
+    [JsonProperty]
     public int Amount { get; protected set; }
 
     [JsonConstructor]

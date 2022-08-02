@@ -8,6 +8,7 @@ public class ConfusionConsumable : Consumable
 {
     [NonSerialized]
     private Entity currentEntity;
+    [JsonProperty]
     public int NumberOfTurns { get; protected set; }
     public ConfusionConsumable(
         int numberOfTurns) : base()

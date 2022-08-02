@@ -68,7 +68,7 @@ public class Item
         }
     }
 
-    public Item(SavedItem savedItem, Tile tile)
+    private Item(SavedItem savedItem, Tile tile)
     {
         Character = savedItem.character;
         Color = SavedColor.LoadColor(savedItem.color);
@@ -97,6 +97,23 @@ public class Item
         targetTile.item = item;
 
         return item;
+    }
+
+    private static Item ItemClone(
+        SavedItem savedItemToClone, Tile targetTile)
+    {
+        Item item = new Item(savedItemToClone, targetTile);
+
+        item.CurrentTile = targetTile;
+        targetTile.item = item;
+
+        return item;
+    }
+
+    public static Item SpawnCloneAtTile(
+        SavedItem savedItem, Tile tile)
+    {
+        return ItemClone(savedItem, tile);
     }
 
     public static Item SpawnCloneAtTile(

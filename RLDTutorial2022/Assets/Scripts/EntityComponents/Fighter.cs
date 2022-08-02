@@ -10,8 +10,9 @@ public class Fighter : BaseComponent
     public int defense;
     public int power;
 
-    private Action<int> cbOnFighterHealthChanged; 
+    private Action<int> cbOnFighterHealthChanged;
 
+    [JsonProperty]
     private int hp;
     public int HP
     {

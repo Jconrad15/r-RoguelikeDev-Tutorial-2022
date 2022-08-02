@@ -9,6 +9,7 @@ public class Inventory : BaseComponent
     private Action<Item> cbOnItemAdded;
     private Action<Item> cbOnItemDropped;
 
+    [JsonProperty]
     public int Capacity { get; protected set; }
     [NonSerialized]
     private List<Item> items;
@@ -16,7 +17,10 @@ public class Inventory : BaseComponent
     public List<Item> GetItems() => items;
 
     [JsonConstructor]
-    private Inventory() { }
+    private Inventory()
+    {
+        items = new List<Item>();
+    }
 
     public Inventory(int capacity) : base()
     {

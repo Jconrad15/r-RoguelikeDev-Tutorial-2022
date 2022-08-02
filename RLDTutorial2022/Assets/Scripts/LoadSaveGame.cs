@@ -1,7 +1,7 @@
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Runtime.Serialization.Formatters.Binary;
+using Newtonsoft.Json;
 
 public class LoadSaveGame : MonoBehaviour
 {
@@ -10,30 +10,25 @@ public class LoadSaveGame : MonoBehaviour
         TileGrid tileGrid = GameManager.Instance.Grid;
         SaveObject saveObject = new SaveObject(tileGrid);
 
-        string path = Application.persistentDataPath + "/save.dat";
+        string path = Path.Combine(
+            Application.persistentDataPath, "save.dat");
 
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Open(
-            path, FileMode.OpenOrCreate);
+        string json = JsonConvert.SerializeObject(saveObject, Formatting.Indented);
 
-        bf.Serialize(file, saveObject);
-        file.Close();
+        File.WriteAllText(path, json);
     }
 
     public static SaveObject Load()
     {
-        string path = Application.persistentDataPath + "/save.dat";
+        string path = Path.Combine(
+            Application.persistentDataPath, "save.dat");
         bool pathExists = File.Exists(path);
 
         if (pathExists)
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file =
-                File.Open(path, FileMode.Open);
+            string json = File.ReadAllText(path);
             SaveObject saveObject =
-                (SaveObject)bf.Deserialize(file);
-            file.Close();
-
+                JsonConvert.DeserializeObject<SaveObject>(json);
             return saveObject;
         }
         

@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -24,6 +24,7 @@ public class PlayerHealthUI : MonoBehaviour
         {
             Debug.LogError(
                 "Player does not have a fighter component");
+            return;
         }
 
         f.RegisterOnFighterHealthChanged(OnPlayerHealthChanged);

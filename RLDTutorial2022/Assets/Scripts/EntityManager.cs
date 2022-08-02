@@ -32,24 +32,27 @@ public class EntityManager : MonoBehaviour
         SavedTile[] savedTiles = saveObject.savedTileGrid.savedTiles;
         for (int i = 0; i < savedTiles.Length; i++)
         {
-            // Add the saved entity to the tile
-            if (savedTiles[i].savedEntity != null)
+            // Unity JSON serializes null enities. 
+            // These have been saved with the name NULL
+            if (savedTiles[i].savedEntity.entityName == "NULL")
             {
-                Entity loadedEntity = new Entity(
-                    savedTiles[i].savedEntity, grid.Tiles[i]);
-
-                if (loadedEntity.IsPlayer)
-                {
-                    entities.Add(loadedEntity);
-                    cbOnPlayerCreated?.Invoke(loadedEntity);
-                }
-                else
-                {
-                    cbOnEntityCreated?.Invoke(loadedEntity);
-                    entities.Add(loadedEntity);
-                }
-
+                continue;
             }
+
+            // Add the saved entity to the tile
+            Entity loadedEntity = new Entity(
+                savedTiles[i].savedEntity, grid.Tiles[i]);
+
+            if (loadedEntity.IsPlayer)
+            {
+                cbOnPlayerCreated?.Invoke(loadedEntity);
+            }
+            else
+            {
+                cbOnEntityCreated?.Invoke(loadedEntity);
+            }
+            entities.Add(loadedEntity);
+            
         }
     }
 

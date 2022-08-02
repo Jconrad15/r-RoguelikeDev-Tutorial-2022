@@ -27,6 +27,12 @@ public class SavedTileGrid
         savedTiles = new SavedTile[tileGrid.Tiles.Length];
         for (int i = 0; i < tileGrid.Tiles.Length; i++)
         {
+            if (tileGrid.Tiles[i] == null)
+            {
+                Debug.LogError("Null tile");
+                continue;
+            }
+
             savedTiles[i] = new SavedTile(tileGrid.Tiles[i]);
         }
 
@@ -36,8 +42,8 @@ public class SavedTileGrid
 [Serializable]
 public class SavedTile
 {
-    public SavedColor backgroundColor;
-    public SavedColor foregroundColor;
+    public Color backgroundColor;
+    public Color foregroundColor;
     public HexCoordinates coordinates;
     public SavedEntity savedEntity;
     public SavedItem savedItem;
@@ -48,17 +54,25 @@ public class SavedTile
 
     public SavedTile(Tile tile)
     {
-        backgroundColor = new SavedColor(tile.backgroundColor);
-        foregroundColor = new SavedColor(tile.foregroundColor);
+        backgroundColor = tile.backgroundColor;
+        foregroundColor = tile.foregroundColor;
         coordinates = tile.Coordinates;
 
-        if (savedEntity != null)
+        if (tile.entity != null)
         {
             savedEntity = new SavedEntity(tile.entity);
         }
-        if (savedItem != null)
+        else
+        {
+            savedEntity = null;
+        }
+        if (tile.item != null)
         {
             savedItem = new SavedItem(tile.item);
+        }
+        else
+        {
+            savedItem = null;
         }
 
         character = tile.Character;
@@ -78,9 +92,11 @@ public class SavedEntity
     public string character;
     public int visibilityDistance;
     public string entityName;
-    public SavedColor color;
+    public Color color;
     public bool blocksMovement;
-    public List<BaseComponent> components;
+    public BaseComponent[] components;
+
+    public SavedItem[] savedItemsFromInventoryComponent;
 
     public SavedEntity(Entity entity)
     {
@@ -88,9 +104,29 @@ public class SavedEntity
         character = entity.Character;
         visibilityDistance = entity.VisibilityDistance;
         entityName = entity.EntityName;
-        color = new SavedColor(entity.Color);
+        color = entity.Color;
         blocksMovement = entity.BlocksMovement;
-        components = entity.Components;
+
+        List<BaseComponent> tempComponents = new List<BaseComponent>();
+        for (int i = 0; i < entity.Components.Count; i++)
+        {
+            // Save inventory item components into the saved entity 
+            if (entity.Components[i] is Inventory)
+            {
+                Inventory inventory = (Inventory)entity.Components[i];
+                List<Item> items = inventory.GetItems();
+                savedItemsFromInventoryComponent =
+                    new SavedItem[items.Count];
+                for (int j = 0; j < items.Count; j++)
+                {
+                    savedItemsFromInventoryComponent[j] =
+                        new SavedItem(items[j]);
+                }
+            }
+
+            tempComponents.Add(entity.Components[i]);
+        }
+        components = tempComponents.ToArray();
     }
 }
 
@@ -102,7 +138,7 @@ public class SavedItem
 {
     public string character;
     public string itemName;
-    public SavedColor color;
+    public Color color;
     public bool blocksMovement;
     public List<BaseItemComponent> components;
 
@@ -110,34 +146,9 @@ public class SavedItem
     {
         character = item.Character;
         itemName = item.ItemName;
-        color = new SavedColor(item.Color);
+        color = item.Color;
         blocksMovement = item.BlocksMovement;
         components = item.Components;
     }
 }
 
-[Serializable]
-public class SavedColor
-{
-    public float r;
-    public float g;
-    public float b;
-    public float a;
-
-    public SavedColor(Color color)
-    {
-        r = color.r;
-        g = color.g;
-        b = color.b;
-        a = color.a;
-    }
-
-    public static Color LoadToColor(SavedColor savedColor)
-    {
-        return new Color(
-            savedColor.r,
-            savedColor.g,
-            savedColor.b,
-            savedColor.a);
-    }
-}

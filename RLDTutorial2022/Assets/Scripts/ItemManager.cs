@@ -28,15 +28,18 @@ public class ItemManager : MonoBehaviour
         SavedTile[] savedTiles = saveObject.savedTileGrid.savedTiles;
         for (int i = 0; i < savedTiles.Length; i++)
         {
-            // Add the saved item to the tile
-            if (savedTiles[i].savedItem != null)
+            // Unity JSON serializes null items. 
+            // These have been saved with the name NULL
+            if (savedTiles[i].savedItem.itemName == "NULL")
             {
-                Item loadedItem = new Item(
-                    savedTiles[i].savedItem, grid.Tiles[i]);
-
-                cbOnItemCreated?.Invoke(loadedItem);
-                items.Add(loadedItem);
+                continue;
             }
+
+            Item loadedItem = new Item(
+                savedTiles[i].savedItem, grid.Tiles[i]);
+
+            cbOnItemCreated?.Invoke(loadedItem);
+            items.Add(loadedItem);
         }
 
     }

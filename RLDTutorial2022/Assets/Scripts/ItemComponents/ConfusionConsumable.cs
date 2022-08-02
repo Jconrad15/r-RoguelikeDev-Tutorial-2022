@@ -5,6 +5,7 @@ using UnityEngine;
 [Serializable]
 public class ConfusionConsumable : Consumable
 {
+    [NonSerialized]
     private Entity currentEntity;
     public int NumberOfTurns { get; protected set; }
     public ConfusionConsumable(

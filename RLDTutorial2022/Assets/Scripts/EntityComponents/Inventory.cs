@@ -2,25 +2,29 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class Inventory : BaseComponent
 {
     private Action<Item> cbOnItemAdded;
     private Action<Item> cbOnItemDropped;
 
     public int Capacity { get; protected set; }
-    public List<Item> Items { get; protected set; }
+    [NonSerialized]
+    private List<Item> items;
+
+    public List<Item> GetItems() => items;
 
     public Inventory(int capacity) : base()
     {
         Capacity = capacity;
-        Items = new List<Item>();
+        items = new List<Item>();
     }
 
     public Inventory(Inventory other)
     : base(other)
     {
         Capacity = other.Capacity;
-        Items = other.Items;
+        items = other.items;
     }
 
     public override object Clone()
@@ -31,7 +35,7 @@ public class Inventory : BaseComponent
     public bool Drop(Item dropItem)
     {
         if (dropItem == null) { return false; }
-        if (Items.Contains(dropItem) == false) { return false; }
+        if (items.Contains(dropItem) == false) { return false; }
 
         Tile targetTile = e.CurrentTile;
 
@@ -40,7 +44,7 @@ public class Inventory : BaseComponent
             return false;
         }
 
-        Items.Remove(dropItem);
+        items.Remove(dropItem);
         cbOnItemDropped?.Invoke(dropItem);
         return true;
     }
@@ -48,7 +52,7 @@ public class Inventory : BaseComponent
     public bool TryAddItem(Item addItem)
     {
         if (addItem == null) { return false; }
-        if (Items.Count >= Capacity)
+        if (items.Count >= Capacity)
         {
             InterfaceLogManager.Instance.LogMessage(
                 "Inventory is full.");
@@ -61,7 +65,7 @@ public class Inventory : BaseComponent
                 addItem.ItemName);
         }
         
-        Items.Add(addItem);
+        items.Add(addItem);
         addItem.PickedUp(e);
         cbOnItemAdded?.Invoke(addItem);
         return true;
@@ -69,12 +73,12 @@ public class Inventory : BaseComponent
 
     public void NotifyItemUsedInInventoryUI(Item usedItem)
     {
-        if (Items.Contains(usedItem) == false)
+        if (items.Contains(usedItem) == false)
         {
             Debug.LogError("Used item is not in the inventory?");
         }
 
-        Items.Remove(usedItem);
+        items.Remove(usedItem);
 
         usedItem.Destroy();
     }

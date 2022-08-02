@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Entity
 {
@@ -34,6 +35,11 @@ public class Entity
         Color = color;
         BlocksMovement = blocksMovement;
 
+        CloneComponents(components);
+    }
+
+    private void CloneComponents(List<BaseComponent> components)
+    {
         Components = new List<BaseComponent>();
         for (int i = 0; i < components.Count; i++)
         {
@@ -57,8 +63,12 @@ public class Entity
                 Components.Add(inv);
                 inv.SetEntity(this);
             }
+            else
+            {
+                Debug.LogError(
+                    "Entity BaseComponent not cast as anything.");
+            }
         }
-
     }
 
     /// <summary>
@@ -71,16 +81,11 @@ public class Entity
         Character = savedEntity.character;
         EntityName = savedEntity.entityName;
         VisibilityDistance = savedEntity.visibilityDistance;
-        Color = SavedColor.LoadToColor(savedEntity.color);
+        Color = savedEntity.color;
         BlocksMovement = savedEntity.blocksMovement;
         CurrentTile = tile;
 
-        Components = savedEntity.components;
-
-        for (int i = 0; i < Components.Count; i++)
-        {
-            Components[i].SetEntity(this);
-        }
+        CloneComponents(savedEntity.components.ToList());
     }
 
     /// <summary>

@@ -13,6 +13,7 @@ public class Item
     public Color Color { get; private set; }
 
     public bool BlocksMovement { get; private set; }
+
     public Tile CurrentTile { get; private set; }
     public Entity CurrentEntity { get; private set; }
 
@@ -68,7 +69,7 @@ public class Item
     public Item(SavedItem savedItem, Tile tile)
     {
         Character = savedItem.character;
-        Color = SavedColor.LoadToColor(savedItem.color);
+        Color = savedItem.color;
         ItemName = savedItem.itemName;
         BlocksMovement = savedItem.blocksMovement;
         CurrentTile = tile;

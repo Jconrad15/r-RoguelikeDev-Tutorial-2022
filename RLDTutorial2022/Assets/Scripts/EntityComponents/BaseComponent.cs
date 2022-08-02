@@ -3,6 +3,7 @@ using System;
 [Serializable]
 public class BaseComponent : ICloneable
 {
+    [NonSerialized]
     protected Entity e;
 
     public BaseComponent() { }

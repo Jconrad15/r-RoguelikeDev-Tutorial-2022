@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum TileType { Floor, Wall };
+[Serializable]
 public class Tile
 {
     private Action<Tile> cbOnVisibilityChanged;
@@ -53,10 +54,8 @@ public class Tile
     /// <param name="savedTile"></param>
     public Tile (SavedTile savedTile)
     {
-        backgroundColor = SavedColor.LoadToColor(
-            savedTile.backgroundColor);
-        foregroundColor = SavedColor.LoadToColor(
-            savedTile.foregroundColor);
+        backgroundColor = savedTile.backgroundColor;
+        foregroundColor = savedTile.foregroundColor;
         Coordinates = savedTile.coordinates;
 
         Character = savedTile.character;

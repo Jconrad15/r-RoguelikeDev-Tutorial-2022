@@ -17,4 +17,13 @@ public abstract class Room
     {
         return InnerArea.Contains((x, y));
     }
+
+    public (int, int) GetRandomCoordInRoom()
+    {
+        int selectedCoord = Random.Range(0, InnerArea.Count);
+        int x = InnerArea[selectedCoord].Item1;
+        int y = InnerArea[selectedCoord].Item2;
+
+        return (x, y);
+    }
 }

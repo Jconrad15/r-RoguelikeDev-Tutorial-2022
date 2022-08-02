@@ -162,7 +162,7 @@ public class Entity
 
     public bool TryAction(Direction direction)
     {
-        Tile neighborTile = GameManager.Instance.Grid
+        Tile neighborTile = GameManager.Instance.CurrentGrid
             .GetTileInDirection(CurrentTile, direction);
 
         if (neighborTile == null)

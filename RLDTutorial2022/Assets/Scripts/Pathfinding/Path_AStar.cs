@@ -25,13 +25,13 @@ public class Path_AStar
 
         // Get pathfinding tile graph from grid
         Path_TileGraph tileGraph =
-            GameManager.Instance.Grid.TileGraph;
+            GameManager.Instance.CurrentGrid.TileGraph;
 
         // Check to see if there is a valid tile graph
         if (tileGraph == null)
         {
-            GameManager.Instance.Grid.CreateNewTileGraph();
-            tileGraph = GameManager.Instance.Grid.TileGraph;
+            GameManager.Instance.CurrentGrid.CreateNewTileGraph();
+            tileGraph = GameManager.Instance.CurrentGrid.TileGraph;
         }
 
         // Get a dictionary of all valid, walkable nodes.

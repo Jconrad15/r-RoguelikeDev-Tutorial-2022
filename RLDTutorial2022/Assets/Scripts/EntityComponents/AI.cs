@@ -111,7 +111,7 @@ public class AI : BaseComponent
         else
         {
             // Try to set destination as a random next door tile
-            Tile randomNeighborTile = GameManager.Instance.Grid
+            Tile randomNeighborTile = GameManager.Instance.CurrentGrid
                 .GetTileInDirection(
                     aiEntity.CurrentTile,
                     Utility.GetRandomEnum<Direction>());

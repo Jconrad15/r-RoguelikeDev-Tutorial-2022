@@ -67,7 +67,6 @@ public class FireballDamageConsumable : Consumable
                 ColorDatabase.error);
             return;
         }
-        Debug.Log("TileTargeted");
         // Fireball at the target
         // Damage at the target tile
         TryDamageEntityAtTile(targetTile);

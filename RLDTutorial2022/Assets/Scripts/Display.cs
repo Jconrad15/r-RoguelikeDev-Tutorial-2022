@@ -28,7 +28,7 @@ public class Display : MonoBehaviour
 
     public void CreateInitialGrid()
     {
-        TileGrid tileGrid = GameManager.Instance.Grid;
+        TileGrid tileGrid = GameManager.Instance.CurrentGrid;
         int width = tileGrid.width;
         int height = tileGrid.height;
 

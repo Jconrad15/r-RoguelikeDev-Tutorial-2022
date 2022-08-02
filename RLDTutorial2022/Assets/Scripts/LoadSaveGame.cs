@@ -7,7 +7,7 @@ public class LoadSaveGame : MonoBehaviour
 {
     public static void Save()
     {
-        TileGrid tileGrid = GameManager.Instance.Grid;
+        TileGrid tileGrid = GameManager.Instance.CurrentGrid;
         SaveObject saveObject = new SaveObject(tileGrid);
 
         string path = Path.Combine(

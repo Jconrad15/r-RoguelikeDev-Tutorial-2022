@@ -197,7 +197,7 @@ public class TargetingSystem : MonoBehaviour
         // Get tile at world position
         HexCoordinates coordinates =
             HexCoordinates.FromPosition(worldPos);
-        targetedTile = GameManager.Instance.Grid
+        targetedTile = GameManager.Instance.CurrentGrid
             .GetTileAtHexCoords(coordinates);
 
         return targetedTile;

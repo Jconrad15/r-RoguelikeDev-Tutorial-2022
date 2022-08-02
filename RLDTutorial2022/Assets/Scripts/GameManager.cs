@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
-    public TileGrid Grid { get; private set; }
+    public TileGrid CurrentGrid { get; private set; }
 
     public void GameStart()
     {
@@ -30,10 +30,10 @@ public class GameManager : MonoBehaviour
         Initialization();
 
         // Create the grid of tiles
-        Grid = new TileGrid(50, 50);
+        CurrentGrid = new TileGrid(50, 50);
 
-        EntityManager.CreateEntities(Grid);
-        itemManager.CreateItems(Grid);
+        EntityManager.CreateEntities(CurrentGrid);
+        itemManager.CreateItems(CurrentGrid);
 
         FinishGameSetup();
     }
@@ -42,10 +42,10 @@ public class GameManager : MonoBehaviour
     {
         SaveObject saveObject = LoadSaveGame.Load();
         Initialization();
-        Grid = new TileGrid(saveObject);
+        CurrentGrid = new TileGrid(saveObject);
 
-        EntityManager.LoadEntities(Grid, saveObject);
-        itemManager.LoadItems(Grid, saveObject);
+        EntityManager.LoadEntities(CurrentGrid, saveObject);
+        itemManager.LoadItems(CurrentGrid, saveObject);
 
         FinishGameSetup();
     }
@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
     private void FinishGameSetup()
     {
         // Update tile graph based on entities for pathfinding
-        Grid.CreateNewTileGraph();
+        CurrentGrid.CreateNewTileGraph();
 
         FindObjectOfType<Display>().CreateInitialGrid();
         TurnController.Instance.StartTurnSystem();

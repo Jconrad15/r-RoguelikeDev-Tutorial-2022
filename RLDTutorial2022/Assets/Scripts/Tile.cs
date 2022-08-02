@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TileType { Floor, Wall };
+public enum TileType { Floor, Wall, DownStairs };
 [Serializable]
 public class Tile
 {
@@ -45,6 +45,14 @@ public class Tile
             case TileType.Wall:
                 CreateWallTile();
                 break;
+
+            case TileType.DownStairs:
+                CreateDownStairsTile();
+                break;
+
+            default:
+                Debug.LogError("No tile type");
+                break;
         }
     }
 
@@ -54,8 +62,10 @@ public class Tile
     /// <param name="savedTile"></param>
     public Tile (SavedTile savedTile)
     {
-        backgroundColor = SavedColor.LoadColor(savedTile.backgroundColor);
-        foregroundColor = SavedColor.LoadColor(savedTile.foregroundColor);
+        backgroundColor = SavedColor.LoadColor(
+            savedTile.backgroundColor);
+        foregroundColor = SavedColor.LoadColor(
+            savedTile.foregroundColor);
         Coordinates = savedTile.coordinates;
 
         Character = savedTile.character;
@@ -82,13 +92,22 @@ public class Tile
         Character = '#';
     }
 
+    private void CreateDownStairsTile()
+    {
+        backgroundColor = ColorDatabase.defaultTileBackground;
+        foregroundColor = ColorDatabase.defaultTileForeground;
+        IsWalkable = true;
+        IsTransparent = true;
+        Character = '>';
+    }
+
     public Tile[] GetNeighboringTiles()
     {
         Tile[] neighbours = new Tile[6];
         for (int i = 0; i < neighbours.Length; i++)
         {
             // Cast i as each direction
-            neighbours[i] = GameManager.Instance.Grid
+            neighbours[i] = GameManager.Instance.CurrentGrid
                 .GetTileInDirection(
                 this, (Direction)i);
         }

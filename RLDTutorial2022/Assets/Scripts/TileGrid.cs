@@ -13,6 +13,8 @@ public class TileGrid
 
 	public Tile[] Tiles { get; private set; }
 
+    public (int, int) downStairsXY;
+
     [JsonIgnore]
     private List<RectangularRoom> rectRooms =
         new List<RectangularRoom>();
@@ -25,7 +27,7 @@ public class TileGrid
 
     public void CreateNewTileGraph()
     {
-        TileGraph = new Path_TileGraph(GameManager.Instance.Grid);
+        TileGraph = new Path_TileGraph(GameManager.Instance.CurrentGrid);
     }
 
     public TileGrid(int width, int height)
@@ -68,17 +70,25 @@ public class TileGrid
                 HexCoordinates coordinates =
                     HexCoordinates.FromOffsetCoordinates(x, y);
 
-                if (IsPointInRoom(x, y))
+                if (IsDownStairs(x, y))
                 {
-                    Tiles[i] = new Tile(TileType.Floor, coordinates);
+                    Tiles[i] = new Tile(
+                        TileType.DownStairs, coordinates);
+                }
+                else if (IsPointInRoom(x, y))
+                {
+                    Tiles[i] = new Tile(
+                        TileType.Floor, coordinates);
                 }
                 else if (IsPointInHallway(x, y))
                 {
-                    Tiles[i] = new Tile(TileType.Floor, coordinates);
+                    Tiles[i] = new Tile(
+                        TileType.Floor, coordinates);
                 }
                 else
                 {
-                    Tiles[i] = new Tile(TileType.Wall, coordinates);
+                    Tiles[i] = new Tile(
+                        TileType.Wall, coordinates);
                 }
 
                 // debug
@@ -91,6 +101,12 @@ public class TileGrid
                 i++;
             }
         }
+    }
+
+    private bool IsDownStairs(int x, int y)
+    {
+        return x == downStairsXY.Item1 &&
+               y == downStairsXY.Item2;
     }
 
     private bool IsCenterPoint(int x, int y)
@@ -148,8 +164,17 @@ public class TileGrid
         CreateHexRooms(hexRoomCount);
     }
 
+    private void CreateDownStairsLocation(Room room)
+    {
+        // Place down stairs at random place in room
+        downStairsXY = room.GetRandomCoordInRoom();
+    }
+
     private void CreateHexRooms(int hexRoomCount)
     {
+        // Determine which room to place down stairs in
+        int downStairsRoomIndex = Random.Range(0, hexRoomCount);
+
         for (int i = 0; i < hexRoomCount; i++)
         {
             int radius = Random.Range(2, 5);
@@ -162,6 +187,12 @@ public class TileGrid
 
             // Add room even if there are intersections
             hexRooms.Add(newRoom);
+
+            // If this is the selected room, place down stairs
+            if (downStairsRoomIndex == i)
+            {
+                CreateDownStairsLocation(newRoom);
+            }
         }
     }
 

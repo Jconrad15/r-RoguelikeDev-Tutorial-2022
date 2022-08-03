@@ -39,12 +39,4 @@ public class SceneBus : MonoBehaviour
             PlayerEntity.TryGetInventoryComponent().GetItems();
     }
 
-    public void Clear()
-    {
-        IsLoadGame = false;
-        MoveToSeed = int.MaxValue;
-        PlayerEntity = null;
-        currentDungeon = new Dungeon();
-    }
-
 }

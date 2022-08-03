@@ -78,8 +78,6 @@ public class GameManager : MonoBehaviour
         itemManager.CreateItems(
             CurrentGrid,
             CurrentGridSeed);
-
-        SceneBus.Instance.Clear();
     }
 
     /// <summary>
@@ -135,7 +133,11 @@ public class GameManager : MonoBehaviour
 
     private void SwitchToNextLevel()
     {
-        SwitchToNextSeed();
+        if (TrySwitchToNextSeed() == false)
+        {
+            // Don't switch to next level
+            return;
+        }
 
         // Set sceneBus data
         SceneBus.Instance.currentDungeon = CurrentDungeon;
@@ -146,19 +148,21 @@ public class GameManager : MonoBehaviour
             .MoveToNextLevel(CurrentGridSeed);
     }
 
-    private void SwitchToNextSeed()
+    private bool TrySwitchToNextSeed()
     {
         int currentIndex = GetCurrentSeedIndex();
 
         int nextIndex = currentIndex + 1;
         if (nextIndex >= CurrentDungeon.dungeonGridSeeds.Length)
         {
+            Debug.Log("Switch to victory menu");
             // Switch to victory menu if no more levels
             FindObjectOfType<SceneChanger>().LoadVictoryMenu();
-            return;
+            return false;
         }
 
         CurrentGridSeed = CurrentDungeon.dungeonGridSeeds[nextIndex];
+        return true;
     }
 
     private int GetCurrentSeedIndex()

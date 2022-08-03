@@ -7,6 +7,7 @@ public class GameInit : MonoBehaviour
     private void Start()
     {
         InitializeFactories();
+
         _ = StartCoroutine(StartGame());
     }
 

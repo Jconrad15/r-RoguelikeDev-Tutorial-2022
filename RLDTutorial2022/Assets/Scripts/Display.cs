@@ -193,7 +193,6 @@ public class Display : MonoBehaviour
         itemGO.GetComponent<ObjectText>().SetText(item);
     }
 
-
     private void UpdateEntityVisibility(EntityGOData entityGOData)
     {
         entityGOData.entityGO.GetComponent<ObjectText>()

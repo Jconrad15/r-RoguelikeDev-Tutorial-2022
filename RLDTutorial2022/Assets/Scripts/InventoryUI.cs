@@ -109,6 +109,7 @@ public class InventoryUI : MonoBehaviour
             return null;
         }
 
+        // TODO: sometimes this is null
         if (inventoryItemContainer == null)
         {
             Debug.LogError("InventoryItemContainer is null. WHY?");

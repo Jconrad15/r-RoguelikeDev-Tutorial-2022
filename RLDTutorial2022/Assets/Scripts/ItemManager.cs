@@ -28,22 +28,6 @@ public class ItemManager : MonoBehaviour
         Random.state = oldState;
     }
 
-/*    /// <summary>
-    /// Create items when transfering player inventory to new level.
-    /// </summary>
-    /// <param name="grid"></param>
-    /// <param name="seed"></param>
-    /// <param name="playerInventoryItems"></param>
-    public void CreateItems(
-        TileGrid grid, int seed, List<Item> playerInventoryItems)
-    {
-        // Load the player inventory items from previous level
-        TransferInventoryItemsToLevel(playerInventoryItems);
-
-        // Normally create items
-        CreateItems(grid, seed);
-    }*/
-    
     public void LoadItems(TileGrid grid, SaveObject saveObject)
     {
         SavedTile[] savedTiles = saveObject.savedTileGrid.savedTiles;
@@ -61,25 +45,6 @@ public class ItemManager : MonoBehaviour
             items.Add(loadedItem);
         }
     }
-
-/*    public void TransferInventoryItemsToLevel(
-        List<Item> inventoryItems)
-    {
-        Entity player = GameManager.Instance
-            .EntityManager.GetPlayerEntity();
-
-        for (int i = 0; i < inventoryItems.Count; i++)
-        {
-            // Create item at the tile
-            Item loadedInventoryItem = Item.SpawnCloneAtTile(
-                inventoryItems[i], player.CurrentTile);
-            // Entity picks up item to inventory
-            player.TryPickUpItem();
-
-            cbOnItemCreated?.Invoke(loadedInventoryItem);
-            items.Add(loadedInventoryItem);
-        }
-    }*/
 
     private void CheckLoadInventoryItems(
         TileGrid grid, SavedTile[] savedTiles, int index)

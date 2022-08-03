@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private KeyCode actionKey = KeyCode.Space;
 
-    private bool isTargeting;
+    private bool isModal;
 
     private Entity player;
     private EscapeMenuManager escManager;
@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
     private void OnPlayerCreated(Entity player)
     {
         this.player = player;
-        isTargeting = false;
+        isModal = false;
     }
 
     private void OnStartTurn()
@@ -60,8 +60,9 @@ public class PlayerController : MonoBehaviour
         bool playerActed = false;
         while (playerActed == false)
         {
-            // Can act if not targeting and escape menu is closed
-            if (isTargeting == false &&
+            // Can act if not modal (targeting, level up, )
+            // and escape menu is closed
+            if (isModal == false &&
                 escManager.IsOpen == false)
             {
                 playerActed = CheckDirectionalAction();
@@ -140,13 +141,13 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
-    public void StartTargeting()
+    public void StartModal()
     {
-        isTargeting = true;
+        isModal = true;
     }
 
-    public void StopTargeting()
+    public void StopModal()
     {
-        isTargeting = false;
+        isModal = false;
     }
 }

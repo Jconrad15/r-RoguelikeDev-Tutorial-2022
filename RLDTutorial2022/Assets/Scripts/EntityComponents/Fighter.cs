@@ -52,7 +52,7 @@ public class Fighter : BaseComponent
             return;
         }
 
-        int xpGiven = level.xpGiven;
+        int xpGiven = level.xpGivenOnKilled;
 
         Level killerLevel = killedBy.TryGetLevelComponent();
         killerLevel.AddXP(xpGiven);

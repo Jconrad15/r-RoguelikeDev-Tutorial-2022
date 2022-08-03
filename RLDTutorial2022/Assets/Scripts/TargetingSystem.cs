@@ -44,7 +44,7 @@ public class TargetingSystem : MonoBehaviour
 
         // Start targeting
         TargetingMessage(isTargetingEntity);
-        playerController.StartTargeting();
+        playerController.StartModal();
         cbOnTargetingStatusChanged?.Invoke(true);
         Entity targetedEntity = null;
         Tile targetedTile = null;
@@ -76,7 +76,7 @@ public class TargetingSystem : MonoBehaviour
         DehighlightAll();
 
         // Stop targeting
-        playerController.StopTargeting();
+        playerController.StopModal();
         cbOnTargetingStatusChanged?.Invoke(false);
         if (isTargetingEntity)
         {

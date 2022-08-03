@@ -37,7 +37,7 @@ public class EntityFactory : MonoBehaviour
                 {
                     new AI(),
                     new Fighter(10, 0, 3),
-                    new Level(xpGiven: 35)
+                    new Level(xpGivenOnKilled: 35)
                 });
         TrollPrefab =
             new Entity(
@@ -48,7 +48,7 @@ public class EntityFactory : MonoBehaviour
                 {
                     new AI(),
                     new Fighter(16, 1, 4),
-                    new Level(xpGiven: 100)
+                    new Level(xpGivenOnKilled: 100)
                 });
     }
 

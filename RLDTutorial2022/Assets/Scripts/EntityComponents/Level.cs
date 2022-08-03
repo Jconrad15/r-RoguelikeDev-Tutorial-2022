@@ -9,25 +9,29 @@ public class Level : BaseComponent
     public int xp = 0;
     public int levelUpBase = 0;
     public int levelUpFactor = 150;
-    public int xpGiven = 0;
+    public int xpGivenOnKilled = 0;
 
     [JsonConstructor]
     private Level() { }
 
     public Level(int level = 1, int xp = 0, int levelUpBase = 0,
-        int levelUpFactor = 150, int xpGiven = 0) : base()
+        int levelUpFactor = 150, int xpGivenOnKilled = 0) : base()
     {
         this.level = level;
         this.xp = xp;
         this.levelUpBase = levelUpBase;
         this.levelUpFactor = levelUpFactor;
-        this.xpGiven = xpGiven;
+        this.xpGivenOnKilled = xpGivenOnKilled;
     }
 
     public Level(Level other)
     : base(other)
     {
-
+        level = other.level;
+        xp = other.xp;
+        levelUpBase = other.levelUpBase;
+        levelUpFactor = other.levelUpFactor;
+        xpGivenOnKilled = other.xpGivenOnKilled;
     }
 
     public override object Clone()
@@ -35,12 +39,12 @@ public class Level : BaseComponent
         return new Level(this);
     }
 
-    public int ExperienceToNextLevel()
+    private int ExperienceToNextLevel()
     {
         return levelUpBase + (level * levelUpFactor);
     }
 
-    public bool CheckRequireLevelUp()
+    private bool CheckRequireLevelUp()
     {
         return xp > ExperienceToNextLevel();
     }
@@ -55,9 +59,28 @@ public class Level : BaseComponent
 
         if (CheckRequireLevelUp())
         {
-            InterfaceLogManager.Instance.LogMessage(
-                "You advance to level " + 
-                (level + 1).ToString() + ".");
+            LevelUpSystem.Instance.StartLevelUpSelection(e);
+        }
+    }
+
+    public void PerkSelected(Perk perk)
+    {
+        switch (perk)
+        {
+            case Perk.Health:
+                IncreaseMaxHP();
+                break;
+
+            case Perk.Power:
+                IncreasePower();
+                break;
+
+            case Perk.Defense:
+                IncreaseDefense();
+                break;
+
+            default:
+                break;
         }
     }
 
@@ -65,9 +88,12 @@ public class Level : BaseComponent
     {
         xp -= ExperienceToNextLevel();
         level++;
+        InterfaceLogManager.Instance.LogMessage(
+                "You advance to level " +
+                (level + 1).ToString() + ".");
     }
 
-    public void IncreaseMaxHP(int amount = 20)
+    private void IncreaseMaxHP(int amount = 20)
     {
         Fighter f = e.TryGetFighterComponent();
         f.IncreaseMaxHP(amount);
@@ -77,7 +103,7 @@ public class Level : BaseComponent
         IncreaseLevel();
     }
 
-    public void IncreasePower(int amount = 1)
+    private void IncreasePower(int amount = 1)
     {
         Fighter f = e.TryGetFighterComponent();
         f.IncreasePower(amount);
@@ -87,7 +113,7 @@ public class Level : BaseComponent
         IncreaseLevel();
     }
 
-    public void IncreaseDefense(int amount = 1)
+    private void IncreaseDefense(int amount = 1)
     {
         Fighter f = e.TryGetFighterComponent();
         f.IncreaseDefense(amount);

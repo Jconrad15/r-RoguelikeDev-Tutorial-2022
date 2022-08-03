@@ -66,6 +66,12 @@ public class Entity
                 Components.Add(inv);
                 inv.SetEntity(this);
             }
+            else if (component is Level)
+            {
+                Level inv = component as Level;
+                Components.Add(inv);
+                inv.SetEntity(this);
+            }
             else
             {
                 Debug.LogError(
@@ -174,8 +180,9 @@ public class Entity
         // Check if on stairs
         if (CurrentTile.Character != '>') { return false; }
 
-
         GameManager.Instance.GoDownStairs();
+        InterfaceLogManager.Instance.LogMessage(
+                "You delve deeper into the cavern.");
         return true;
     }
 
@@ -254,7 +261,7 @@ public class Entity
                 " did " + damage + " damage to " +
                 targetEntity.EntityName);
             // Do the damage
-            target.Damage(damage);
+            target.Damage(damage, this);
         }
         else
         {
@@ -278,6 +285,21 @@ public class Entity
         }
 
         return inventory;
+    }
+
+    public Level TryGetLevelComponent()
+    {
+        Level level = null;
+        for (int i = 0; i < Components.Count; i++)
+        {
+            var component = Components[i];
+            if (component is Level)
+            {
+                level = component as Level;
+            }
+        }
+
+        return level;
     }
 
     public Fighter TryGetFighterComponent()

@@ -97,7 +97,7 @@ public class FireballDamageConsumable : Consumable
                     " is damaged by " +
                     DamageAmount.ToString() +
                     " from the fireball.");
-                f.Damage(DamageAmount);
+                f.Damage(DamageAmount, e);
             }
         }
     }

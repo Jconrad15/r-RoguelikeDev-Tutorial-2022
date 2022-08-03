@@ -41,6 +41,7 @@ public class TargetingSystem : MonoBehaviour
         // Wait for end of frame, so that previous
         // clicks don't trigger location selection
         yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
 
         // Start targeting
         TargetingMessage(isTargetingEntity);
@@ -179,7 +180,7 @@ public class TargetingSystem : MonoBehaviour
         if (targetedTile == null)
         {
             InterfaceLogManager.Instance.LogMessage(
-                "Null tile targeted.");
+                "Non-valid tile targeted.");
             return null;
         }
 
@@ -201,6 +202,12 @@ public class TargetingSystem : MonoBehaviour
             HexCoordinates.FromPosition(worldPos);
         targetedTile = GameManager.Instance.CurrentGrid
             .GetTileAtHexCoords(coordinates);
+
+        // Only target visibile tiles
+        if (targetedTile.VisibilityLevel != VisibilityLevel.Visible)
+        {
+            return null; ;
+        }
 
         return targetedTile;
     }

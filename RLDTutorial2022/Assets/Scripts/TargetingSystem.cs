@@ -94,6 +94,11 @@ public class TargetingSystem : MonoBehaviour
     {
         List<Tile> hoveredTiles = new List<Tile>();
         Tile mainHoveredTile = TryGetTile();
+        if (mainHoveredTile == null)
+        {
+            return;
+        }
+
         hoveredTiles.Add(mainHoveredTile);
 
         // TODO: better method of getting surrounding tiles
@@ -202,12 +207,6 @@ public class TargetingSystem : MonoBehaviour
             HexCoordinates.FromPosition(worldPos);
         targetedTile = GameManager.Instance.CurrentGrid
             .GetTileAtHexCoords(coordinates);
-
-        // Only target visibile tiles
-        if (targetedTile.VisibilityLevel != VisibilityLevel.Visible)
-        {
-            return null; ;
-        }
 
         return targetedTile;
     }

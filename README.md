@@ -8,7 +8,7 @@
 ![https://github.com/Jconrad15/r-RoguelikeDev-Tutorial-2022/blob/main/RLDTutorial2022/Screenshots/InitialMovement.gif ](https://raw.githubusercontent.com/Jconrad15/r-RoguelikeDev-Tutorial-2022/main/RLDTutorial2022/Screenshots/InitialMovement.gif)
 
 
-# Parts 2-3 - Generic Entity, Map, and Dungeon
+# Parts 2-3 - Generic entity, map, and dungeon
 ![GeneratedDungeon](https://user-images.githubusercontent.com/83470418/177862918-291de181-af10-4ee4-8ef0-f60bbbe85746.gif)
 
 # Parts 4-5 - Field of view and initial combat framework
@@ -16,3 +16,6 @@
 
 # Parts 6-9 - Combat, log, items, and targeting
 ![RangedAttack](https://raw.githubusercontent.com/Jconrad15/r-RoguelikeDev-Tutorial-2022/main/RLDTutorial2022/Screenshots/RangedAttack.gif)
+
+# Parts 10-11 - Saving, leveling, and multi-floor caverns
+![LevelUp&GoDown](https://raw.githubusercontent.com/Jconrad15/r-RoguelikeDev-Tutorial-2022/main/RLDTutorial2022/Screenshots/LevelUp%26GoDown.gif)

@@ -74,11 +74,13 @@ public class LightningDamageConsumable : Consumable
         }
 
         // Damage other entity's fighter component
-        otherFighter.Damage(DamageAmount);
+        otherFighter.Damage(DamageAmount, entity);
 
         InterfaceLogManager.Instance.LogMessage(
-            "A lighting bolt strikes the " + otherEntity.EntityName +
-            " with a loud thunder, for " + DamageAmount + " damage!",
+            "A lighting bolt strikes the " +
+            otherEntity.EntityName +
+            " with a loud thunder, for " +
+            DamageAmount + " damage!",
             ColorDatabase.yellow);
         return true;
     }

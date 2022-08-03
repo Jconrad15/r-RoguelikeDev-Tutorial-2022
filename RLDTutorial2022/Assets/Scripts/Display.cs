@@ -28,7 +28,7 @@ public class Display : MonoBehaviour
 
     public void CreateInitialGrid()
     {
-        TileGrid tileGrid = GameManager.Instance.Grid;
+        TileGrid tileGrid = GameManager.Instance.CurrentGrid;
         int width = tileGrid.width;
         int height = tileGrid.height;
 
@@ -192,7 +192,6 @@ public class Display : MonoBehaviour
 
         itemGO.GetComponent<ObjectText>().SetText(item);
     }
-
 
     private void UpdateEntityVisibility(EntityGOData entityGOData)
     {

@@ -21,7 +21,8 @@ public class EntityFactory : MonoBehaviour
                 new List<BaseComponent>() 
                 {
                     new Fighter(30, 2, 5),
-                    new Inventory(5)
+                    new Inventory(5),
+                    new Level(levelUpBase: 200)
                 },
                 5,
                 true,
@@ -35,7 +36,8 @@ public class EntityFactory : MonoBehaviour
                 new List<BaseComponent>()
                 {
                     new AI(),
-                    new Fighter(10, 0, 3)
+                    new Fighter(10, 0, 3),
+                    new Level(xpGivenOnKilled: 35)
                 });
         TrollPrefab =
             new Entity(
@@ -45,7 +47,8 @@ public class EntityFactory : MonoBehaviour
                 new List<BaseComponent>()
                 {
                     new AI(),
-                    new Fighter(16, 1, 4)
+                    new Fighter(16, 1, 4),
+                    new Level(xpGivenOnKilled: 100)
                 });
     }
 

@@ -7,8 +7,10 @@ public class LoadSaveGame : MonoBehaviour
 {
     public static void Save()
     {
-        TileGrid tileGrid = GameManager.Instance.Grid;
-        SaveObject saveObject = new SaveObject(tileGrid);
+        SaveObject saveObject = new SaveObject(
+            GameManager.Instance.CurrentGrid,
+            GameManager.Instance.CurrentGridSeed,
+            GameManager.Instance.CurrentDungeon.dungeonGridSeeds);
 
         string path = Path.Combine(
             Application.persistentDataPath, "save.json");

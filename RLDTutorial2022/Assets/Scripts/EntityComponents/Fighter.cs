@@ -21,16 +21,14 @@ public class Fighter : BaseComponent
         {
             hp = Mathf.Clamp(value, 0, maxHP);
             cbOnFighterHealthChanged?.Invoke(hp);
-            if (hp <= 0)
-            {
-                Died();
-            }
         }
     }
 
-    public void Damage(int amount)
+    public void Damage(int amount, Entity damagedBy)
     {
         HP -= amount;
+        // Check if died
+        if (hp <= 0) { Died(damagedBy); }
     }
 
     public int Heal(int amount)
@@ -43,9 +41,40 @@ public class Fighter : BaseComponent
         return HPDownBy >= amount ? amount : HPDownBy;
     }
 
-    private void Died()
+    private void Died(Entity killedBy)
     {
+        // Give experience to killer
+        Level level = e.TryGetLevelComponent();
+
+        if (level == null)
+        {
+            Debug.LogError("No level component on killed entity");
+            return;
+        }
+
+        int xpGiven = level.xpGivenOnKilled;
+
+        Level killerLevel = killedBy.TryGetLevelComponent();
+        killerLevel.AddXP(xpGiven);
+
+        // This entity dies
         e.Died();
+    }
+
+    public void IncreaseMaxHP(int amount)
+    {
+        maxHP += amount;
+        HP += amount;
+    }
+
+    public void IncreasePower(int amount)
+    {
+        power += amount;
+    }
+
+    public void IncreaseDefense(int amount)
+    {
+        defense += amount;
     }
 
     [JsonConstructor]

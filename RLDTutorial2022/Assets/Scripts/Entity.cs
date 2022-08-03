@@ -18,6 +18,7 @@ public class Entity
 
     [JsonIgnore]
     public Tile CurrentTile { get; private set; }
+    public void SetTile(Tile t) => CurrentTile = t;
 
     public Color Color { get; private set; }
 
@@ -62,6 +63,12 @@ public class Entity
             else if (component is Inventory)
             {
                 Inventory inv = component as Inventory;
+                Components.Add(inv);
+                inv.SetEntity(this);
+            }
+            else if (component is Level)
+            {
+                Level inv = component as Level;
                 Components.Add(inv);
                 inv.SetEntity(this);
             }
@@ -118,10 +125,18 @@ public class Entity
         Entity e = new Entity(
             savedEntityToClone, targetTile);
 
-        // Set entity in components 
-        for (int i = 0; i < e.Components.Count; i++)
+        if (e.Components != null)
         {
-            e.Components[i].SetEntity(e);
+            // Set entity in components 
+            for (int i = 0; i < e.Components.Count; i++)
+            {
+                if (e.Components[i] == null)
+                {
+                    continue;
+                }
+
+                e.Components[i].SetEntity(e);
+            }
         }
 
         e.CurrentTile = targetTile;
@@ -160,9 +175,20 @@ public class Entity
         return inventory.TryAddItem(CurrentTile.item);
     }
 
+    public bool TryGoDownStairs()
+    {
+        // Check if on stairs
+        if (CurrentTile.Character != '>') { return false; }
+
+        GameManager.Instance.GoDownStairs();
+        InterfaceLogManager.Instance.LogMessage(
+                "You delve deeper into the cavern.");
+        return true;
+    }
+
     public bool TryAction(Direction direction)
     {
-        Tile neighborTile = GameManager.Instance.Grid
+        Tile neighborTile = GameManager.Instance.CurrentGrid
             .GetTileInDirection(CurrentTile, direction);
 
         if (neighborTile == null)
@@ -235,13 +261,13 @@ public class Entity
                 " did " + damage + " damage to " +
                 targetEntity.EntityName);
             // Do the damage
-            target.Damage(damage);
+            target.Damage(damage, this);
         }
         else
         {
             InterfaceLogManager.Instance.LogMessage(
                 EntityName + " attacked " +
-                targetEntity.EntityName + "for no damage");
+                targetEntity.EntityName + " for no damage");
         }
 
     }
@@ -259,6 +285,21 @@ public class Entity
         }
 
         return inventory;
+    }
+
+    public Level TryGetLevelComponent()
+    {
+        Level level = null;
+        for (int i = 0; i < Components.Count; i++)
+        {
+            var component = Components[i];
+            if (component is Level)
+            {
+                level = component as Level;
+            }
+        }
+
+        return level;
     }
 
     public Fighter TryGetFighterComponent()
@@ -329,8 +370,25 @@ public class Entity
             Components[i].Destroy();
             Components[i] = null;
         }
+        Components = new List<BaseComponent>();
 
         cbOnEntityDied?.Invoke(this);
+    }
+
+    public void Destroy()
+    {
+        Character = null;
+        EntityName = null;
+        Components = null;
+
+        ClearCallbacks();
+    }
+
+    public void ClearCallbacks()
+    {
+        cbOnEntityAttackDirection = null;
+        cbOnEntityDied = null;
+        cbOnEntityMoved = null;
     }
 
     public void RegisterOnEntityMoved(

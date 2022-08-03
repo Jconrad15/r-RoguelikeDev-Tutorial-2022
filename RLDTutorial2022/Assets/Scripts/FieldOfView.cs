@@ -23,7 +23,7 @@ public class FieldOfView : MonoBehaviour
 
     public void UpdateFOV(Entity player)
     {
-        TileGrid grid = GameManager.Instance.Grid;
+        TileGrid grid = GameManager.Instance.CurrentGrid;
 
         HexCoordinates currentHex =
             player.CurrentTile.Coordinates;
@@ -118,7 +118,7 @@ public class FieldOfView : MonoBehaviour
             }
 
             // Get tile at lerped position
-            Tile intermediateTile = GameManager.Instance.Grid
+            Tile intermediateTile = GameManager.Instance.CurrentGrid
                 .GetTileAtHexCoords(new HexCoordinates(ix, iz));
 
             // If reach target, hex is not blocked

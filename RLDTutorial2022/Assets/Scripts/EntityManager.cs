@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EntityManager : MonoBehaviour
 {
@@ -10,8 +11,12 @@ public class EntityManager : MonoBehaviour
     private Action<Entity> cbOnPlayerCreated;
     private Action<Entity> cbOnEntityCreated;
 
-    public void CreateEntities(TileGrid grid)
+    public void CreateEntities(TileGrid grid, int seed)
     {
+        // Create seed based state
+        Random.State oldState = Random.state;
+        Random.InitState(seed);
+
         Tile[] roomCenters = grid.GetAllRoomCenterTiles();
         Room[] rooms = grid.GetAllRoomsArray();
 
@@ -20,10 +25,39 @@ public class EntityManager : MonoBehaviour
         // Create NPCs -- Use index 1 to N
         for (int i = 1; i < roomCenters.Length; i++)
         {
-            CreateEntitiesInRoom(grid, rooms[i]);
+            CreateEntitiesInRoom(grid, rooms[i], seed);
         }
 
-        //Debug.Log("Created " + entities.Count + " entities");
+        // Restore state
+        Random.state = oldState;
+    }
+
+    /// <summary>
+    /// Create entities and load player entity from previous level
+    /// </summary>
+    /// <param name="grid"></param>
+    /// <param name="seed"></param>
+    /// <param name="playerEntity"></param>
+    public void CreateEntities(
+        TileGrid grid, int seed, Entity playerEntity)
+    {
+        // Create seed based state
+        Random.State oldState = Random.state;
+        Random.InitState(seed);
+
+        Tile[] roomCenters = grid.GetAllRoomCenterTiles();
+        Room[] rooms = grid.GetAllRoomsArray();
+
+        CreatePlayer(roomCenters[0], playerEntity);
+
+        // Create NPCs -- Use index 1 to N
+        for (int i = 1; i < roomCenters.Length; i++)
+        {
+            CreateEntitiesInRoom(grid, rooms[i], seed);
+        }
+
+        // Restore state
+        Random.state = oldState;
     }
 
     public void LoadEntities(TileGrid grid, SaveObject saveObject)
@@ -62,15 +96,37 @@ public class EntityManager : MonoBehaviour
         cbOnPlayerCreated?.Invoke(newPlayer);
     }
 
-    private void CreateEntitiesInRoom(TileGrid grid, Room room)
+    /// <summary>
+    /// Load player Entity from previous level.
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="playerEntity"></param>
+    private void CreatePlayer(Tile tile, Entity playerEntity)
     {
+        Entity newPlayer = playerEntity;
+        newPlayer.SetTile(tile);
+        tile.entity = newPlayer;
+
+        Debug.Log("Player at " + tile.Coordinates.ToString());
+
+        entities.Add(newPlayer);
+        cbOnPlayerCreated?.Invoke(newPlayer);
+    }
+
+    private void CreateEntitiesInRoom(
+        TileGrid grid, Room room, int seed)
+    {
+        // Create seed based state
+        Random.State oldState = Random.state;
+        Random.InitState(seed);
+
         int entityCount = 2;
         List<(int, int)> locations = room.InnerArea;
 
         for (int i = 0; i < entityCount; i++)
         {
             // Determine index and remove from list
-            int index = UnityEngine.Random.Range(
+            int index = Random.Range(
                 0, locations.Count);
             (int, int) location = locations[index];
             locations.RemoveAt(index);
@@ -81,15 +137,23 @@ public class EntityManager : MonoBehaviour
             // Skip if this tile already has an entity
             if (tile.entity != null) { continue; }
 
-            PlaceEntityAtTile(tile);
+            PlaceEntityAtTile(tile, seed);
         }
 
+        // Restore state
+        Random.state = oldState;
     }
 
-    private void PlaceEntityAtTile(Tile tile)
+    private void PlaceEntityAtTile(Tile tile, int seed)
     {
+        // Create seed based state
+        Random.State oldState = Random.state;
+        // Use seed for this tile
+        seed += tile.Coordinates.X + tile.Coordinates.Z;
+        Random.InitState(seed);
+
         Entity newEntity;
-        if (UnityEngine.Random.value < 0.8f)
+        if (Random.value < 0.8f)
         {
             newEntity = Entity.SpawnCloneAtTile(
                 EntityFactory.Instance.OrcPrefab, tile);
@@ -102,6 +166,9 @@ public class EntityManager : MonoBehaviour
 
         cbOnEntityCreated?.Invoke(newEntity);
         entities.Add(newEntity);
+
+        // Restore state
+        Random.state = oldState;
     }
 
     public List<Entity> GetNonPlayerEntities()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
@@ -17,6 +18,18 @@ public class InventoryUI : MonoBehaviour
         new Dictionary<Item, GameObject>();
 
     private bool isHidden;
+
+    private void Start()
+    {
+        if (inventoryItemContainer == null)
+        {
+            inventoryItemContainer =
+                GetComponentInChildren<VerticalLayoutGroup>()
+                .gameObject;
+            Debug.LogError("Why is serializedField" +
+                "null when reloading scene?");
+        }
+    }
 
     private void Update()
     {

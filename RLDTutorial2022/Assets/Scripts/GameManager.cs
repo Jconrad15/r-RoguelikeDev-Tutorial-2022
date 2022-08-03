@@ -110,7 +110,8 @@ public class GameManager : MonoBehaviour
         TurnController.Instance.StartTurnSystem();
 
         InterfaceLogManager.Instance.LogMessage(
-            "Welcome to Hex Caverns");
+            "Welcome to Hex Caverns Level " +
+            (GetCurrentSeedIndex() + 1).ToString() + ".");
     }
 
     private void Initialization()
@@ -147,17 +148,23 @@ public class GameManager : MonoBehaviour
 
     private void SwitchToNextSeed()
     {
-        int currentIndex = Array.IndexOf(
-            CurrentDungeon.dungeonGridSeeds, CurrentGridSeed);
+        int currentIndex = GetCurrentSeedIndex();
 
         int nextIndex = currentIndex + 1;
         if (nextIndex >= CurrentDungeon.dungeonGridSeeds.Length)
         {
-            Debug.Log("You reached the end!");
+            // Switch to victory menu if no more levels
+            FindObjectOfType<SceneChanger>().LoadVictoryMenu();
             return;
         }
 
         CurrentGridSeed = CurrentDungeon.dungeonGridSeeds[nextIndex];
     }
 
+    private int GetCurrentSeedIndex()
+    {
+        return Array.IndexOf(
+            CurrentDungeon.dungeonGridSeeds,
+            CurrentGridSeed);
+    }
 }

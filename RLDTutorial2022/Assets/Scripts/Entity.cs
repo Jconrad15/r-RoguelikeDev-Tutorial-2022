@@ -267,7 +267,7 @@ public class Entity
         {
             InterfaceLogManager.Instance.LogMessage(
                 EntityName + " attacked " +
-                targetEntity.EntityName + "for no damage");
+                targetEntity.EntityName + " for no damage");
         }
 
     }

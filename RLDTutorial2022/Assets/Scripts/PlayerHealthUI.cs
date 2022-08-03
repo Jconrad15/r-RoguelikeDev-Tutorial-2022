@@ -8,7 +8,7 @@ public class PlayerHealthUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI healthText;
 
-    private int maxHP;
+    private Fighter playerFighter;
 
     public void Initialize()
     {
@@ -28,13 +28,15 @@ public class PlayerHealthUI : MonoBehaviour
         }
 
         f.RegisterOnFighterHealthChanged(OnPlayerHealthChanged);
-        maxHP = f.maxHP;
+        playerFighter = f;
         OnPlayerHealthChanged(f.HP);
     }
 
     private void OnPlayerHealthChanged(int hp)
     {
         healthText.SetText(
-            hp.ToString() + " / " + maxHP.ToString());
+            hp.ToString() +
+            " / " +
+            playerFighter.maxHP.ToString());
     }
 }

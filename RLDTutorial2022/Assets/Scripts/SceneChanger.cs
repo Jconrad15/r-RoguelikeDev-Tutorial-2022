@@ -28,8 +28,8 @@ public class SceneChanger : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
-    private void LoadMainMenuScene()
+    public void LoadVictoryMenu()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(2);
     }
 }

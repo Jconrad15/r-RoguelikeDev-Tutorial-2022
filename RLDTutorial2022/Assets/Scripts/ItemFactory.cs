@@ -56,6 +56,25 @@ public class ItemFactory : MonoBehaviour
                 false);
     }
 
+    public Item CreateProceduralScroll()
+    {
+        ProceduralConsumable proceduralComponent =
+            new ProceduralConsumable();
+
+        Item proceduralScroll =
+            new Item(
+                proceduralComponent.Character,
+                proceduralComponent.ItemColor,
+                proceduralComponent.ItemName,
+                new List<BaseItemComponent>()
+                {
+                    proceduralComponent
+                },
+                false);
+
+        return proceduralScroll;
+    }
+
     public static ItemFactory Instance { get; private set; }
     private void Awake()
     {

@@ -14,25 +14,30 @@ public class ItemSelector
 
         Item newItem;
         float randomValue = Random.value;
-        if (randomValue < 0.7f)
+        if (randomValue < 0.4f)
         {
             newItem = Item.SpawnCloneAtTile(
                 ItemFactory.Instance.HealthPotionPrefab, tile);
         }
-        else if (randomValue < 0.8f)
+        else if (randomValue < 0.5f)
         {
             newItem = Item.SpawnCloneAtTile(
                 ItemFactory.Instance.FireballScrollPrefab, tile);
         }
-        else if (randomValue < 0.9f)
+        else if (randomValue < 0.6f)
         {
             newItem = Item.SpawnCloneAtTile(
                 ItemFactory.Instance.ConfusionScrollPrefab, tile);
         }
-        else
+        else if (randomValue < 0.7f)
         {
             newItem = Item.SpawnCloneAtTile(
                 ItemFactory.Instance.LightingScrollPrefab, tile);
+        }
+        else
+        {
+            newItem = Item.SpawnCloneAtTile(
+                ItemFactory.Instance.CreateProceduralScroll(), tile);
         }
 
         // Restore state

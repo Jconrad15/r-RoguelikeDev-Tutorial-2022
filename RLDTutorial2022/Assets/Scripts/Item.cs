@@ -65,6 +65,13 @@ public class Item
                 Components.Add(fdc);
                 fdc.SetItem(this);
             }
+            else if (component is ProceduralConsumable)
+            {
+                ProceduralConsumable fdc =
+                    component as ProceduralConsumable;
+                Components.Add(fdc);
+                fdc.SetItem(this);
+            }
         }
     }
 

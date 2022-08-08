@@ -45,6 +45,18 @@ public static class ColorDatabase
     public static Color fire =
         new Color32(255, 0, 0, 255);
 
+    public static Color water =
+        new Color32(0, 0, 255, 255);
+
+    public static Color air =
+        new Color32(218, 234, 235, 255);
+
+    public static Color earth =
+        new Color32(125, 89, 30, 255);
+
+    public static Color corruption =
+        new Color32(93, 56, 102, 255);
+
     public static Color highlight =
         new Color32(245, 243, 154, 255);
 }

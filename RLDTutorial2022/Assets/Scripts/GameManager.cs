@@ -55,11 +55,13 @@ public class GameManager : MonoBehaviour
         CurrentGrid = new TileGrid(50, 50, CurrentGridSeed);
         EntityManager.CreateEntities(
             CurrentGrid,
-            CurrentGridSeed);
+            CurrentGridSeed,
+            GetCurrentSeedIndex());
 
         itemManager.CreateItems(
             CurrentGrid,
-            CurrentGridSeed);
+            CurrentGridSeed,
+            GetCurrentSeedIndex());
     }
 
     private void CreateNextLevel()
@@ -73,11 +75,13 @@ public class GameManager : MonoBehaviour
         EntityManager.CreateEntities(
             CurrentGrid,
             CurrentGridSeed,
-            SceneBus.Instance.PlayerEntity);
+            SceneBus.Instance.PlayerEntity,
+            GetCurrentSeedIndex());
 
         itemManager.CreateItems(
             CurrentGrid,
-            CurrentGridSeed);
+            CurrentGridSeed,
+            GetCurrentSeedIndex());
     }
 
     /// <summary>

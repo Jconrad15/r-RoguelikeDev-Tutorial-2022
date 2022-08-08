@@ -11,7 +11,8 @@ public class EntityManager : MonoBehaviour
     private Action<Entity> cbOnPlayerCreated;
     private Action<Entity> cbOnEntityCreated;
 
-    public void CreateEntities(TileGrid grid, int seed)
+    public void CreateEntities(
+        TileGrid grid, int seed, int floorLevel)
     {
         // Create seed based state
         Random.State oldState = Random.state;
@@ -25,7 +26,7 @@ public class EntityManager : MonoBehaviour
         // Create NPCs -- Use index 1 to N
         for (int i = 1; i < roomCenters.Length; i++)
         {
-            CreateEntitiesInRoom(grid, rooms[i], seed);
+            CreateEntitiesInRoom(grid, rooms[i], seed, floorLevel);
         }
 
         // Restore state
@@ -39,7 +40,8 @@ public class EntityManager : MonoBehaviour
     /// <param name="seed"></param>
     /// <param name="playerEntity"></param>
     public void CreateEntities(
-        TileGrid grid, int seed, Entity playerEntity)
+        TileGrid grid, int seed,
+        Entity playerEntity, int floorLevel)
     {
         // Create seed based state
         Random.State oldState = Random.state;
@@ -53,7 +55,7 @@ public class EntityManager : MonoBehaviour
         // Create NPCs -- Use index 1 to N
         for (int i = 1; i < roomCenters.Length; i++)
         {
-            CreateEntitiesInRoom(grid, rooms[i], seed);
+            CreateEntitiesInRoom(grid, rooms[i], seed, floorLevel);
         }
 
         // Restore state
@@ -114,7 +116,7 @@ public class EntityManager : MonoBehaviour
     }
 
     private void CreateEntitiesInRoom(
-        TileGrid grid, Room room, int seed)
+        TileGrid grid, Room room, int seed, int floorLevel)
     {
         // Create seed based state
         Random.State oldState = Random.state;
@@ -137,14 +139,15 @@ public class EntityManager : MonoBehaviour
             // Skip if this tile already has an entity
             if (tile.entity != null) { continue; }
 
-            PlaceEntityAtTile(tile, seed);
+            PlaceEntityAtTile(tile, seed, floorLevel);
         }
 
         // Restore state
         Random.state = oldState;
     }
 
-    private void PlaceEntityAtTile(Tile tile, int seed)
+    private void PlaceEntityAtTile(
+        Tile tile, int seed, int floorLevel)
     {
         // Create seed based state
         Random.State oldState = Random.state;
@@ -152,17 +155,9 @@ public class EntityManager : MonoBehaviour
         seed += tile.Coordinates.X + tile.Coordinates.Z;
         Random.InitState(seed);
 
-        Entity newEntity;
-        if (Random.value < 0.8f)
-        {
-            newEntity = Entity.SpawnCloneAtTile(
-                EntityFactory.Instance.OrcPrefab, tile);
-        }
-        else
-        {
-            newEntity = Entity.SpawnCloneAtTile(
-                EntityFactory.Instance.TrollPrefab, tile);
-        }
+        // Select entity
+        Entity newEntity = EntitySelector.SelectEntityPerLevel(
+            tile, seed, floorLevel);
 
         cbOnEntityCreated?.Invoke(newEntity);
         entities.Add(newEntity);

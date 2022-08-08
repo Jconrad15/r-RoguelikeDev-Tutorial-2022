@@ -10,7 +10,8 @@ public class ItemManager : MonoBehaviour
 
     private Action<Item> cbOnItemCreated;
 
-    public void CreateItems(TileGrid grid, int seed)
+    public void CreateItems(
+        TileGrid grid, int seed, int floorLevel)
     {
         // Create seed based state
         Random.State oldState = Random.state;
@@ -21,7 +22,7 @@ public class ItemManager : MonoBehaviour
 
         for (int i = 0; i < roomCenters.Length; i++)
         {
-            CreateItemsInRoom(grid, rooms[i], seed);
+            CreateItemsInRoom(grid, rooms[i], seed, floorLevel);
         }
 
         // Restore state
@@ -82,19 +83,29 @@ public class ItemManager : MonoBehaviour
     }
 
     private void CreateItemsInRoom(
-        TileGrid grid, Room room, int seed)
+        TileGrid grid, Room room, int seed, int floorLevel)
     {
         // Create seed based state
         Random.State oldState = Random.state;
         Random.InitState(seed);
 
-        int itemCount = Random.Range(1, 3);
+        // Determine number of items
+        int itemCount;
+        if (floorLevel < 3) // for floors 0,1,2
+        {
+            itemCount = Random.Range(0, 3);
+        }
+        else
+        {
+            itemCount = Random.Range(0, 2);
+        }
+
         List<(int, int)> locations = room.InnerArea;
 
         for (int i = 0; i < itemCount; i++)
         {
             // Determine index and remove from list
-            int index = UnityEngine.Random.Range(
+            int index = Random.Range(
                 0, locations.Count);
             (int, int) location = locations[index];
             locations.RemoveAt(index);
@@ -105,14 +116,15 @@ public class ItemManager : MonoBehaviour
             // Skip if this tile already has an item
             if (tile.item != null) { continue; }
 
-            PlaceItemAtTile(tile, seed);
+            PlaceItemAtTile(tile, seed, floorLevel);
         }
 
         // Restore state
         Random.state = oldState;
     }
 
-    private void PlaceItemAtTile(Tile tile, int seed)
+    private void PlaceItemAtTile(
+        Tile tile, int seed, int floorLevel)
     {
         // Create seed based state
         Random.State oldState = Random.state;
@@ -120,29 +132,9 @@ public class ItemManager : MonoBehaviour
         seed += tile.Coordinates.X + tile.Coordinates.Z;
         Random.InitState(seed);
 
-        // Randomly choose which item
-        Item newItem;
-        float randomValue = Random.value;
-        if (randomValue < 0.7f)
-        {
-            newItem = Item.SpawnCloneAtTile(
-                ItemFactory.Instance.HealthPotionPrefab, tile);
-        }
-        else if (randomValue < 0.8f)
-        {
-            newItem = Item.SpawnCloneAtTile(
-                ItemFactory.Instance.FireballScrollPrefab, tile);
-        }
-        else if (randomValue < 0.9f)
-        {
-            newItem = Item.SpawnCloneAtTile(
-                ItemFactory.Instance.ConfusionScrollPrefab, tile);
-        }
-        else
-        {
-            newItem = Item.SpawnCloneAtTile(
-                ItemFactory.Instance.LightingScrollPrefab, tile);
-        }
+        // Choose which item
+        Item newItem = ItemSelector.SelectItemPerLevel(
+            tile, seed, floorLevel);
 
         cbOnItemCreated?.Invoke(newItem);
         items.Add(newItem);

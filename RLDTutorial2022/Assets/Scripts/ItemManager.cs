@@ -87,6 +87,9 @@ public class ItemManager : MonoBehaviour
     {
         // Create seed based state
         Random.State oldState = Random.state;
+        seed += room.InnerArea.Count +
+                room.Center.Item2 +
+                room.Center.Item1;
         Random.InitState(seed);
 
         // Determine number of items
@@ -99,6 +102,7 @@ public class ItemManager : MonoBehaviour
         {
             itemCount = Random.Range(0, 2);
         }
+        Debug.Log("itemCount = " + itemCount);
 
         List<(int, int)> locations = room.InnerArea;
 

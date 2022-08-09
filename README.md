@@ -19,3 +19,6 @@
 
 # Parts 10-11 - Saving, leveling, and multi-floor caverns
 ![LevelUp&GoDown](https://raw.githubusercontent.com/Jconrad15/r-RoguelikeDev-Tutorial-2022/main/RLDTutorial2022/Screenshots/LevelUp%26GoDown.gif)
+
+# Parts 12-13 - Increasing difficulty and ~~gearing up~~ procedural items
+![MysteryScrolls](https://raw.githubusercontent.com/Jconrad15/r-RoguelikeDev-Tutorial-2022/main/RLDTutorial2022/Screenshots/MysteryScrolls.gif)
